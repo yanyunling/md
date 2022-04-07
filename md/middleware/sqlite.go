@@ -18,13 +18,28 @@ CREATE TABLE IF NOT EXISTS t_user
 	id TEXT PRIMARY KEY NOT NULL,
 	name TEXT NOT NULL,
 	password TEXT NOT NULL,
-	phone TEXT NOT NULL,
-	email TEXT NOT NULL,
-	portrait TEXT NOT NULL,
-	remark TEXT NOT NULL,
-	status INTEGER NOT NULL,
+	create_time INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS t_document
+(
+	id TEXT PRIMARY KEY NOT NULL,
+	name TEXT NOT NULL,
+	content TEXT NOT NULL,
 	create_time INTEGER NOT NULL,
-	update_time INTEGER NOT NULL
+	update_time INTEGER NOT NULL,
+	user_id TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS t_picture
+(
+	id TEXT PRIMARY KEY NOT NULL,
+	name TEXT NOT NULL,
+	path TEXT NOT NULL,
+	hash TEXT NOT NULL,
+	size INTEGER NOT NULL,
+	create_time INTEGER NOT NULL,
+	user_id TEXT NOT NULL
 );
 `
 

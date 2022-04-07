@@ -1,9 +1,6 @@
 package middleware
 
 import (
-	"bytes"
-	"encoding/json"
-	"io/ioutil"
 	"md/model/common"
 	"md/util"
 	"strings"
@@ -14,18 +11,18 @@ import (
 	"github.com/muesli/cache2go"
 )
 
-// 管理页面接口授权
-func ManagerAuth(ctx iris.Context) {
+// 用户接口授权
+func UserAuth(ctx iris.Context) {
 	// header中的token
 	token := resolveHeader(ctx, "Bearer")
 
 	// 检验缓存中是否存在此token
-	if !cache2go.Cache(common.ManagerTokenCache).Exists(token) {
+	if !cache2go.Cache(common.AccessTokenCache).Exists(token) {
 		panic(common.NewErrorCode(common.HttpAuthFailure, "认证失败"))
 	}
 
 	// 自动续期
-	cache2go.Cache(common.ManagerTokenCache).Add(token, time.Hour*2, true)
+	cache2go.Cache(common.AccessTokenCache).Add(token, time.Hour*2, true)
 
 	ctx.Next()
 }
@@ -43,12 +40,6 @@ func TokenAuth(ctx iris.Context) {
 	ctx.Next()
 }
 
-// AppSecret接口授权
-func AppAuth(ctx iris.Context) {
-
-	ctx.Next()
-}
-
 // 解析头信息中的认证信息
 func resolveHeader(ctx iris.Context, prefix string) string {
 	header := ctx.GetHeader("Authorization")
@@ -57,25 +48,4 @@ func resolveHeader(ctx iris.Context, prefix string) string {
 		return string([]rune(header)[prefixLen:])
 	}
 	panic(common.NewErrorCode(common.HttpAuthFailure, "头信息认证失败"))
-}
-
-// 解析body数据，执行ctx.Next()之前必须重新填充body数据，否则后续路由将无法解析参数
-func resolveBody(ctx iris.Context, con interface{}) {
-	if ctx.Request().Body == nil {
-		panic(common.NewErrorCode(common.HttpAuthFailure, "参数解析失败"))
-	}
-
-	bodyBytes, err := ioutil.ReadAll(ctx.Request().Body)
-	if err != nil {
-		panic(common.NewErrCode(common.HttpAuthFailure, "参数解析失败", err))
-	}
-
-	if err = json.Unmarshal(bodyBytes, &con); err != nil {
-		panic(common.NewErrCode(common.HttpAuthFailure, "参数解析失败", err))
-	}
-}
-
-// 重新填充body数据
-func recoverBody(ctx iris.Context, bodyBytes []byte) {
-	ctx.Request().Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 }

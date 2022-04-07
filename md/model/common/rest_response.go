@@ -3,8 +3,6 @@ package common
 const (
 	HttpSuccess     = 200 // 请求成功
 	HttpAuthFailure = 401 // 认证失败
-	HttpApiFailure  = 402 // 权限不足
-	HttpNotFound    = 404 // 找不到页面
 	HttpFailure     = 500 // 请求失败
 )
 

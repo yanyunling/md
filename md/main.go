@@ -4,7 +4,6 @@ import (
 	"embed"
 	"flag"
 	"io/fs"
-	"md/controller"
 	"md/middleware"
 	"md/model/common"
 	"md/util"
@@ -20,8 +19,8 @@ var web embed.FS
 func init() {
 	// 解析命令行参数
 	flag.StringVar(&common.Port, "p", "9900", "监听端口")
-	flag.StringVar(&common.LogPath, "log", "./logs", "日志文件目录")
-	flag.StringVar(&common.DbPath, "db", "./", "数据库文件目录")
+	flag.StringVar(&common.LogPath, "log", "./logs", "日志目录")
+	flag.StringVar(&common.DbPath, "db", "./", "数据库目录")
 	flag.Parse()
 }
 
@@ -60,10 +59,9 @@ func main() {
 	}
 
 	// 初始化API路由
-	controller.InitRouter(app)
 
 	// 网页静态资源路由
-	webFs, err := fs.Sub(web, "web/dist")
+	webFs, err := fs.Sub(web, "web")
 	if err == nil {
 		app.Use(iris.StaticCache(time.Hour * 720))
 		app.HandleDir("/", http.FS(webFs))

@@ -6,7 +6,11 @@ interface HTMLInputEvent extends Event {
  * 上传文件类型
  */
 export const enum InputAccept {
-  XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  image = "image/*",
+  jpg = "image/jpeg",
+  png = "image/png",
+  gif = "image/gif",
 }
 
 /**
