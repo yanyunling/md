@@ -4,6 +4,7 @@ import (
 	"embed"
 	"flag"
 	"io/fs"
+	"md/controller"
 	"md/middleware"
 	"md/model/common"
 	"md/util"
@@ -21,6 +22,7 @@ func init() {
 	flag.StringVar(&common.Port, "p", "9900", "监听端口")
 	flag.StringVar(&common.LogPath, "log", "./logs", "日志目录")
 	flag.StringVar(&common.DbPath, "db", "./", "数据库目录")
+	flag.BoolVar(&common.Register, "reg", true, "允许注册(即使禁止注册，在没有任何用户的情况时仍可注册)")
 	flag.Parse()
 }
 
@@ -59,6 +61,7 @@ func main() {
 	}
 
 	// 初始化API路由
+	controller.InitRouter(app)
 
 	// 网页静态资源路由
 	webFs, err := fs.Sub(web, "web")

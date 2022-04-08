@@ -6,5 +6,5 @@ type Document struct {
 	Content    string `json:"content" db:"content"`
 	CreateTime int64  `json:"createTime" db:"create_time"`
 	UpdateTime int64  `json:"updateTime" db:"update_time"`
-	UserId     string `json:"userId" db:"user_id"`
+	BookId     string `json:"bookId" db:"book_id"`
 }

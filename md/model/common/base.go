@@ -5,6 +5,10 @@ type Page struct {
 	Total   int         `json:"total"`
 }
 
+type CommonResult struct {
+	Count int `json:"count" db:"count"`
+}
+
 type ManagerLogin struct {
 	Email string `json:"email"`
 	Vcode string `json:"vcode"`

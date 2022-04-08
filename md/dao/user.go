@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"md/model/common"
 	"md/model/entity"
 
 	"github.com/jmoiron/sqlx"
@@ -35,5 +36,26 @@ func UserDeleteById(tx *sqlx.Tx, id string) error {
 func UserGetById(tx *sqlx.Tx, id string) (entity.User, error) {
 	result := entity.User{}
 	err := tx.Get(&result, "select * from t_user where id=?", id)
+	return result, err
+}
+
+// 根据名字查询用户
+func UserGetByName(tx *sqlx.Tx, name string) (entity.User, error) {
+	result := entity.User{}
+	err := tx.Get(&result, "select * from t_user where name=?", name)
+	return result, err
+}
+
+// 根据用户名查询用户数量
+func UserCountByName(tx *sqlx.Tx, name string) (common.CommonResult, error) {
+	result := common.CommonResult{}
+	err := tx.Get(&result, "select count(*) as count from t_user where name=?", name)
+	return result, err
+}
+
+// 查询用户数量
+func UserCount(tx *sqlx.Tx) (common.CommonResult, error) {
+	result := common.CommonResult{}
+	err := tx.Get(&result, "select count(*) as count from t_user")
 	return result, err
 }
