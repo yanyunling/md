@@ -1,8 +1,7 @@
 import { createApp } from "vue";
+import "./styles/index.scss";
 import ElementPlus from "element-plus";
 import locale from "element-plus/lib/locale/lang/zh-cn";
-import "element-plus/dist/index.css";
-import "./styles/index.scss";
 import App from "./App.vue";
 import router from "./router";
 import "virtual:svg-icons-register";

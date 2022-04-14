@@ -1,34 +1,10 @@
 <template>
   <div class="layout-view">
     <div class="top-view">
-      <div class="top-title">消息服务管理</div>
-      <el-button class="top-button" type="text">注销</el-button>
+      <div class="top-title"><svg-icon name="md" style="width: 20px; height: 20px; margin: 5px 5px 0 0"></svg-icon><span>云文档</span></div>
+      <el-button class="top-button" type="text">退出登录</el-button>
     </div>
-    <div class="bottom-view">
-      <el-menu class="menu-view">
-        <el-menu-item index="app">
-          <i class="el-icon-user"></i>
-          <template #title>用户管理</template>
-        </el-menu-item>
-        <el-menu-item index="email">
-          <i class="el-icon-message"></i>
-          <template #title>邮件记录</template>
-        </el-menu-item>
-        <el-menu-item index="sms">
-          <i class="el-icon-chat-line-square"></i>
-          <template #title>短信记录</template>
-        </el-menu-item>
-        <el-menu-item index="smsSign">
-          <i class="el-icon-notebook-1"></i>
-          <template #title>短信签名</template>
-        </el-menu-item>
-        <el-menu-item index="smsTemplate">
-          <i class="el-icon-notebook-2"></i>
-          <template #title>短信模板</template>
-        </el-menu-item>
-      </el-menu>
-      <router-view class="content-view"></router-view>
-    </div>
+    <router-view class="content-view"></router-view>
   </div>
 </template>
 
@@ -64,42 +40,22 @@ export default defineComponent({
   align-items: center;
   user-select: none;
   border-bottom: 1px #eee solid;
-
   .top-title {
     font-size: 20px;
     font-weight: bold;
-    margin-left: 23px;
+    margin-left: 25px;
     cursor: pointer;
     display: flex;
     align-items: center;
   }
-
   .top-button {
     margin-right: 50px;
   }
 }
-
-.bottom-view {
-  display: flex;
-  flex-direction: row;
-  height: calc(100% - 60px);
+.content-view {
   width: 100%;
-
-  .menu-view {
-    height: 100%;
-    overflow: auto;
-    user-select: none;
-  }
-
-  .menu-view:not(.el-menu--collapse) {
-    width: 200px;
-  }
-
-  .content-view {
-    flex: 1;
-    height: 100%;
-    overflow: auto;
-    background-color: #fcfcfc;
-  }
+  height: calc(100% - 60px);
+  overflow: auto;
+  background-color: #fcfcfc;
 }
 </style>

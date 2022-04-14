@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"errors"
 	"md/model/common"
 	"md/model/entity"
 
@@ -8,54 +9,95 @@ import (
 )
 
 // 添加用户
-func UserAdd(tx *sqlx.Tx, user entity.User) error {
-	_, err := tx.NamedExec(`insert into t_user (id,name,password,create_time)
-	values (:id,:name,:password,:create_time)`, user)
-	return err
-}
-
-// 修改用户
-func UserUpdate(tx *sqlx.Tx, user entity.User) error {
-	_, err := tx.NamedExec(`update t_user set name=:name where id=:id`, user)
+func UserAdd(tx interface{}, user entity.User) error {
+	sql := `insert into t_user (id,name,password,create_time) values (:id,:name,:password,:create_time)`
+	var err error
+	switch tx := tx.(type) {
+	case *sqlx.Tx:
+		_, err = tx.NamedExec(sql, user)
+	case *sqlx.DB:
+		_, err = tx.NamedExec(sql, user)
+	default:
+		err = errors.New("数据库事务异常")
+	}
 	return err
 }
 
 // 修改用户密码
-func UserResetPassword(tx *sqlx.Tx, user entity.User) error {
-	_, err := tx.NamedExec(`update t_user set password=:password where id=:id`, user)
-	return err
-}
-
-// 根据id删除用户
-func UserDeleteById(tx *sqlx.Tx, id string) error {
-	_, err := tx.Exec("delete from t_user where id=?", id)
+func UserResetPassword(tx interface{}, user entity.User) error {
+	sql := `update t_user set password=:password where id=:id`
+	var err error
+	switch tx := tx.(type) {
+	case *sqlx.Tx:
+		_, err = tx.NamedExec(sql, user)
+	case *sqlx.DB:
+		_, err = tx.NamedExec(sql, user)
+	default:
+		err = errors.New("数据库事务异常")
+	}
 	return err
 }
 
 // 根据id查询用户
-func UserGetById(tx *sqlx.Tx, id string) (entity.User, error) {
+func UserGetById(tx interface{}, id string) (entity.User, error) {
+	sql := `select * from t_user where id=?`
 	result := entity.User{}
-	err := tx.Get(&result, "select * from t_user where id=?", id)
+	var err error
+	switch tx := tx.(type) {
+	case *sqlx.Tx:
+		err = tx.Get(&result, sql, id)
+	case *sqlx.DB:
+		err = tx.Get(&result, sql, id)
+	default:
+		err = errors.New("数据库事务异常")
+	}
 	return result, err
 }
 
-// 根据名字查询用户
-func UserGetByName(tx *sqlx.Tx, name string) (entity.User, error) {
+// 根据用户名查询用户
+func UserGetByName(tx interface{}, name string) (entity.User, error) {
+	sql := `select * from t_user where name=?`
 	result := entity.User{}
-	err := tx.Get(&result, "select * from t_user where name=?", name)
+	var err error
+	switch tx := tx.(type) {
+	case *sqlx.Tx:
+		err = tx.Get(&result, sql, name)
+	case *sqlx.DB:
+		err = tx.Get(&result, sql, name)
+	default:
+		err = errors.New("数据库事务异常")
+	}
 	return result, err
 }
 
 // 根据用户名查询用户数量
-func UserCountByName(tx *sqlx.Tx, name string) (common.CommonResult, error) {
-	result := common.CommonResult{}
-	err := tx.Get(&result, "select count(*) as count from t_user where name=?", name)
+func UserCountByName(tx interface{}, name string) (common.CountResult, error) {
+	sql := `select count(*) as count from t_user where name=?`
+	result := common.CountResult{}
+	var err error
+	switch tx := tx.(type) {
+	case *sqlx.Tx:
+		err = tx.Get(&result, sql, name)
+	case *sqlx.DB:
+		err = tx.Get(&result, sql, name)
+	default:
+		err = errors.New("数据库事务异常")
+	}
 	return result, err
 }
 
 // 查询用户数量
-func UserCount(tx *sqlx.Tx) (common.CommonResult, error) {
-	result := common.CommonResult{}
-	err := tx.Get(&result, "select count(*) as count from t_user")
+func UserCount(tx interface{}) (common.CountResult, error) {
+	sql := `select count(*) as count from t_user`
+	result := common.CountResult{}
+	var err error
+	switch tx := tx.(type) {
+	case *sqlx.Tx:
+		err = tx.Get(&result, sql)
+	case *sqlx.DB:
+		err = tx.Get(&result, sql)
+	default:
+		err = errors.New("数据库事务异常")
+	}
 	return result, err
 }

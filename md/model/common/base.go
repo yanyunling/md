@@ -5,12 +5,19 @@ type Page struct {
 	Total   int         `json:"total"`
 }
 
-type CommonResult struct {
+type CountResult struct {
 	Count int `json:"count" db:"count"`
 }
 
-type ManagerLogin struct {
-	Email string `json:"email"`
-	Vcode string `json:"vcode"`
-	Token string `json:"token"`
+type TokenResult struct {
+	Name         string `json:"name"`
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
+}
+
+type TokenCache struct {
+	Id           string `json:"id"`
+	Name         string `json:"name"`
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
 }

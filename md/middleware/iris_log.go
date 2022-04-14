@@ -1,13 +1,14 @@
 package middleware
 
 import (
-	"github.com/kataras/golog"
 	"io"
 	"io/ioutil"
+	"md/util"
 	"os"
 	"path"
-	"strings"
 	"time"
+
+	"github.com/kataras/golog"
 )
 
 var (
@@ -25,11 +26,7 @@ func InitLog(prefixPath string, logger *golog.Logger) {
 	// 首次执行
 	if lastTime == "" {
 		// 创建目录
-		if prefixPath == "" {
-			prefixPath = "./logs/"
-		} else if !strings.HasSuffix(prefixPath, "/") {
-			prefixPath += "/"
-		}
+		prefixPath = util.PathCompletion(prefixPath)
 		err := os.MkdirAll(prefixPath, 0666)
 		if err != nil {
 			panic(err)

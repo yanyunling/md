@@ -20,10 +20,18 @@ var web embed.FS
 func init() {
 	// 解析命令行参数
 	flag.StringVar(&common.Port, "p", "9900", "监听端口")
-	flag.StringVar(&common.LogPath, "log", "./logs", "日志目录")
-	flag.StringVar(&common.DbPath, "db", "./", "数据库目录")
-	flag.BoolVar(&common.Register, "reg", true, "允许注册(即使禁止注册，在没有任何用户的情况时仍可注册)")
+	flag.StringVar(&common.LogPath, "log", "./logs", "日志目录，存放近30天的日志")
+	flag.StringVar(&common.DataPath, "data", "./data", "数据目录，存放数据库文件和图片")
+	flag.BoolVar(&common.Register, "reg", true, "是否允许注册（即使禁止注册，在没有任何用户的情况时仍可注册）")
 	flag.Parse()
+
+	// 固定配置
+	common.LogPath = util.PathCompletion(common.LogPath)
+	common.DataPath = util.PathCompletion(common.DataPath)
+	common.BasicTokenKey = "md"
+	common.ResourceName = "resource"
+	common.PictureName = "picture"
+	common.ThumbnailName = "thumbnail"
 }
 
 func main() {
@@ -54,8 +62,14 @@ func main() {
 		return
 	}
 
+	// 初始化数据目录
+	err = middleware.InitDataDir(common.DataPath, common.ResourceName, common.PictureName, common.ThumbnailName)
+	if err != nil {
+		return
+	}
+
 	// 初始化数据库
-	err = middleware.InitSqlite(common.DbPath)
+	err = middleware.InitSqlite(common.DataPath)
 	if err != nil {
 		return
 	}
@@ -63,12 +77,16 @@ func main() {
 	// 初始化API路由
 	controller.InitRouter(app)
 
-	// 网页静态资源路由
+	// 网页资源路由
+	app.Use(iris.StaticCache(time.Hour * 720))
 	webFs, err := fs.Sub(web, "web")
-	if err == nil {
-		app.Use(iris.StaticCache(time.Hour * 720))
-		app.HandleDir("/", http.FS(webFs))
+	if err != nil {
+		middleware.Log.Error("初始化网页资源失败：", err)
 	}
+	app.HandleDir("/", http.FS(webFs))
+
+	// 静态资源路由
+	app.HandleDir("/"+common.ResourceName, common.DataPath+common.ResourceName)
 
 	// 启动服务
 	app.Logger().Error(app.Run(iris.Addr(":" + common.Port)))

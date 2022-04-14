@@ -1,33 +1,56 @@
 interface Token {
-  tokenKey: string;
+  nameKey: string;
+  accessTokenKey: string;
+  refreshTokenKey: string;
 }
 
 class Token {
   constructor() {
-    this.tokenKey = "Token";
+    this.nameKey = "Name";
+    this.accessTokenKey = "AccessToken";
+    this.refreshTokenKey = "RefreshToken";
   }
 
   /**
-   * 保存token
+   * 缓存token
    * @param token
    */
-  setToken(token: string) {
-    localStorage.setItem(this.tokenKey, token);
+  setToken(token: TokenResult) {
+    if (token) {
+      localStorage.setItem(this.nameKey, token.name);
+      localStorage.setItem(this.accessTokenKey, token.accessToken);
+      localStorage.setItem(this.refreshTokenKey, token.refreshToken);
+    }
   }
 
   /**
    * 清空token
    */
   removeToken() {
-    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.accessTokenKey);
+    localStorage.removeItem(this.refreshTokenKey);
     location.reload();
   }
 
   /**
-   * 查询token
+   * 获取用户名
    */
-  getToken() {
-    return localStorage.getItem(this.tokenKey);
+  getName() {
+    return localStorage.getItem(this.nameKey);
+  }
+
+  /**
+   * 获取AccessToken
+   */
+  getAccessToken() {
+    return localStorage.getItem(this.accessTokenKey);
+  }
+
+  /**
+   * 获取RefreshToken
+   */
+  getRefreshToken() {
+    return localStorage.getItem(this.refreshTokenKey);
   }
 }
 

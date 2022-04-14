@@ -1,9 +1,6 @@
 package middleware
 
 import (
-	"os"
-	"strings"
-
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -52,21 +49,10 @@ CREATE TABLE IF NOT EXISTS t_picture
 `
 
 // 初始化sqlite
-func InitSqlite(dbPath string) error {
-	// 创建目录
-	if dbPath == "" {
-		dbPath = "./"
-	} else if !strings.HasSuffix(dbPath, "/") {
-		dbPath += "/"
-	}
-	err := os.MkdirAll(dbPath, 0666)
-	if err != nil {
-		Log.Error("创建数据库文件目录失败：", err)
-		return err
-	}
-
+func InitSqlite(dataPath string) error {
 	// 开启数据库文件
-	Db, err = sqlx.Connect("sqlite3", dbPath+"md.db")
+	var err error
+	Db, err = sqlx.Connect("sqlite3", dataPath+"md.db")
 	if err != nil {
 		Log.Error("开启数据库文件失败：", err)
 		return err

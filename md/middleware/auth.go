@@ -3,6 +3,7 @@ package middleware
 import (
 	"md/model/common"
 	"md/util"
+	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -11,9 +12,15 @@ import (
 	"github.com/muesli/cache2go"
 )
 
-// 用户接口授权
-func UserAuth(ctx iris.Context) {
-	// header中的token
+// 获取当前登录用户信息
+func CurrentUser(ctx iris.Context) {
+	token := resolveHeader(ctx, "Bearer")
+
+	cache2go.Cache(token)
+}
+
+// 数据接口授权
+func DataAuth(ctx iris.Context) {
 	token := resolveHeader(ctx, "Bearer")
 
 	// 检验缓存中是否存在此token
@@ -21,20 +28,21 @@ func UserAuth(ctx iris.Context) {
 		panic(common.NewErrorCode(common.HttpAuthFailure, "认证失败"))
 	}
 
-	// 自动续期
-	cache2go.Cache(common.AccessTokenCache).Add(token, time.Hour*2, true)
-
 	ctx.Next()
 }
 
-// token认证授权
+// token相关接口认证授权
 func TokenAuth(ctx iris.Context) {
-	// header中的token
 	token := resolveHeader(ctx, "Basic")
 
-	_, err := util.DecryptBASE64(token)
-	if err != nil {
-		common.NewErrCode(common.HttpAuthFailure, "头信息认证失败", err)
+	// SHA256（BasicTokenKey + 时间戳的10分钟为基准的值，可上下浮动10分钟）
+	current := time.Now().UnixMilli() / 600000
+	t1 := util.EncryptSHA256([]byte(common.BasicTokenKey + strconv.FormatInt(current, 10)))
+	t2 := util.EncryptSHA256([]byte(common.BasicTokenKey + strconv.FormatInt(current-1, 10)))
+	t3 := util.EncryptSHA256([]byte(common.BasicTokenKey + strconv.FormatInt(current+1, 10)))
+
+	if token != t1 && token != t2 && token != t3 {
+		panic(common.NewErrorCode(common.HttpAuthFailure, "认证失败"))
 	}
 
 	ctx.Next()
@@ -47,5 +55,5 @@ func resolveHeader(ctx iris.Context, prefix string) string {
 	if header != "" && strings.Index(header, prefix) == 0 && utf8.RuneCountInString(header) > prefixLen {
 		return string([]rune(header)[prefixLen:])
 	}
-	panic(common.NewErrorCode(common.HttpAuthFailure, "头信息认证失败"))
+	panic(common.NewErrorCode(common.HttpAuthFailure, "认证失败"))
 }

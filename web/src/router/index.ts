@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Layout from "@/views/layout/index.vue";
 import Login from "@/views/login/index.vue";
+import Document from "@/views/document/index.vue";
+import Picture from "@/views/picture/index.vue";
 import Token from "@/store/token";
 
 const routes = [
@@ -9,7 +11,11 @@ const routes = [
     path: "/",
     name: "layout",
     component: Layout,
-    children: [{ path: "/user", name: "user", component: () => import("@/views/user/index.vue") }],
+    redirect: "/document",
+    children: [
+      { path: "/document", name: "document", component: Document },
+      { path: "/picture", name: "picture", component: Picture },
+    ],
   },
 ];
 
@@ -19,7 +25,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-  if (!Token.getToken() && to.name !== "login") {
+  if (!Token.getAccessToken() && to.name !== "login") {
     router.push({ name: "login" });
   }
 });
