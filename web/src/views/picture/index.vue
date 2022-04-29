@@ -1,5 +1,5 @@
 <template>
-  pic
+   <div>pic</div>
 </template>
 
 <script lang="ts">

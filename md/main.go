@@ -82,6 +82,7 @@ func main() {
 	webFs, err := fs.Sub(web, "web")
 	if err != nil {
 		middleware.Log.Error("初始化网页资源失败：", err)
+		return
 	}
 	app.HandleDir("/", http.FS(webFs))
 

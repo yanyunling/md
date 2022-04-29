@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"md/dao"
 	"md/middleware"
 	"md/model/common"
@@ -10,6 +11,9 @@ import (
 
 	"github.com/muesli/cache2go"
 )
+
+const AccessTokenExpire = time.Hour
+const RefreshTokenExpire = time.Hour * 24 * 180
 
 // 注册
 func SignUp(user entity.User) {
@@ -69,6 +73,9 @@ func SignIn(user entity.User) common.TokenResult {
 		panic(common.NewError("用户名或密码不可为空"))
 	}
 
+	// 校验登录次数
+	checkSignInTimes(user.Name)
+
 	// 根据用户名查询用户
 	userResult, err := dao.UserGetByName(middleware.Db, user.Name)
 	if err != nil {
@@ -86,15 +93,76 @@ func SignIn(user entity.User) common.TokenResult {
 	tokenResult.AccessToken = util.RandomString(64)
 	tokenResult.RefreshToken = util.RandomString(64)
 
-	// 缓存token
 	tokenCache := common.TokenCache{}
 	tokenCache.Id = userResult.Id
-	tokenCache.Name = userResult.Name
-	tokenCache.AccessToken = tokenResult.AccessToken
-	tokenCache.RefreshToken = tokenResult.RefreshToken
+	tokenCache.TokenResult = tokenResult
 
-	cache2go.Cache(common.AccessTokenCache).Add(tokenResult.AccessToken, time.Hour, &tokenCache)
-	cache2go.Cache(common.RefreshTokenCache).Add(tokenResult.RefreshToken, time.Hour*24*180, &tokenCache)
+	// 缓存token
+	cache2go.Cache(common.AccessTokenCache).Add(tokenResult.AccessToken, AccessTokenExpire, &tokenCache)
+	cache2go.Cache(common.RefreshTokenCache).Add(tokenResult.RefreshToken, RefreshTokenExpire, &tokenCache)
+	cache2go.Cache(common.SignInTimesCache).Delete(user.Name)
 
 	return tokenResult
+}
+
+// 退出登录
+func SignOut(tokenResult common.TokenResult) {
+	res, err := cache2go.Cache(common.RefreshTokenCache).Value(tokenResult.RefreshToken)
+	if err == nil {
+		tokenCache := res.Data().(*common.TokenCache)
+		if tokenCache.RefreshToken != "" {
+			cache2go.Cache(common.RefreshTokenCache).Delete(tokenResult.RefreshToken)
+		}
+		if tokenCache.AccessToken != "" {
+			cache2go.Cache(common.AccessTokenCache).Delete(tokenResult.AccessToken)
+		}
+	}
+}
+
+// 刷新token
+func TokenRefresh(refreshToken string) common.TokenResult {
+	res, err := cache2go.Cache(common.RefreshTokenCache).Value(refreshToken)
+	if err != nil {
+		panic(common.NewError("token已失效"))
+	}
+	tokenCache := res.Data().(*common.TokenCache)
+	if tokenCache.RefreshToken == "" {
+		panic(common.NewError("token已失效"))
+	}
+
+	// 重新生成AccessToken
+	tokenResult := common.TokenResult{}
+	tokenResult.Name = tokenCache.Name
+	tokenResult.AccessToken = util.RandomString(64)
+	tokenResult.RefreshToken = tokenCache.RefreshToken
+
+	tokenCache.AccessToken = tokenResult.AccessToken
+
+	// 缓存token
+	cache2go.Cache(common.AccessTokenCache).Add(tokenCache.AccessToken, AccessTokenExpire, &tokenCache)
+	cache2go.Cache(common.RefreshTokenCache).Add(tokenCache.RefreshToken, RefreshTokenExpire, &tokenCache)
+
+	return tokenResult
+}
+
+// 校验登录次数，如已超出则抛出异常
+func checkSignInTimes(name string) {
+	cache := cache2go.Cache(common.SignInTimesCache)
+	signInTimes, err := cache.Value(name)
+	times := 1
+	expireSecond := int64(0)
+	if err != nil {
+		cache.Add(name, time.Minute*5, true)
+	} else {
+		expireSecond = 300 - (time.Now().Unix() - signInTimes.CreatedOn().Unix())
+		// 有时过期后缓存不会立即删除，手动重置次数
+		if expireSecond <= 0 {
+			cache.Add(name, time.Minute*5, true)
+		} else {
+			times = int(signInTimes.AccessCount()) + 1
+		}
+	}
+	if times > 5 {
+		panic(common.NewError(fmt.Sprintf("登录次数已达上限，请于%v分钟后再试", (expireSecond/60 + 1))))
+	}
 }

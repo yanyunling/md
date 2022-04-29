@@ -15,7 +15,7 @@ export default defineComponent({
     className: {
       type: String,
     },
-    style: {
+    customStyle: {
       type: String,
     },
   },
@@ -33,7 +33,7 @@ export default defineComponent({
           <svg
             class={svgClass.value}
             aria-hidden={true}
-            style={props.style}
+            style={props.customStyle}
             onClick={(ev: MouseEvent) => {
               emit("click", ev);
             }}

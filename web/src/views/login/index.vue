@@ -5,8 +5,8 @@
       <div class="content-view" v-if="isLogin">
         <el-input class="input-view" v-model.trim="inputData.name" size="large" clearable placeholder="请输入用户名"></el-input>
         <el-input class="input-view" v-model.trim="inputData.password" size="large" type="password" clearable placeholder="请输入密码"></el-input>
-        <el-button class="register-button" type="text" size="small" @click="registerClick">注册</el-button>
-        <el-button class="login-button" size="large" type="primary" @click="loginClick">登录</el-button>
+        <el-button class="register-button" type="text" size="small" @click="registerClick" :disabled="loading">注册</el-button>
+        <el-button class="login-button" size="large" type="primary" @click="loginClick" :disabled="loading">登录</el-button>
       </div>
       <div class="content-view" v-else>
         <el-input class="input-view" v-model.trim="inputData.name" size="large" clearable placeholder="请输入用户名"></el-input>
@@ -19,8 +19,8 @@
           clearable
           placeholder="请再次输入密码"
         ></el-input>
-        <el-button class="register-button" type="text" size="small" @click="registerClick">返回登录</el-button>
-        <el-button class="login-button" size="large" type="primary" @click="loginClick">注册</el-button>
+        <el-button class="register-button" type="text" size="small" @click="registerClick" :disabled="loading">返回登录</el-button>
+        <el-button class="login-button" size="large" type="primary" @click="loginClick" :disabled="loading">注册</el-button>
       </div>
     </transition>
   </div>
@@ -35,8 +35,9 @@ import { useRouter } from "vue-router";
 export default defineComponent({
   setup() {
     const router = useRouter();
+    const loading = ref(false);
     // 登录/注册
-    const isLogin: Ref<boolean> = ref(true);
+    const isLogin = ref(true);
     // 输入框数据
     const inputData = ref({
       name: "",
@@ -68,22 +69,32 @@ export default defineComponent({
       }
       if (isLogin.value) {
         // 登录
-        TokenApi.signIn(inputData.value.name, inputData.value.password).then((res) => {
-          Token.setToken(res.data);
-          router.push({ name: "layout" });
-        });
+        loading.value = true;
+        TokenApi.signIn(inputData.value.name, inputData.value.password)
+          .then((res) => {
+            Token.setToken(res.data);
+            router.push({ name: "layout" });
+          })
+          .finally(() => {
+            loading.value = false;
+          });
       } else {
         // 注册
         if (inputData.value.password !== inputData.value.confirmPassword) {
           ElMessage.warning("两次密码不一致");
           return;
         }
-        TokenApi.signUp(inputData.value.name, inputData.value.password).then(() => {
-          ElMessage.success("注册成功");
-          inputData.value.password = "";
-          inputData.value.confirmPassword = "";
-          isLogin.value = true;
-        });
+        loading.value = true;
+        TokenApi.signUp(inputData.value.name, inputData.value.password)
+          .then(() => {
+            ElMessage.success("注册成功");
+            inputData.value.password = "";
+            inputData.value.confirmPassword = "";
+            isLogin.value = true;
+          })
+          .finally(() => {
+            loading.value = false;
+          });
       }
     };
 
@@ -94,7 +105,7 @@ export default defineComponent({
       }
     });
 
-    return { isLogin, inputData, registerClick, loginClick };
+    return { isLogin, loading, inputData, registerClick, loginClick };
   },
 });
 </script>

@@ -16,8 +16,6 @@ type TokenResult struct {
 }
 
 type TokenCache struct {
-	Id           string `json:"id"`
-	Name         string `json:"name"`
-	AccessToken  string `json:"accessToken"`
-	RefreshToken string `json:"refreshToken"`
+	Id string `json:"id"`
+	TokenResult
 }

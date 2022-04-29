@@ -26,16 +26,16 @@ func SignIn(ctx iris.Context) {
 
 // 退出登录
 func SignOut(ctx iris.Context) {
-	user := entity.User{}
-	resolveParam(ctx, &user)
-	service.SignUp(user)
+	tokenResult := common.TokenResult{}
+	resolveParam(ctx, &tokenResult)
+	service.SignOut(tokenResult)
 	ctx.JSON(common.NewSuccess("已退出登录"))
 }
 
 // 刷新token
 func TokenRefresh(ctx iris.Context) {
-	user := entity.User{}
-	resolveParam(ctx, &user)
-	service.SignUp(user)
-	ctx.JSON(common.NewSuccess("token刷新成功"))
+	tokenResult := common.TokenResult{}
+	resolveParam(ctx, &tokenResult)
+	tokenResult = service.TokenRefresh(tokenResult.RefreshToken)
+	ctx.JSON(common.NewSuccessData("token刷新成功", tokenResult))
 }
