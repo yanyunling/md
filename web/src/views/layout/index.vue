@@ -42,6 +42,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import SvgIcon from "@/components/SvgIcon";
 import Token from "@/store/token";
 import TokenApi from "@/api/token";
+import UserApi from "@/api/user";
 export default defineComponent({
   components: {
     SvgIcon,
@@ -82,8 +83,15 @@ export default defineComponent({
       }
 
       dialogLoading.value = true;
-
-      dialogLoading.value = false;
+      UserApi.updatePassword(form.value.password, form.value.newPassword)
+        .then((res) => {
+          ElMessage.success("修改成功");
+          dialogLoading.value = false;
+          dialogClose();
+        })
+        .catch(() => {
+          dialogLoading.value = false;
+        });
     };
 
     /**

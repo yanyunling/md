@@ -57,3 +57,17 @@ func resolveHeader(ctx iris.Context, prefix string) string {
 	}
 	panic(common.NewErrorCode(common.HttpAuthFailure, "认证失败"))
 }
+
+// 获取当前登录用户id
+func CurrentUserId(ctx iris.Context) string {
+	token := resolveHeader(ctx, "Bearer")
+	res, err := cache2go.Cache(common.AccessTokenCache).Value(token)
+	if err != nil {
+		panic(common.NewErrorCode(common.HttpAuthFailure, "认证失败"))
+	}
+	tokenCache := res.Data().(*common.TokenCache)
+	if tokenCache.Id == "" {
+		panic(common.NewErrorCode(common.HttpAuthFailure, "认证失败"))
+	}
+	return tokenCache.Id
+}

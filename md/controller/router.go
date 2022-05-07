@@ -13,15 +13,28 @@ func InitRouter(app *iris.Application) {
 		// token相关接口
 		api.PartyFunc("/token", func(token iris.Party) {
 			token.Use(middleware.TokenAuth)
-			token.Post("/register", SignUp)
-			token.Post("/get", SignIn)
-			token.Post("/remove", SignOut)
+
+			token.Post("/sign-up", SignUp)
+			token.Post("/sign-in", SignIn)
+			token.Post("/sign-out", SignOut)
 			token.Post("/refresh", TokenRefresh)
 		})
 
 		// 数据接口
 		api.PartyFunc("/data", func(data iris.Party) {
 			data.Use(middleware.DataAuth)
+
+			data.PartyFunc("/user", func(user iris.Party) {
+				user.Post("/update-password", UserUpdatePassword)
+			})
+
+			data.PartyFunc("/doc", func(doc iris.Party) {
+
+			})
+
+			data.PartyFunc("/pic", func(pic iris.Party) {
+
+			})
 		})
 	})
 }

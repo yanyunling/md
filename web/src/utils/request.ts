@@ -15,13 +15,13 @@ let refreshing = false;
 
 // 数据接口axios实例
 const dataInstance = axios.create({
-  baseURL: host + context,
+  baseURL: host + context + "/data",
   timeout: 20000,
 });
 
 // 授权接口axios实例
 const authInstance = axios.create({
-  baseURL: host + context,
+  baseURL: host + context + "/token",
   timeout: 10000,
 });
 
@@ -80,7 +80,7 @@ dataInstance.interceptors.response.use(
           if (!refreshing) {
             // 未刷新token时才进行刷新
             refreshing = true;
-            authInstance({ method: "post", url: "/token/refresh", data: { refreshToken: Token.getRefreshToken() } })
+            authInstance({ method: "post", url: "/refresh", data: { refreshToken: Token.getRefreshToken() } })
               .then((tokenResult) => {
                 refreshing = false;
                 // 刷新token成功，保存新的token

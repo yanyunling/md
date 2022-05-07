@@ -2,11 +2,15 @@
 	"folders": [
 		{
 			"name": "web",
-			"path": "web"
+			"path": "./web"
 		},
 		{
 			"name": "md",
-			"path": "md"
+			"path": "./md"
+		},
+		{
+			"name": "ROOT",
+			"path": "./"
 		}
 	],
 	"settings": {}

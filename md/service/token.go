@@ -31,9 +31,8 @@ func SignUp(user entity.User) {
 		}
 	}
 
-	// 去除用户名和密码的空白
+	// 去除用户名的空白
 	user.Name = util.RemoveBlank(user.Name)
-	user.Password = util.RemoveBlank(user.Password)
 	if user.Name == "" || user.Password == "" {
 		panic(common.NewError("用户名或密码不可为空"))
 	}
@@ -66,9 +65,8 @@ func SignUp(user entity.User) {
 
 // 登录
 func SignIn(user entity.User) common.TokenResult {
-	// 去除用户名和密码的空白
+	// 去除用户名的空白
 	user.Name = util.RemoveBlank(user.Name)
-	user.Password = util.RemoveBlank(user.Password)
 	if user.Name == "" || user.Password == "" {
 		panic(common.NewError("用户名或密码不可为空"))
 	}

@@ -12,7 +12,7 @@ class TokenApi {
   signUp(name: string, password: string) {
     return authRequest({
       method: "post",
-      url: "/token/register",
+      url: "/sign-up",
       data: { name: name, password: sha256(password).toString() },
     });
   }
@@ -26,7 +26,7 @@ class TokenApi {
   signIn(name: string, password: string) {
     return authRequest<TokenResult>({
       method: "post",
-      url: "/token/get",
+      url: "/sign-in",
       data: { name: name, password: sha256(password).toString() },
     });
   }
@@ -38,7 +38,7 @@ class TokenApi {
   signOut() {
     return authRequest({
       method: "post",
-      url: "/token/remove",
+      url: "/sign-out",
       data: { refreshToken: Token.getRefreshToken() },
     });
   }

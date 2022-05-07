@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"md/middleware"
 	"md/model/common"
 	"md/model/entity"
 	"md/service"
@@ -8,9 +9,11 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-func UpdatePassword(ctx iris.Context) {
-	user := entity.User{}
-	resolveParam(ctx, &user)
-	service.SignUp(user)
+// 更新用户密码
+func UserUpdatePassword(ctx iris.Context) {
+	userCondition := entity.UserCondition{}
+	resolveParam(ctx, &userCondition)
+	userCondition.Id = middleware.CurrentUserId(ctx)
+	service.UserUpdatePassword(userCondition)
 	ctx.JSON(common.NewSuccess("更新成功"))
 }
