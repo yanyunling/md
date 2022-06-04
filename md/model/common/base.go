@@ -1,8 +1,18 @@
 package common
 
+type PageCondition[T interface{}] struct {
+	Page      Page `json:"page"`
+	Condition T    `json:"condition"`
+}
+
+type PageResult[T interface{}] struct {
+	Records []T `json:"records"`
+	Total   int `json:"total"`
+}
+
 type Page struct {
-	Records interface{} `json:"records"`
-	Total   int         `json:"total"`
+	Current int `json:"current"`
+	Size    int `json:"size"`
 }
 
 type CountResult struct {

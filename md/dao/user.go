@@ -9,32 +9,16 @@ import (
 )
 
 // 添加用户
-func UserAdd(tx interface{}, user entity.User) error {
+func UserAdd(tx *sqlx.Tx, user entity.User) error {
 	sql := `insert into t_user (id,name,password,create_time) values (:id,:name,:password,:create_time)`
-	var err error
-	switch tx := tx.(type) {
-	case *sqlx.Tx:
-		_, err = tx.NamedExec(sql, user)
-	case *sqlx.DB:
-		_, err = tx.NamedExec(sql, user)
-	default:
-		err = errors.New("数据库事务异常")
-	}
+	_, err := tx.NamedExec(sql, user)
 	return err
 }
 
 // 修改用户密码
-func UserResetPassword(tx interface{}, user entity.User) error {
+func UserResetPassword(tx *sqlx.Tx, user entity.User) error {
 	sql := `update t_user set password=:password where id=:id`
-	var err error
-	switch tx := tx.(type) {
-	case *sqlx.Tx:
-		_, err = tx.NamedExec(sql, user)
-	case *sqlx.DB:
-		_, err = tx.NamedExec(sql, user)
-	default:
-		err = errors.New("数据库事务异常")
-	}
+	_, err := tx.NamedExec(sql, user)
 	return err
 }
 

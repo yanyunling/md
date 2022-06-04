@@ -2,6 +2,7 @@
 package util
 
 import (
+	"os"
 	"regexp"
 	"strings"
 	"unicode/utf8"
@@ -32,4 +33,16 @@ func PathCompletion(path string) string {
 		path += "/"
 	}
 	return path
+}
+
+// 判断文件是否存在，返回error则不确定
+func PathExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return true, err
 }

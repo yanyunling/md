@@ -33,7 +33,9 @@ func InitRouter(app *iris.Application) {
 			})
 
 			data.PartyFunc("/pic", func(pic iris.Party) {
-
+				pic.Post("/page", PicturePage)
+				pic.Post("/delete", PictureDelete)
+				pic.Post("/upload", PictureUpload)
 			})
 		})
 	})

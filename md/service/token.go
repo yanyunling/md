@@ -121,11 +121,11 @@ func SignOut(tokenResult common.TokenResult) {
 func TokenRefresh(refreshToken string) common.TokenResult {
 	res, err := cache2go.Cache(common.RefreshTokenCache).Value(refreshToken)
 	if err != nil {
-		panic(common.NewError("token已失效"))
+		panic(common.NewError("认证信息已过期，请重新登录"))
 	}
 	tokenCache := res.Data().(*common.TokenCache)
 	if tokenCache.RefreshToken == "" {
-		panic(common.NewError("token已失效"))
+		panic(common.NewError("认证信息已过期，请重新登录"))
 	}
 
 	// 重新生成AccessToken

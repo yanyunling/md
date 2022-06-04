@@ -9,3 +9,9 @@ type Picture struct {
 	CreateTime int64  `json:"createTime" db:"create_time"`
 	UserId     string `json:"userId" db:"user_id"`
 }
+
+type PicturePageResult struct {
+	Picture
+	PicturePrefix   string `json:"picturePrefix"`
+	ThumbnailPrefix string `json:"thumbnailPrefix"`
+}
