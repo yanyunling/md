@@ -13,13 +13,6 @@ require (
 )
 
 require (
-	github.com/CloudyKit/jet/v4 v4.1.0 // indirect
-	github.com/iris-contrib/pongo2 v0.0.1 // indirect
-	github.com/ryanuber/columnize v2.1.0+incompatible // indirect
-	github.com/thoas/go-funk v0.9.2 // indirect
-)
-
-require (
 	github.com/BurntSushi/toml v1.0.0 // indirect
 	github.com/CloudyKit/fastprinter v0.0.0-20200109182630-33d98a066a53 // indirect
 	github.com/CloudyKit/jet/v6 v6.1.0 // indirect
@@ -39,7 +32,6 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kataras/blocks v0.0.5 // indirect
-	github.com/kataras/iris v0.0.2
 	github.com/kataras/pio v0.0.10 // indirect
 	github.com/kataras/sitemap v0.0.5 // indirect
 	github.com/kataras/tunnel v0.0.3 // indirect

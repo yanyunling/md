@@ -12,7 +12,8 @@
     "element-plus": "^2.1.10",
     "vue": "^3.2.31",
     "vue-router": "^4.0.14",
-    "XLSX": "^0.18.3"
+    "XLSX": "^0.18.3",
+    "compressorjs" : "^1.1.1"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",

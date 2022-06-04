@@ -28,6 +28,17 @@ func PictureDelete(ctx iris.Context) {
 
 // 上传图片
 func PictureUpload(ctx iris.Context) {
-	//userId := middleware.CurrentUserId(ctx)
-	ctx.JSON(common.NewSuccess("上传成功"))
+	userId := middleware.CurrentUserId(ctx)
+	pictureFile, pictureInfo, err := ctx.FormFile("picture")
+	if err != nil {
+		panic(common.NewErr("图片解析失败", err))
+	}
+	defer pictureFile.Close()
+	thumbnailFile, thumbnailInfo, err := ctx.FormFile("thumbnail")
+	if err != nil {
+		panic(common.NewErr("图片解析失败", err))
+	}
+	defer thumbnailFile.Close()
+	path, message := service.PictureUpload(pictureFile, thumbnailFile, pictureInfo, thumbnailInfo, userId)
+	ctx.JSON(common.NewSuccessData(message, path))
 }

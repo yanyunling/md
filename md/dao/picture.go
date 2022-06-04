@@ -73,6 +73,22 @@ func PictureCountBySizeHash(tx interface{}, size int64, hash string) (common.Cou
 	return result, err
 }
 
+// 根据文件大小、hash值查询相同图片
+func PictureBySizeHash(tx interface{}, size int64, hash string) ([]entity.Picture, error) {
+	sql := `select * from t_picture where size=? and hash=?`
+	result := []entity.Picture{}
+	var err error
+	switch tx := tx.(type) {
+	case *sqlx.Tx:
+		err = tx.Select(&result, sql, size, hash)
+	case *sqlx.DB:
+		err = tx.Select(&result, sql, size, hash)
+	default:
+		err = errors.New("数据库事务异常")
+	}
+	return result, err
+}
+
 // 添加图片
 func PictureAdd(tx *sqlx.Tx, picture entity.Picture) error {
 	sql := `insert into t_picture (id,name,path,hash,size,create_time,user_id) values (:id,:name,:path,:hash,:size,:create_time,:user_id)`

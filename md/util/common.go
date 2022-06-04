@@ -3,6 +3,7 @@ package util
 
 import (
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"unicode/utf8"
@@ -45,4 +46,13 @@ func PathExists(path string) (bool, error) {
 		return false, nil
 	}
 	return true, err
+}
+
+// 获取文件后缀
+func FileExt(filename string) string {
+	ext := filepath.Ext(filename)
+	if ext != "" {
+		ext = strings.ToLower(ext)
+	}
+	return ext
 }

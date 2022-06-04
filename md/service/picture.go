@@ -1,11 +1,15 @@
 package service
 
 import (
+	"io/ioutil"
 	"md/dao"
 	"md/middleware"
 	"md/model/common"
 	"md/model/entity"
+	"md/util"
+	"mime/multipart"
 	"os"
+	"time"
 )
 
 // 分页查询图片记录
@@ -55,4 +59,114 @@ func PictureDelete(id, userId string) {
 	if err != nil {
 		panic(common.NewErr("删除失败", err))
 	}
+}
+
+// 图片上传
+func PictureUpload(pictureFile, thumbnailFile multipart.File, pictureInfo, thumbnailInfo *multipart.FileHeader, userId string) (string, string) {
+	// 校验文件大小
+	if pictureInfo.Size == 0 {
+		panic(common.NewError("图片解析失败"))
+	}
+	if thumbnailInfo.Size == 0 {
+		panic(common.NewError("缩略图解析失败"))
+	}
+	if pictureInfo.Size > 1000*1000*20 {
+		panic(common.NewError("图片大小不可超过20MB"))
+	}
+	if thumbnailInfo.Size > 1000*100 {
+		panic(common.NewError("缩略图大小不可超过100KB"))
+	}
+
+	// 获取文件后缀
+	pictureExt := util.FileExt(pictureInfo.Filename)
+	thumbnailExt := util.FileExt(pictureInfo.Filename)
+	if pictureExt != ".jpg" && pictureExt != ".jpeg" && pictureExt != ".png" && pictureExt != ".gif" {
+		panic(common.NewError("不支持的图片格式，支持格式：jpg、png、gif"))
+	}
+	if thumbnailExt != ".jpg" && thumbnailExt != ".jpeg" && thumbnailExt != ".png" && thumbnailExt != ".gif" {
+		panic(common.NewError("不支持的缩略图格式，支持格式：jpg、png、gif"))
+	}
+
+	// 读取文件
+	pictureByte, err := ioutil.ReadAll(pictureFile)
+	if err != nil {
+		panic(common.NewErr("图片解析失败", err))
+	}
+	thumbnailByte, err := ioutil.ReadAll(thumbnailFile)
+	if err != nil {
+		panic(common.NewErr("缩略图解析失败", err))
+	}
+
+	// 生成sha256校验码
+	sha256Str := util.EncryptSHA256(pictureByte)
+
+	tx := middleware.Db.MustBegin()
+	defer tx.Rollback()
+
+	// 查询相同大小和校验码的文件
+	pictures, err := dao.PictureBySizeHash(tx, pictureInfo.Size, sha256Str)
+	if err != nil {
+		panic(common.NewErr("图片上传失败", err))
+	}
+
+	// 生成文件名
+	filename := util.SnowflakeString() + pictureExt
+
+	needAddRecord := true
+	message := "上传成功"
+	if len(pictures) == 0 {
+		// 无相同文件，保存文件
+		savePictureFile, err := os.Create(common.DataPath + common.ResourceName + "/" + common.PictureName + "/" + filename)
+		if err != nil {
+			panic(common.NewErr("图片上传失败", err))
+		}
+		defer savePictureFile.Close()
+		_, err = savePictureFile.Write(pictureByte)
+		if err != nil {
+			panic(common.NewErr("图片上传失败", err))
+		}
+		// 保存缩略图
+		saveThumbnailFile, err := os.Create(common.DataPath + common.ResourceName + "/" + common.ThumbnailName + "/" + filename)
+		if err != nil {
+			panic(common.NewErr("图片上传失败", err))
+		}
+		defer saveThumbnailFile.Close()
+		_, err = saveThumbnailFile.Write(thumbnailByte)
+		if err != nil {
+			panic(common.NewErr("图片上传失败", err))
+		}
+	} else {
+		// 存在相同文件，文件名使用原记录中的名字
+		for _, v := range pictures {
+			filename = v.Path
+			// 判断是否自己也存在相同文件，如存在则不添加记录
+			if v.UserId == userId {
+				needAddRecord = false
+				message = "图片已存在"
+				break
+			}
+		}
+	}
+
+	// 添加记录
+	if needAddRecord {
+		picture := entity.Picture{}
+		picture.Id = util.SnowflakeString()
+		picture.CreateTime = time.Now().UnixMilli()
+		picture.Name = pictureInfo.Filename
+		picture.Path = filename
+		picture.Hash = sha256Str
+		picture.Size = pictureInfo.Size
+		picture.UserId = userId
+		err = dao.PictureAdd(tx, picture)
+		if err != nil {
+			panic(common.NewErr("图片上传失败", err))
+		}
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		panic(common.NewErr("图片上传失败", err))
+	}
+	return "/" + common.ResourceName + "/" + common.PictureName + "/" + filename, message
 }

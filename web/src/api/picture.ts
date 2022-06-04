@@ -26,6 +26,19 @@ class PictureApi {
       data: { id: id },
     });
   }
+
+  /**
+   * 上传图片
+   * @param formData
+   * @returns
+   */
+  upload(formData: FormData) {
+    return request({
+      method: "post",
+      url: "/pic/upload",
+      data: formData,
+    });
+  }
 }
 
 export default new PictureApi();
