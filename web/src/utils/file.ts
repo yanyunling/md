@@ -104,3 +104,20 @@ export const blobToBase64 = (blob: Blob, callback: Function) => {
   };
   reader.readAsDataURL(blob);
 };
+
+/**
+ * 格式化文件大小
+ * @param size
+ */
+export const formatFileSize = (size: number) => {
+  if (size < 1000) {
+    return size + "B";
+  }
+  if (size < 1000 * 1000) {
+    return (size / 1000).toFixed(2) + "KB";
+  }
+  if (size < 1000 * 1000 * 1000) {
+    return (size / 1000 / 1000).toFixed(2) + "MB";
+  }
+  return (size / 1000 / 1000 / 1000).toFixed(2) + "GB";
+};

@@ -7,9 +7,13 @@
           {{ hostUrl + scope.row.picturePrefix + scope.row.path }}
         </template>
       </el-table-column>
-      <el-table-column prop="size" label="图片大小" align="center" />
-      <el-table-column prop="createTime" label="上传时间" align="center" />
-      <el-table-column prop="path" label="缩略图" align="center">
+      <el-table-column prop="size" label="图片大小" align="center">
+        <template #default="scope"> {{ formatFileSize(scope.row.size) }} </template>
+      </el-table-column>
+      <el-table-column prop="createTime" label="上传时间" align="center">
+        <template #default="scope"> {{ formatTime(scope.row.createTime, "YYYY-MM-DD HH:mm:ss") }} </template>
+      </el-table-column>
+      <el-table-column prop="path" label="缩略图" align="center" width="150px">
         <template #default="scope">
           <el-image
             class="table-picture"
@@ -20,7 +24,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="path" label="" align="center">
+      <el-table-column prop="path" label="" align="center" width="150px">
         <template #header>
           <el-button type="primary" @click="uploadClick">上传</el-button>
         </template>
@@ -47,6 +51,8 @@ import { defineComponent, ref, Ref, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import PictureApi from "@/api/picture";
 import { uploadPicture } from "./util";
+import { formatTime, formatFileSize } from "@/utils";
+import { openFiles, getFileName } from "@/utils";
 export default defineComponent({
   setup() {
     const hostUrl = ref(location.origin);
@@ -96,8 +102,10 @@ export default defineComponent({
      * 上传图片
      */
     const uploadClick = () => {
-      uploadPicture().then(() => {
-        tablePageCurrentChange(1);
+      openFiles(false, ".jpg,.jpeg,.png,.gif").then((fileList) => {
+        uploadPicture(fileList[0]).then(() => {
+          tablePageCurrentChange(1);
+        });
       });
     };
 
@@ -124,7 +132,19 @@ export default defineComponent({
       queryTableData();
     });
 
-    return { hostUrl, tableData, tableTotal, tableLoading, tableCondition, deleteClick, uploadClick, tablePageSizeChange, tablePageCurrentChange };
+    return {
+      hostUrl,
+      tableData,
+      tableTotal,
+      tableLoading,
+      tableCondition,
+      deleteClick,
+      uploadClick,
+      tablePageSizeChange,
+      tablePageCurrentChange,
+      formatFileSize,
+      formatTime,
+    };
   },
 });
 </script>
@@ -134,7 +154,6 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
-
   .table-picture {
     width: 100px;
     height: 100px;

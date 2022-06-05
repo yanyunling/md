@@ -1,4 +1,3 @@
-export * from "./excel";
 export * from "./file";
 export * from "./number";
 export * from "./string";

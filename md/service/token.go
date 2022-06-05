@@ -128,17 +128,19 @@ func TokenRefresh(refreshToken string) common.TokenResult {
 		panic(common.NewError("认证信息已过期，请重新登录"))
 	}
 
-	// 重新生成AccessToken
+	// 重新生成token
 	tokenResult := common.TokenResult{}
 	tokenResult.Name = tokenCache.Name
 	tokenResult.AccessToken = util.RandomString(64)
-	tokenResult.RefreshToken = tokenCache.RefreshToken
+	tokenResult.RefreshToken = util.RandomString(64)
 
-	tokenCache.AccessToken = tokenResult.AccessToken
+	newTokenCache := common.TokenCache{}
+	newTokenCache.Id = tokenCache.Id
+	newTokenCache.TokenResult = tokenResult
 
 	// 缓存token
-	cache2go.Cache(common.AccessTokenCache).Add(tokenCache.AccessToken, AccessTokenExpire, &tokenCache)
-	cache2go.Cache(common.RefreshTokenCache).Add(tokenCache.RefreshToken, RefreshTokenExpire, &tokenCache)
+	cache2go.Cache(common.AccessTokenCache).Add(newTokenCache.AccessToken, AccessTokenExpire, &newTokenCache)
+	cache2go.Cache(common.RefreshTokenCache).Add(newTokenCache.RefreshToken, RefreshTokenExpire, &newTokenCache)
 
 	return tokenResult
 }

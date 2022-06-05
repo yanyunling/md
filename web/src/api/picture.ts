@@ -33,7 +33,7 @@ class PictureApi {
    * @returns
    */
   upload(formData: FormData) {
-    return request({
+    return request<string>({
       method: "post",
       url: "/pic/upload",
       data: formData,

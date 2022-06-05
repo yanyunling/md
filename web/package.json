@@ -13,7 +13,8 @@
     "vue": "^3.2.31",
     "vue-router": "^4.0.14",
     "XLSX": "^0.18.3",
-    "compressorjs" : "^1.1.1"
+    "compressorjs": "^1.1.1",
+    "md-editor-v3": "^2.1.0"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",

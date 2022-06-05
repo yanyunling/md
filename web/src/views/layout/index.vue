@@ -123,7 +123,7 @@ export default defineComponent({
   bottom: 0;
 }
 .top-view {
-  height: 59px;
+  height: 49px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -187,7 +187,7 @@ export default defineComponent({
 }
 .content-view {
   width: 100%;
-  height: calc(100% - 60px);
+  height: calc(100% - 50px);
   overflow: auto;
   background-color: #fcfcfc;
 }
