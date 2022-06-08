@@ -1,12 +1,12 @@
-import { openFiles, getFileName } from "@/utils";
+import { getFileName } from "@/utils";
 import Compressor from "compressorjs";
 import PictureApi from "@/api/picture";
 import { ElMessage } from "element-plus";
 
 /**
  * 上传图片
- * @param file 
- * @returns 
+ * @param file
+ * @returns
  */
 export const uploadPicture = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {

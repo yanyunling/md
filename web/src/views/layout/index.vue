@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-view">
+  <div class="page-layout">
     <div class="top-view">
       <div class="left-view">
         <div class="title-view">
@@ -39,7 +39,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import SvgIcon from "@/components/SvgIcon";
+import SvgIcon from "@/components/svg-icon";
 import Token from "@/store/token";
 import TokenApi from "@/api/token";
 import UserApi from "@/api/user";
@@ -113,7 +113,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.layout-view {
+.page-layout {
   position: fixed;
   width: 100%;
   height: 100%;

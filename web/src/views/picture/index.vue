@@ -1,6 +1,6 @@
 <template>
-  <div class="picture-view">
-    <el-table :data="tableData" height="100%" stripe v-loading="tableLoading">
+  <div class="page-picture">
+    <el-table class="table-view" :data="tableData" height="100%" stripe v-loading="tableLoading">
       <el-table-column prop="name" label="图片名称" align="center" />
       <el-table-column prop="path" label="图片地址" align="center">
         <template #default="scope">
@@ -52,7 +52,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import PictureApi from "@/api/picture";
 import { uploadPicture } from "./util";
 import { formatTime, formatFileSize } from "@/utils";
-import { openFiles, getFileName } from "@/utils";
+import { openFiles } from "@/utils";
 export default defineComponent({
   setup() {
     const hostUrl = ref(location.origin);
@@ -149,14 +149,19 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-.picture-view {
+<style lang="scss">
+.page-picture {
   display: flex;
   flex-direction: column;
   align-items: center;
-  .table-picture {
-    width: 100px;
-    height: 100px;
+  .table-view {
+    .el-scrollbar__wrap {
+      display: flex;
+    }
+    .table-picture {
+      width: 100px;
+      height: 100px;
+    }
   }
 }
 </style>

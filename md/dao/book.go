@@ -1,0 +1,44 @@
+package dao
+
+import (
+	"md/model/entity"
+
+	"github.com/jmoiron/sqlx"
+)
+
+// 添加文集
+func BookAdd(tx *sqlx.Tx, book entity.Book) error {
+	sql := `insert into t_book (id,name,create_time,user_id) values (:id,:name,:create_time,:user_id)`
+	_, err := tx.NamedExec(sql, book)
+	return err
+}
+
+// 修改文集
+func BookUpdate(tx *sqlx.Tx, book entity.Book) error {
+	sql := `update t_book set name=:name where id=:id and user_id=:user_id`
+	_, err := tx.NamedExec(sql, book)
+	return err
+}
+
+// 根据id删除文集
+func BookDeleteById(tx *sqlx.Tx, id, userId string) error {
+	sql := `delete from t_book where id=? and user_id=?`
+	_, err := tx.Exec(sql, id, userId)
+	return err
+}
+
+// 查询文集列表
+func BookList(db *sqlx.DB, userId string) ([]entity.Book, error) {
+	sql := `select * from t_book where user_id=? order by create_time`
+	result := []entity.Book{}
+	err := db.Select(&result, sql, userId)
+	return result, err
+}
+
+// 根据名称查询文集列表
+func BookListByName(tx *sqlx.Tx, name, userId string) ([]entity.Book, error) {
+	sql := `select * from t_book where name=? and user_id=?`
+	result := []entity.Book{}
+	err := tx.Select(&result, sql, name, userId)
+	return result, err
+}

@@ -28,6 +28,13 @@ func InitRouter(app *iris.Application) {
 				user.Post("/update-password", UserUpdatePassword)
 			})
 
+			data.PartyFunc("/book", func(book iris.Party) {
+				book.Post("/add", BookAdd)
+				book.Post("/update", BookUpdate)
+				book.Post("/delete", BookDelete)
+				book.Post("/list", BookList)
+			})
+
 			data.PartyFunc("/doc", func(doc iris.Party) {
 
 			})

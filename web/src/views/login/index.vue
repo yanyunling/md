@@ -1,5 +1,5 @@
 <template>
-  <div class="login-view">
+  <div class="page-login">
     <div class="title-view">云文档</div>
     <transition name="fade">
       <div class="content-view" v-if="isLogin">
@@ -111,7 +111,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.login-view {
+.page-login {
   position: fixed;
   width: 100%;
   height: 100%;

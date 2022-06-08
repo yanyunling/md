@@ -1,5 +1,4 @@
 import { defineComponent, Ref, ref, onMounted, onUnmounted, watch } from "vue";
-import { ElTooltip } from "element-plus";
 import { debounce } from "@/utils";
 import "./style.scss";
 
@@ -57,12 +56,10 @@ export default defineComponent({
 
     return () => {
       return (
-        <div class="text-tip" ref={textTipRef}>
-          <ElTooltip effect="light" placement="bottom-start" disabled={disabled.value} content={props.content}>
-            <div class={"text"} ref={textTipTextRef}>
-              {props.content}
-            </div>
-          </ElTooltip>
+        <div class="text-tip" ref={textTipRef} title={disabled.value ? "" : props.content}>
+          <div class={"text"} ref={textTipTextRef}>
+            {props.content}
+          </div>
         </div>
       );
     };
