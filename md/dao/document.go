@@ -2,6 +2,7 @@ package dao
 
 import (
 	"md/model/entity"
+	"md/util"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -29,9 +30,15 @@ func DocumentDeleteById(tx *sqlx.Tx, id, userId string) error {
 
 // 查询文档列表
 func DocumentList(db *sqlx.DB, bookId, userId string) ([]entity.Document, error) {
-	sql := `select id,name,create_time,update_time,book_id from t_document where book_id=? and user_id=? order by create_time desc`
+	sqlCompletion := util.SqlCompletion{}
+	sqlCompletion.InitSql(`select id,name,create_time,update_time,book_id from t_document`, ``)
+	sqlCompletion.Eq("user_id", userId, true)
+	if bookId != "" {
+		sqlCompletion.Eq("book_id", bookId, true)
+	}
+	sqlCompletion.Order("create_time", false)
 	result := []entity.Document{}
-	err := db.Select(&result, sql, bookId, userId)
+	err := db.Select(&result, sqlCompletion.GetSql(), sqlCompletion.GetParams()...)
 	return result, err
 }
 
