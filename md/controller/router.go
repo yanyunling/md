@@ -36,7 +36,11 @@ func InitRouter(app *iris.Application) {
 			})
 
 			data.PartyFunc("/doc", func(doc iris.Party) {
-
+				doc.Post("/add", DocumentAdd)
+				doc.Post("/update", DocumentUpdate)
+				doc.Post("/delete", DocumentDelete)
+				doc.Post("/list", DocumentList)
+				doc.Post("/get", DocumentGet)
 			})
 
 			data.PartyFunc("/pic", func(pic iris.Party) {

@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS t_document
 	content TEXT NOT NULL,
 	create_time INTEGER NOT NULL,
 	update_time INTEGER NOT NULL,
-	book_id TEXT NOT NULL
+	book_id TEXT NOT NULL,
+	user_id TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS t_book

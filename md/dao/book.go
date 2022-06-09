@@ -29,7 +29,7 @@ func BookDeleteById(tx *sqlx.Tx, id, userId string) error {
 
 // 查询文集列表
 func BookList(db *sqlx.DB, userId string) ([]entity.Book, error) {
-	sql := `select * from t_book where user_id=? order by create_time`
+	sql := `select id,name,create_time from t_book where user_id=? order by create_time`
 	result := []entity.Book{}
 	err := db.Select(&result, sql, userId)
 	return result, err

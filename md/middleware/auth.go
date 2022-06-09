@@ -12,13 +12,6 @@ import (
 	"github.com/muesli/cache2go"
 )
 
-// 获取当前登录用户信息
-func CurrentUser(ctx iris.Context) {
-	token := resolveHeader(ctx, "Bearer")
-
-	cache2go.Cache(token)
-}
-
 // 数据接口授权
 func DataAuth(ctx iris.Context) {
 	token := resolveHeader(ctx, "Bearer")
@@ -48,16 +41,6 @@ func TokenAuth(ctx iris.Context) {
 	ctx.Next()
 }
 
-// 解析头信息中的认证信息
-func resolveHeader(ctx iris.Context, prefix string) string {
-	header := ctx.GetHeader("Authorization")
-	prefixLen := utf8.RuneCountInString(prefix) + 1
-	if header != "" && strings.Index(header, prefix) == 0 && utf8.RuneCountInString(header) > prefixLen {
-		return string([]rune(header)[prefixLen:])
-	}
-	panic(common.NewErrorCode(common.HttpAuthFailure, "认证失败"))
-}
-
 // 获取当前登录用户id
 func CurrentUserId(ctx iris.Context) string {
 	token := resolveHeader(ctx, "Bearer")
@@ -70,4 +53,14 @@ func CurrentUserId(ctx iris.Context) string {
 		panic(common.NewErrorCode(common.HttpAuthFailure, "认证失败"))
 	}
 	return tokenCache.Id
+}
+
+// 解析头信息中的认证信息
+func resolveHeader(ctx iris.Context, prefix string) string {
+	header := ctx.GetHeader("Authorization")
+	prefixLen := utf8.RuneCountInString(prefix) + 1
+	if header != "" && strings.Index(header, prefix) == 0 && utf8.RuneCountInString(header) > prefixLen {
+		return string([]rune(header)[prefixLen:])
+	}
+	panic(common.NewErrorCode(common.HttpAuthFailure, "认证失败"))
 }

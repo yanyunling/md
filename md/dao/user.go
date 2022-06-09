@@ -39,49 +39,25 @@ func UserGetById(tx interface{}, id string) (entity.User, error) {
 }
 
 // 根据用户名查询用户
-func UserGetByName(tx interface{}, name string) (entity.User, error) {
+func UserGetByName(db *sqlx.DB, name string) (entity.User, error) {
 	sql := `select * from t_user where name=?`
 	result := entity.User{}
-	var err error
-	switch tx := tx.(type) {
-	case *sqlx.Tx:
-		err = tx.Get(&result, sql, name)
-	case *sqlx.DB:
-		err = tx.Get(&result, sql, name)
-	default:
-		err = errors.New("数据库事务异常")
-	}
+	err := db.Get(&result, sql, name)
 	return result, err
 }
 
 // 根据用户名查询用户数量
-func UserCountByName(tx interface{}, name string) (common.CountResult, error) {
+func UserCountByName(tx *sqlx.Tx, name string) (common.CountResult, error) {
 	sql := `select count(*) as count from t_user where name=?`
 	result := common.CountResult{}
-	var err error
-	switch tx := tx.(type) {
-	case *sqlx.Tx:
-		err = tx.Get(&result, sql, name)
-	case *sqlx.DB:
-		err = tx.Get(&result, sql, name)
-	default:
-		err = errors.New("数据库事务异常")
-	}
+	err := tx.Get(&result, sql, name)
 	return result, err
 }
 
 // 查询用户数量
-func UserCount(tx interface{}) (common.CountResult, error) {
+func UserCount(tx *sqlx.Tx) (common.CountResult, error) {
 	sql := `select count(*) as count from t_user`
 	result := common.CountResult{}
-	var err error
-	switch tx := tx.(type) {
-	case *sqlx.Tx:
-		err = tx.Get(&result, sql)
-	case *sqlx.DB:
-		err = tx.Get(&result, sql)
-	default:
-		err = errors.New("数据库事务异常")
-	}
+	err := tx.Get(&result, sql)
 	return result, err
 }
