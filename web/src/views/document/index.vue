@@ -1,7 +1,7 @@
 <template>
   <div class="page-document">
     <book @change="bookChange"></book>
-    <doc></doc>
+    <doc :currentBookId="currentBookId" ref="doc"></doc>
     <md-editor class="editor-view" v-model="content" @onUploadImg="uploadImage" @onSave="saveDoc" />
   </div>
 </template>
@@ -21,14 +21,16 @@ export default defineComponent({
     Doc,
   },
   setup() {
+    const doc = ref<InstanceType<typeof Doc>>();
     const hostUrl = ref(location.origin);
     const content = ref("");
+    const currentBookId = ref("");
 
     /**
      * 文集选择变化
      */
     const bookChange = (bookId: string) => {
-      console.log(bookId);
+      currentBookId.value = bookId;
     };
 
     /**
@@ -54,7 +56,9 @@ export default defineComponent({
     };
 
     return {
+      doc,
       content,
+      currentBookId,
       bookChange,
       uploadImage,
       saveDoc,

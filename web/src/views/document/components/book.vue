@@ -48,12 +48,12 @@ export default defineComponent({
   emits: ["change"],
   setup(props, { emit }) {
     const books: Ref<Book[]> = ref([]);
+    const bookLoading = ref(false);
     const currentBookId = ref("");
     const addBookVisible = ref(false);
     const newBookName = ref("");
     const updateBookId = ref("");
     const updateBookName = ref("");
-    const bookLoading = ref(false);
 
     /**
      * 查询文集列表
@@ -72,11 +72,13 @@ export default defineComponent({
     };
 
     /**
-     * 点击添加文集取消
+     * 点击文集
      */
-    const addBookCancel = () => {
-      addBookVisible.value = false;
-      newBookName.value = "";
+    const bookClick = (book: Book) => {
+      if (updateBookId.value) {
+        return;
+      }
+      currentBookId.value = book.id;
     };
 
     /**
@@ -100,13 +102,11 @@ export default defineComponent({
     };
 
     /**
-     * 点击文集
+     * 点击添加文集取消
      */
-    const bookClick = (book: Book) => {
-      if (updateBookId.value) {
-        return;
-      }
-      currentBookId.value = book.id;
+    const addBookCancel = () => {
+      addBookVisible.value = false;
+      newBookName.value = "";
     };
 
     /**
@@ -146,7 +146,7 @@ export default defineComponent({
     };
 
     /**
-     * 点击文集删除
+     * 点击删除文集
      */
     const deleteBookClick = (book: Book) => {
       ElMessageBox.confirm("是否删除文集：" + book.name + "？", "提示", {
@@ -177,20 +177,20 @@ export default defineComponent({
       CircleCheckFilled,
       CircleCloseFilled,
       books,
+      bookLoading,
       currentBookId,
       addBookVisible,
       newBookName,
       updateBookId,
       updateBookName,
-      bookLoading,
       queryBooks,
-      addBookCancel,
-      addBookSave,
       bookClick,
+      addBookSave,
+      addBookCancel,
       updateBookClick,
-      deleteBookClick,
       updateBookSave,
       updateBookCancel,
+      deleteBookClick,
     };
   },
 });

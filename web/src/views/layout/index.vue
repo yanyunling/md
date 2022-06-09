@@ -23,9 +23,11 @@
     </div>
     <router-view class="content-view"></router-view>
     <el-dialog v-model="dialogVisible" title="修改密码" width="400px" :show-close="false" :before-close="dialogClose">
-      <el-input v-model.trim="form.password" size="large" type="password" clearable placeholder="请输入原密码"></el-input>
-      <el-input style="margin: 10px 0" v-model.trim="form.newPassword" size="large" type="password" clearable placeholder="请输入新密码"></el-input>
-      <el-input v-model.trim="form.confirmPassword" size="large" type="password" clearable placeholder="请再次输入密码"></el-input>
+      <form>
+        <el-input v-model.trim="form.password" size="large" type="password" clearable placeholder="请输入原密码"></el-input>
+        <el-input style="margin: 10px 0" v-model.trim="form.newPassword" size="large" type="password" clearable placeholder="请输入新密码"></el-input>
+        <el-input v-model.trim="form.confirmPassword" size="large" type="password" clearable placeholder="请再次输入密码"></el-input>
+      </form>
       <template #footer>
         <span class="dialog-footer">
           <el-button :loading="dialogLoading" @click="dialogVisible = false">取消</el-button>
