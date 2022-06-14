@@ -14,9 +14,16 @@ func DocumentAdd(tx *sqlx.Tx, document entity.Document) error {
 	return err
 }
 
-// 修改文档
+// 修改文档基础信息
 func DocumentUpdate(tx *sqlx.Tx, document entity.Document) error {
-	sql := `update t_document set name=:name,content=:content,update_time=:update_time,book_id=:book_id where id=:id and user_id=:user_id`
+	sql := `update t_document set name=:name,update_time=:update_time,book_id=:book_id where id=:id and user_id=:user_id`
+	_, err := tx.NamedExec(sql, document)
+	return err
+}
+
+// 修改文档内容
+func DocumentUpdateContent(tx *sqlx.Tx, document entity.Document) error {
+	sql := `update t_document set content=:content,update_time=:update_time where id=:id and user_id=:user_id`
 	_, err := tx.NamedExec(sql, document)
 	return err
 }
@@ -48,4 +55,11 @@ func DocumentGetById(db *sqlx.DB, id, userId string) (entity.Document, error) {
 	result := entity.Document{}
 	err := db.Get(&result, sql, id, userId)
 	return result, err
+}
+
+// 清空文档的bookId
+func DocumentClearBookId(tx *sqlx.Tx, bookId string) error {
+	sql := `update t_document set book_id='' where book_id=:book_id`
+	_, err := tx.Exec(sql, bookId)
+	return err
 }

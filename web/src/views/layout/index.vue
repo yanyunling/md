@@ -38,80 +38,72 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "vue";
+<script lang="ts" setup>
+import { ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import SvgIcon from "@/components/svg-icon";
 import Token from "@/store/token";
 import TokenApi from "@/api/token";
 import UserApi from "@/api/user";
-export default defineComponent({
-  components: {
-    SvgIcon,
-  },
-  setup() {
-    const name = ref(Token.getName());
-    const dialogVisible = ref(false);
-    const dialogLoading = ref(false);
-    const form = ref({ password: "", newPassword: "", confirmPassword: "" });
 
-    /**
-     * 点击退出登录
-     */
-    const logout = () => {
-      ElMessageBox.confirm("是否退出登录？", "提示", {
-        confirmButtonText: "退出登录",
-        cancelButtonText: "取消",
-        type: "info",
-      })
-        .then(() => {
-          TokenApi.signOut();
-          Token.removeToken();
-        })
-        .catch(() => {});
-    };
+const name = ref(Token.getName());
+const dialogVisible = ref(false);
+const dialogLoading = ref(false);
+const form = ref({ password: "", newPassword: "", confirmPassword: "" });
 
-    /**
-     * 更新密码
-     */
-    const updatePassword = () => {
-      if (form.value.password === "" || form.value.newPassword === "" || form.value.confirmPassword === "") {
-        ElMessage.warning("请填写密码");
-        return;
-      }
-      if (form.value.newPassword !== form.value.confirmPassword) {
-        ElMessage.warning("两次密码不一致");
-        return;
-      }
+/**
+ * 点击退出登录
+ */
+const logout = () => {
+  ElMessageBox.confirm("是否退出登录？", "提示", {
+    confirmButtonText: "退出登录",
+    cancelButtonText: "取消",
+    type: "info",
+  })
+    .then(() => {
+      TokenApi.signOut();
+      Token.removeToken();
+    })
+    .catch(() => {});
+};
 
-      dialogLoading.value = true;
-      UserApi.updatePassword(form.value.password, form.value.newPassword)
-        .then((res) => {
-          ElMessage.success("修改成功");
-          dialogLoading.value = false;
-          dialogClose();
-        })
-        .catch(() => {
-          dialogLoading.value = false;
-        });
-    };
+/**
+ * 更新密码
+ */
+const updatePassword = () => {
+  if (form.value.password === "" || form.value.newPassword === "" || form.value.confirmPassword === "") {
+    ElMessage.warning("请填写密码");
+    return;
+  }
+  if (form.value.newPassword !== form.value.confirmPassword) {
+    ElMessage.warning("两次密码不一致");
+    return;
+  }
 
-    /**
-     * 弹窗关闭
-     */
-    const dialogClose = () => {
-      if (dialogLoading.value) {
-        return;
-      }
-      dialogVisible.value = false;
-      form.value.password = "";
-      form.value.newPassword = "";
-      form.value.confirmPassword = "";
-    };
+  dialogLoading.value = true;
+  UserApi.updatePassword(form.value.password, form.value.newPassword)
+    .then((res) => {
+      ElMessage.success("修改成功");
+      dialogLoading.value = false;
+      dialogClose();
+    })
+    .catch(() => {
+      dialogLoading.value = false;
+    });
+};
 
-    return { name, dialogVisible, dialogLoading, form, updatePassword, logout, dialogClose };
-  },
-});
+/**
+ * 弹窗关闭
+ */
+const dialogClose = () => {
+  if (dialogLoading.value) {
+    return;
+  }
+  dialogVisible.value = false;
+  form.value.password = "";
+  form.value.newPassword = "";
+  form.value.confirmPassword = "";
+};
 </script>
 
 <style lang="scss" scoped>

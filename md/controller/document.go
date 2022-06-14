@@ -18,12 +18,21 @@ func DocumentAdd(ctx iris.Context) {
 	ctx.JSON(common.NewSuccess("添加成功"))
 }
 
-// 修改文档
+// 修改文档基础信息
 func DocumentUpdate(ctx iris.Context) {
 	document := entity.Document{}
 	resolveParam(ctx, &document)
 	document.UserId = middleware.CurrentUserId(ctx)
 	service.DocumentUpdate(document)
+	ctx.JSON(common.NewSuccess("更新成功"))
+}
+
+// 修改文档内容
+func DocumentUpdateContent(ctx iris.Context) {
+	document := entity.Document{}
+	resolveParam(ctx, &document)
+	document.UserId = middleware.CurrentUserId(ctx)
+	service.DocumentUpdateContent(document)
 	ctx.JSON(common.NewSuccess("更新成功"))
 }
 

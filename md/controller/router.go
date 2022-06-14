@@ -38,6 +38,7 @@ func InitRouter(app *iris.Application) {
 			data.PartyFunc("/doc", func(doc iris.Party) {
 				doc.Post("/add", DocumentAdd)
 				doc.Post("/update", DocumentUpdate)
+				doc.Post("/update-content", DocumentUpdateContent)
 				doc.Post("/delete", DocumentDelete)
 				doc.Post("/list", DocumentList)
 				doc.Post("/get", DocumentGet)

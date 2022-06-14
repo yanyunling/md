@@ -87,7 +87,14 @@ func BookDelete(id, userId string) {
 	tx := middleware.Db.MustBegin()
 	defer tx.Rollback()
 
+	// 删除
 	err := dao.BookDeleteById(tx, id, userId)
+	if err != nil {
+		panic(common.NewErr("删除失败", err))
+	}
+
+	// 清空文档的bookId
+	err = dao.DocumentClearBookId(tx, id)
 	if err != nil {
 		panic(common.NewErr("删除失败", err))
 	}

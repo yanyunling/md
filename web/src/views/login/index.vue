@@ -30,87 +30,82 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+<script lang="ts" setup>
+import { ref, onMounted } from "vue";
 import Token from "@/store/token";
 import TokenApi from "@/api/token";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
-export default defineComponent({
-  setup() {
-    const router = useRouter();
-    const loading = ref(false);
-    // 登录/注册
-    const isLogin = ref(true);
-    // 输入框数据
-    const inputData = ref({
-      name: "",
-      password: "",
-      confirmPassword: "",
-    });
 
-    /**
-     * 点击注册切换按钮
-     */
-    const registerClick = () => {
-      inputData.value.name = "";
-      inputData.value.password = "";
-      inputData.value.confirmPassword = "";
-      isLogin.value = !isLogin.value;
-    };
+const router = useRouter();
+const loading = ref(false);
+// 登录/注册
+const isLogin = ref(true);
+// 输入框数据
+const inputData = ref({
+  name: "",
+  password: "",
+  confirmPassword: "",
+});
 
-    /**
-     * 点击登录按钮
-     */
-    const loginClick = () => {
-      if (!inputData.value.name) {
-        ElMessage.warning("请输入用户名");
-        return;
-      }
-      if (!inputData.value.password) {
-        ElMessage.warning("请输入密码");
-        return;
-      }
-      if (isLogin.value) {
-        // 登录
-        loading.value = true;
-        TokenApi.signIn(inputData.value.name, inputData.value.password)
-          .then((res) => {
-            Token.setToken(res.data);
-            router.push({ name: "layout" });
-          })
-          .finally(() => {
-            loading.value = false;
-          });
-      } else {
-        // 注册
-        if (inputData.value.password !== inputData.value.confirmPassword) {
-          ElMessage.warning("两次密码不一致");
-          return;
-        }
-        loading.value = true;
-        TokenApi.signUp(inputData.value.name, inputData.value.password)
-          .then(() => {
-            ElMessage.success("注册成功");
-            inputData.value.password = "";
-            inputData.value.confirmPassword = "";
-            isLogin.value = true;
-          })
-          .finally(() => {
-            loading.value = false;
-          });
-      }
-    };
+/**
+ * 点击注册切换按钮
+ */
+const registerClick = () => {
+  inputData.value.name = "";
+  inputData.value.password = "";
+  inputData.value.confirmPassword = "";
+  isLogin.value = !isLogin.value;
+};
 
-    onMounted(() => {
-      let nameCache = Token.getName();
-      if (nameCache) {
-        inputData.value.name = nameCache;
-      }
-    });
+/**
+ * 点击登录按钮
+ */
+const loginClick = () => {
+  if (!inputData.value.name) {
+    ElMessage.warning("请输入用户名");
+    return;
+  }
+  if (!inputData.value.password) {
+    ElMessage.warning("请输入密码");
+    return;
+  }
+  if (isLogin.value) {
+    // 登录
+    loading.value = true;
+    TokenApi.signIn(inputData.value.name, inputData.value.password)
+      .then((res) => {
+        Token.setToken(res.data);
+        router.push({ name: "layout" });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  } else {
+    // 注册
+    if (inputData.value.password !== inputData.value.confirmPassword) {
+      ElMessage.warning("两次密码不一致");
+      return;
+    }
+    loading.value = true;
+    TokenApi.signUp(inputData.value.name, inputData.value.password)
+      .then(() => {
+        ElMessage.success("注册成功");
+        inputData.value.password = "";
+        inputData.value.confirmPassword = "";
+        isLogin.value = true;
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  }
+};
 
-    return { isLogin, loading, inputData, registerClick, loginClick };
-  },
+onMounted(() => {
+  let nameCache = Token.getName();
+  if (nameCache) {
+    inputData.value.name = nameCache;
+  }
 });
 </script>
 

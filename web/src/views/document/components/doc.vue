@@ -27,142 +27,118 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, Ref, onMounted, watch } from "vue";
+<script lang="ts" setup>
+import { defineProps, ref, Ref, onMounted, watch } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Plus, Tools, CircleCheckFilled, CircleCloseFilled } from "@element-plus/icons-vue";
+import { Plus, Tools } from "@element-plus/icons-vue";
 import TextTip from "@/components/text-tip";
 import DocumentApi from "@/api/document";
-export default defineComponent({
-  props: {
-    currentBookId: {
-      type: String,
-      default: "",
-    },
-  },
-  components: {
-    TextTip,
-    Tools,
-    CircleCheckFilled,
-    CircleCloseFilled,
-  },
-  emits: ["change"],
-  setup(props, { emit }) {
-    const docs: Ref<Doc[]> = ref([]);
-    const docLoading = ref(false);
-    const currentDocId = ref("");
-    const addDocVisible = ref(false);
-    const newDocName = ref("");
 
-    /**
-     * 查询文档列表
-     */
-    const queryDocs = (bookId: string) => {
-      addDocCancel();
-      docLoading.value = true;
-      DocumentApi.list(bookId)
-        .then((res) => {
-          docs.value = res.data;
-        })
-        .finally(() => {
-          docLoading.value = false;
-        });
-    };
+const docs: Ref<Doc[]> = ref([]);
+const docLoading = ref(false);
+const currentDocId = ref("");
+const addDocVisible = ref(false);
+const newDocName = ref("");
 
-    /**
-     * 点击文档
-     */
-    const docClick = (doc: Doc) => {
-      currentDocId.value = doc.id;
-      docLoading.value = true;
-      DocumentApi.get(currentDocId.value)
-        .then((res) => {
-          console.log(res);
-        })
-        .finally(() => {
-          docLoading.value = false;
-        });
-    };
-
-    /**
-     * 点击添加文档保存
-     */
-    const addDocSave = () => {
-      let name = String(newDocName.value).trim();
-      if (!name) {
-        ElMessage.warning("请填写文档名称");
-        return;
-      }
-      docLoading.value = true;
-      DocumentApi.add({ id: "", name: name, content: "", bookId: props.currentBookId })
-        .then(() => {
-          ElMessage.success("创建成功");
-          queryDocs(props.currentBookId);
-        })
-        .catch(() => {
-          docLoading.value = false;
-        });
-    };
-
-    /**
-     * 点击添加文档取消
-     */
-    const addDocCancel = () => {
-      addDocVisible.value = false;
-      newDocName.value = "";
-    };
-
-    /**
-     * 点击修改文档
-     */
-    const updateDocClick = (doc: Doc) => {};
-
-    /**
-     * 点击删除文档
-     */
-    const deleteDocClick = (doc: Doc) => {
-      ElMessageBox.confirm("是否删除文档：" + doc.name + "？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        DocumentApi.delete(doc.id).then(() => {
-          ElMessage.success("删除成功");
-          if (currentDocId.value === doc.id) {
-            currentDocId.value = "";
-          }
-          queryDocs(props.currentBookId);
-        });
-      });
-    };
-
-    watch(
-      () => props.currentBookId,
-      (val) => {
-        queryDocs(val);
-      }
-    );
-
-    onMounted(() => {
-      queryDocs(props.currentBookId);
-    });
-
-    return {
-      Plus,
-      docs,
-      docLoading,
-      currentDocId,
-      addDocVisible,
-      newDocName,
-      queryDocs,
-      docClick,
-      addDocSave,
-      addDocCancel,
-      updateDocClick,
-      deleteDocClick,
-    };
+const props = defineProps({
+  currentBookId: {
+    type: String,
+    default: "",
   },
 });
+
+watch(
+  () => props.currentBookId,
+  (val) => {
+    queryDocs(val);
+  }
+);
+
+onMounted(() => {
+  queryDocs(props.currentBookId);
+});
+
+/**
+ * 查询文档列表
+ */
+const queryDocs = (bookId: string) => {
+  addDocCancel();
+  docLoading.value = true;
+  DocumentApi.list(bookId)
+    .then((res) => {
+      docs.value = res.data;
+    })
+    .finally(() => {
+      docLoading.value = false;
+    });
+};
+
+/**
+ * 点击文档
+ */
+const docClick = (doc: Doc) => {
+  currentDocId.value = doc.id;
+  docLoading.value = true;
+  DocumentApi.get(currentDocId.value)
+    .then((res) => {
+      console.log(res);
+    })
+    .finally(() => {
+      docLoading.value = false;
+    });
+};
+
+/**
+ * 点击添加文档保存
+ */
+const addDocSave = () => {
+  let name = String(newDocName.value).trim();
+  if (!name) {
+    ElMessage.warning("请填写文档名称");
+    return;
+  }
+  docLoading.value = true;
+  DocumentApi.add({ id: "", name: name, content: "", bookId: props.currentBookId })
+    .then(() => {
+      ElMessage.success("创建成功");
+      queryDocs(props.currentBookId);
+    })
+    .catch(() => {
+      docLoading.value = false;
+    });
+};
+
+/**
+ * 点击添加文档取消
+ */
+const addDocCancel = () => {
+  addDocVisible.value = false;
+  newDocName.value = "";
+};
+
+/**
+ * 点击修改文档
+ */
+const updateDocClick = (doc: Doc) => {};
+
+/**
+ * 点击删除文档
+ */
+const deleteDocClick = (doc: Doc) => {
+  ElMessageBox.confirm("是否删除文档：" + doc.name + "？", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then(() => {
+    DocumentApi.delete(doc.id).then(() => {
+      ElMessage.success("删除成功");
+      if (currentDocId.value === doc.id) {
+        currentDocId.value = "";
+      }
+      queryDocs(props.currentBookId);
+    });
+  });
+};
 </script>
 
 <style lang="scss">

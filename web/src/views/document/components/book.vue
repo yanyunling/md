@@ -32,168 +32,139 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, Ref, onMounted, watch } from "vue";
+<script lang="ts" setup>
+import { defineEmits, ref, Ref, onMounted, watch } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus, Tools, CircleCheckFilled, CircleCloseFilled } from "@element-plus/icons-vue";
 import TextTip from "@/components/text-tip";
 import BookApi from "@/api/book";
-export default defineComponent({
-  components: {
-    TextTip,
-    Tools,
-    CircleCheckFilled,
-    CircleCloseFilled,
-  },
-  emits: ["change"],
-  setup(props, { emit }) {
-    const books: Ref<Book[]> = ref([]);
-    const bookLoading = ref(false);
-    const currentBookId = ref("");
-    const addBookVisible = ref(false);
-    const newBookName = ref("");
-    const updateBookId = ref("");
-    const updateBookName = ref("");
 
-    /**
-     * 查询文集列表
-     */
-    const queryBooks = () => {
-      addBookCancel();
-      updateBookCancel();
-      bookLoading.value = true;
-      BookApi.list()
-        .then((res) => {
-          books.value = res.data;
-        })
-        .finally(() => {
-          bookLoading.value = false;
-        });
-    };
+const books: Ref<Book[]> = ref([]);
+const bookLoading = ref(false);
+const currentBookId = ref("");
+const addBookVisible = ref(false);
+const newBookName = ref("");
+const updateBookId = ref("");
+const updateBookName = ref("");
 
-    /**
-     * 点击文集
-     */
-    const bookClick = (book: Book) => {
-      if (updateBookId.value) {
-        return;
-      }
-      currentBookId.value = book.id;
-    };
+const emit = defineEmits(["change"]);
 
-    /**
-     * 点击添加文集保存
-     */
-    const addBookSave = () => {
-      let name = String(newBookName.value).trim();
-      if (!name) {
-        ElMessage.warning("请填写文集名称");
-        return;
-      }
-      bookLoading.value = true;
-      BookApi.add({ id: "", name: name })
-        .then(() => {
-          ElMessage.success("创建成功");
-          queryBooks();
-        })
-        .catch(() => {
-          bookLoading.value = false;
-        });
-    };
+watch(currentBookId, (val) => {
+  emit("change", val);
+});
 
-    /**
-     * 点击添加文集取消
-     */
-    const addBookCancel = () => {
-      addBookVisible.value = false;
-      newBookName.value = "";
-    };
+onMounted(() => {
+  queryBooks();
+});
 
-    /**
-     * 点击修改文集
-     */
-    const updateBookClick = (book: Book) => {
-      updateBookId.value = book.id;
-      updateBookName.value = book.name;
-    };
-
-    /**
-     * 点击修改文集保存
-     */
-    const updateBookSave = () => {
-      let name = String(updateBookName.value).trim();
-      if (!name) {
-        ElMessage.warning("请填写文集名称");
-        return false;
-      }
-      bookLoading.value = true;
-      BookApi.update({ id: updateBookId.value, name: name })
-        .then(() => {
-          ElMessage.success("修改成功");
-          queryBooks();
-        })
-        .catch(() => {
-          bookLoading.value = false;
-        });
-    };
-
-    /**
-     * 点击修改文集取消
-     */
-    const updateBookCancel = () => {
-      updateBookId.value = "";
-      updateBookName.value = "";
-    };
-
-    /**
-     * 点击删除文集
-     */
-    const deleteBookClick = (book: Book) => {
-      ElMessageBox.confirm("是否删除文集：" + book.name + "？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        BookApi.delete(book.id).then(() => {
-          ElMessage.success("删除成功");
-          if (currentBookId.value === book.id) {
-            currentBookId.value = "";
-          }
-          queryBooks();
-        });
-      });
-    };
-
-    watch(currentBookId, (val) => {
-      emit("change", val);
+/**
+ * 查询文集列表
+ */
+const queryBooks = () => {
+  addBookCancel();
+  updateBookCancel();
+  bookLoading.value = true;
+  BookApi.list()
+    .then((res) => {
+      books.value = res.data;
+    })
+    .finally(() => {
+      bookLoading.value = false;
     });
+};
 
-    onMounted(() => {
+/**
+ * 点击文集
+ */
+const bookClick = (book: Book) => {
+  if (updateBookId.value) {
+    return;
+  }
+  currentBookId.value = book.id;
+};
+
+/**
+ * 点击添加文集保存
+ */
+const addBookSave = () => {
+  let name = String(newBookName.value).trim();
+  if (!name) {
+    ElMessage.warning("请填写文集名称");
+    return;
+  }
+  bookLoading.value = true;
+  BookApi.add({ id: "", name: name })
+    .then(() => {
+      ElMessage.success("创建成功");
+      queryBooks();
+    })
+    .catch(() => {
+      bookLoading.value = false;
+    });
+};
+
+/**
+ * 点击添加文集取消
+ */
+const addBookCancel = () => {
+  addBookVisible.value = false;
+  newBookName.value = "";
+};
+
+/**
+ * 点击修改文集
+ */
+const updateBookClick = (book: Book) => {
+  updateBookId.value = book.id;
+  updateBookName.value = book.name;
+};
+
+/**
+ * 点击修改文集保存
+ */
+const updateBookSave = () => {
+  let name = String(updateBookName.value).trim();
+  if (!name) {
+    ElMessage.warning("请填写文集名称");
+    return false;
+  }
+  bookLoading.value = true;
+  BookApi.update({ id: updateBookId.value, name: name })
+    .then(() => {
+      ElMessage.success("修改成功");
+      queryBooks();
+    })
+    .catch(() => {
+      bookLoading.value = false;
+    });
+};
+
+/**
+ * 点击修改文集取消
+ */
+const updateBookCancel = () => {
+  updateBookId.value = "";
+  updateBookName.value = "";
+};
+
+/**
+ * 点击删除文集
+ */
+const deleteBookClick = (book: Book) => {
+  ElMessageBox.confirm("是否删除文集：" + book.name + "？", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then(() => {
+    BookApi.delete(book.id).then(() => {
+      ElMessage.success("删除成功");
+      if (currentBookId.value === book.id) {
+        currentBookId.value = "";
+      }
       queryBooks();
     });
-
-    return {
-      Plus,
-      CircleCheckFilled,
-      CircleCloseFilled,
-      books,
-      bookLoading,
-      currentBookId,
-      addBookVisible,
-      newBookName,
-      updateBookId,
-      updateBookName,
-      queryBooks,
-      bookClick,
-      addBookSave,
-      addBookCancel,
-      updateBookClick,
-      updateBookSave,
-      updateBookCancel,
-      deleteBookClick,
-    };
-  },
-});
+  });
+};
 </script>
 
 <style lang="scss">

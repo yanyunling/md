@@ -33,7 +33,7 @@ func DocumentAdd(document entity.Document) {
 	}
 }
 
-// 修改文档
+// 修改文档基础信息
 func DocumentUpdate(document entity.Document) {
 	tx := middleware.Db.MustBegin()
 	defer tx.Rollback()
@@ -44,6 +44,23 @@ func DocumentUpdate(document entity.Document) {
 	}
 	document.UpdateTime = time.Now().UnixMilli()
 	err := dao.DocumentUpdate(tx, document)
+	if err != nil {
+		panic(common.NewErr("更新失败", err))
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		panic(common.NewErr("更新失败", err))
+	}
+}
+
+// 修改文档内容
+func DocumentUpdateContent(document entity.Document) {
+	tx := middleware.Db.MustBegin()
+	defer tx.Rollback()
+
+	document.UpdateTime = time.Now().UnixMilli()
+	err := dao.DocumentUpdateContent(tx, document)
 	if err != nil {
 		panic(common.NewErr("更新失败", err))
 	}

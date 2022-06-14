@@ -46,106 +46,89 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, Ref, onMounted } from "vue";
+<script lang="ts" setup>
+import { ref, Ref, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import PictureApi from "@/api/picture";
 import { uploadPicture } from "./util";
 import { formatTime, formatFileSize } from "@/utils";
 import { openFiles } from "@/utils";
-export default defineComponent({
-  setup() {
-    const hostUrl = ref(location.origin);
-    const tableData: Ref<PicturePageResult[]> = ref([]);
-    const tableTotal = ref(0);
-    const tableLoading = ref(false);
-    const tableCondition: Ref<PageCondition<null>> = ref({
-      page: {
-        current: 1,
-        size: 20,
-      },
-      condition: null,
-    });
 
-    /**
-     * 查询表格数据
-     */
-    const queryTableData = () => {
-      tableLoading.value = true;
-      PictureApi.page(tableCondition.value)
-        .then((res) => {
-          tableData.value = res.data.records;
-          tableTotal.value = res.data.total;
-        })
-        .finally(() => {
-          tableLoading.value = false;
-        });
-    };
-
-    /**
-     * 删除记录
-     */
-    const deleteClick = (row: PicturePageResult) => {
-      ElMessageBox.confirm("是否删除图片：" + row.name + "？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        PictureApi.delete(row.id).then(() => {
-          ElMessage.success("删除成功");
-          tablePageCurrentChange(1);
-        });
-      });
-    };
-
-    /**
-     * 上传图片
-     */
-    const uploadClick = () => {
-      openFiles(false, ".jpg,.jpeg,.png,.gif").then((fileList) => {
-        uploadPicture(fileList[0]).then(() => {
-          tablePageCurrentChange(1);
-        });
-      });
-    };
-
-    /**
-     * 每页显示条数变化
-     * @param size
-     */
-    const tablePageSizeChange = (size: number) => {
-      tableCondition.value.page.current = 1;
-      tableCondition.value.page.size = size;
-      queryTableData();
-    };
-
-    /**
-     * 当前页码变化
-     * @param current
-     */
-    const tablePageCurrentChange = (current: number) => {
-      tableCondition.value.page.current = current;
-      queryTableData();
-    };
-
-    onMounted(() => {
-      queryTableData();
-    });
-
-    return {
-      hostUrl,
-      tableData,
-      tableTotal,
-      tableLoading,
-      tableCondition,
-      deleteClick,
-      uploadClick,
-      tablePageSizeChange,
-      tablePageCurrentChange,
-      formatFileSize,
-      formatTime,
-    };
+const hostUrl = ref(location.origin);
+const tableData: Ref<PicturePageResult[]> = ref([]);
+const tableTotal = ref(0);
+const tableLoading = ref(false);
+const tableCondition: Ref<PageCondition<null>> = ref({
+  page: {
+    current: 1,
+    size: 20,
   },
+  condition: null,
+});
+
+/**
+ * 查询表格数据
+ */
+const queryTableData = () => {
+  tableLoading.value = true;
+  PictureApi.page(tableCondition.value)
+    .then((res) => {
+      tableData.value = res.data.records;
+      tableTotal.value = res.data.total;
+    })
+    .finally(() => {
+      tableLoading.value = false;
+    });
+};
+
+/**
+ * 删除记录
+ */
+const deleteClick = (row: PicturePageResult) => {
+  ElMessageBox.confirm("是否删除图片：" + row.name + "？", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then(() => {
+    PictureApi.delete(row.id).then(() => {
+      ElMessage.success("删除成功");
+      tablePageCurrentChange(1);
+    });
+  });
+};
+
+/**
+ * 上传图片
+ */
+const uploadClick = () => {
+  openFiles(false, ".jpg,.jpeg,.png,.gif").then((fileList) => {
+    uploadPicture(fileList[0]).then(() => {
+      tablePageCurrentChange(1);
+    });
+  });
+};
+
+/**
+ * 每页显示条数变化
+ * @param size
+ */
+const tablePageSizeChange = (size: number) => {
+  tableCondition.value.page.current = 1;
+  tableCondition.value.page.size = size;
+  queryTableData();
+};
+
+/**
+ * 当前页码变化
+ * @param current
+ */
+const tablePageCurrentChange = (current: number) => {
+  tableCondition.value.page.current = current;
+  queryTableData();
+};
+
+onMounted(() => {
+  queryTableData();
 });
 </script>
 

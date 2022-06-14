@@ -41,7 +41,7 @@ class DocumentApi {
   }
 
   /**
-   * 修改文档
+   * 修改文档基础信息
    * @param doc
    * @returns
    */
@@ -49,6 +49,19 @@ class DocumentApi {
     return request({
       method: "post",
       url: "/doc/update",
+      data: doc,
+    });
+  }
+
+  /**
+   * 修改文档内容
+   * @param doc
+   * @returns
+   */
+  updateContent(doc: Doc) {
+    return request({
+      method: "post",
+      url: "/doc/update-content",
       data: doc,
     });
   }

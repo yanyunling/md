@@ -6,65 +6,57 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, Ref, watch, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
+<script lang="ts" setup>
+import { ref, Ref, watch, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import MdEditor from "@/components/md-editor";
 import { uploadPicture } from "../picture/util";
 import Book from "./components/book.vue";
 import Doc from "./components/doc.vue";
 import DocumentApi from "@/api/document";
-export default defineComponent({
-  components: {
-    MdEditor,
-    Book,
-    Doc,
-  },
-  setup() {
-    const doc = ref<InstanceType<typeof Doc>>();
-    const hostUrl = ref(location.origin);
-    const content = ref("");
-    const currentBookId = ref("");
 
-    /**
-     * 文集选择变化
-     */
-    const bookChange = (bookId: string) => {
-      currentBookId.value = bookId;
-    };
+const doc = ref<InstanceType<typeof Doc>>();
+const hostUrl = ref(location.origin);
+const content = ref("");
+const originContent = ref("");
+const currentBookId = ref("");
+const currentDocId = ref("");
 
-    /**
-     * 上传图片
-     * @param files
-     * @param callback
-     */
-    const uploadImage = async (files: File[], callback: (urls: string[]) => void) => {
-      const pathList: string[] = [];
-      for (let file of files) {
-        try {
-          pathList.push(hostUrl.value + (await uploadPicture(file)));
-        } catch (e) {}
-      }
-      callback(pathList);
-    };
+/**
+ * 文集选择变化
+ */
+const bookChange = (bookId: string) => {
+  currentBookId.value = bookId;
+};
 
-    /**
-     * 保存文档
-     */
-    const saveDoc = (text: string) => {
-      console.log(text, content);
-    };
+/**
+ * 文档选择变化
+ */
+const docChange = (docId: string) => {
+  currentDocId.value = docId;
+};
 
-    return {
-      doc,
-      content,
-      currentBookId,
-      bookChange,
-      uploadImage,
-      saveDoc,
-    };
-  },
-});
+/**
+ * 上传图片
+ * @param files
+ * @param callback
+ */
+const uploadImage = async (files: File[], callback: (urls: string[]) => void) => {
+  const pathList: string[] = [];
+  for (let file of files) {
+    try {
+      pathList.push(hostUrl.value + (await uploadPicture(file)));
+    } catch (e) {}
+  }
+  callback(pathList);
+};
+
+/**
+ * 保存文档
+ */
+const saveDoc = (text: string) => {
+  console.log(text, content);
+};
 </script>
 
 <style lang="scss">
