@@ -16,7 +16,7 @@ func DocumentAdd(tx *sqlx.Tx, document entity.Document) error {
 
 // 修改文档基础信息
 func DocumentUpdate(tx *sqlx.Tx, document entity.Document) error {
-	sql := `update t_document set name=:name,update_time=:update_time,book_id=:book_id where id=:id and user_id=:user_id`
+	sql := `update t_document set name=:name,book_id=:book_id where id=:id and user_id=:user_id`
 	_, err := tx.NamedExec(sql, document)
 	return err
 }

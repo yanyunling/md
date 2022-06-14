@@ -7,8 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, Ref, watch, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ref, Ref, onMounted, onBeforeUnmount } from "vue";
 import MdEditor from "@/components/md-editor";
 import { uploadPicture } from "../picture/util";
 import Book from "./components/book.vue";
@@ -78,8 +77,8 @@ const uploadImage = async (files: File[], callback: (urls: string[]) => void) =>
 /**
  * 保存文档
  */
-const saveDoc = (text: string) => {
-  console.log(text, currentDoc.value);
+const saveDoc = (content: string) => {
+  docRef.value?.saveDoc(content);
 };
 </script>
 

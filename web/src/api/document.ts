@@ -59,7 +59,7 @@ class DocumentApi {
    * @returns
    */
   updateContent(doc: Doc) {
-    return request({
+    return request<Doc>({
       method: "post",
       url: "/doc/update-content",
       data: doc,

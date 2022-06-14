@@ -14,8 +14,8 @@ func DocumentAdd(ctx iris.Context) {
 	document := entity.Document{}
 	resolveParam(ctx, &document)
 	document.UserId = middleware.CurrentUserId(ctx)
-	service.DocumentAdd(document)
-	ctx.JSON(common.NewSuccess("添加成功"))
+
+	ctx.JSON(common.NewSuccessData("添加成功", service.DocumentAdd(document)))
 }
 
 // 修改文档基础信息
@@ -32,8 +32,7 @@ func DocumentUpdateContent(ctx iris.Context) {
 	document := entity.Document{}
 	resolveParam(ctx, &document)
 	document.UserId = middleware.CurrentUserId(ctx)
-	service.DocumentUpdateContent(document)
-	ctx.JSON(common.NewSuccess("更新成功"))
+	ctx.JSON(common.NewSuccessData("更新成功", service.DocumentUpdateContent(document)))
 }
 
 // 删除文档

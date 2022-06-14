@@ -245,6 +245,18 @@ const dialogClose = () => {
 const dialogSave = () => {
   if (dialog.value.isAdd) {
     // 新增文档
+    docLoading.value = true;
+    DocumentApi.add(dialog.value.condition)
+      .then((res) => {
+        ElMessage.success("创建成功");
+        emitDoc(res.data.id, res.data.content, String(res.data.updateTime));
+        docLoading.value = false;
+        dialogClose();
+        queryDocs(props.currentBookId);
+      })
+      .catch(() => {
+        docLoading.value = false;
+      });
   } else {
     // 更新基本信息
     let name = String(dialog.value.condition.name).trim();
@@ -266,6 +278,35 @@ const dialogSave = () => {
       });
   }
 };
+
+/**
+ * 保存文档
+ */
+const saveDoc = (content: string) => {
+  if (props.currentDoc.id !== "") {
+    // 更新文档内容
+    docLoading.value = true;
+    DocumentApi.updateContent({ id: props.currentDoc.id, name: "", content: content, bookId: "" })
+      .then((res) => {
+        ElMessage.success("保存成功");
+        emitDoc(res.data.id, res.data.content, String(res.data.updateTime));
+        queryDocs(props.currentBookId);
+      })
+      .catch(() => {
+        docLoading.value = false;
+      });
+  } else {
+    // 新增
+    dialog.value.condition.id = "";
+    dialog.value.condition.name = "";
+    dialog.value.condition.content = content;
+    dialog.value.condition.bookId = "";
+    dialog.value.isAdd = true;
+    dialog.value.visible = true;
+  }
+};
+
+defineExpose({ saveDoc });
 </script>
 
 <style lang="scss">

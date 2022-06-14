@@ -11,7 +11,7 @@ import (
 )
 
 // 添加文档
-func DocumentAdd(document entity.Document) {
+func DocumentAdd(document entity.Document) entity.Document {
 	tx := middleware.Db.MustBegin()
 	defer tx.Rollback()
 
@@ -31,6 +31,8 @@ func DocumentAdd(document entity.Document) {
 	if err != nil {
 		panic(common.NewErr("添加失败", err))
 	}
+
+	return document
 }
 
 // 修改文档基础信息
@@ -42,7 +44,6 @@ func DocumentUpdate(document entity.Document) {
 	if document.Name == "" {
 		panic(common.NewError("文集名称不可为空"))
 	}
-	document.UpdateTime = time.Now().UnixMilli()
 	err := dao.DocumentUpdate(tx, document)
 	if err != nil {
 		panic(common.NewErr("更新失败", err))
@@ -55,7 +56,7 @@ func DocumentUpdate(document entity.Document) {
 }
 
 // 修改文档内容
-func DocumentUpdateContent(document entity.Document) {
+func DocumentUpdateContent(document entity.Document) entity.Document {
 	tx := middleware.Db.MustBegin()
 	defer tx.Rollback()
 
@@ -69,6 +70,8 @@ func DocumentUpdateContent(document entity.Document) {
 	if err != nil {
 		panic(common.NewErr("更新失败", err))
 	}
+
+	return document
 }
 
 // 删除文档
