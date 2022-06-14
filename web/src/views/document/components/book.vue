@@ -7,7 +7,7 @@
         <el-button @click="addBookSave" type="primary" size="small">确定</el-button>
       </div>
       <template #reference>
-        <el-button type="warning" size="large" link :icon="Plus" @click="addBookVisible = true">创建文集</el-button>
+        <el-button class="create-button" type="warning" size="large" link :icon="Plus" @click="addBookVisible = true">创建文集</el-button>
       </template>
     </el-popover>
     <el-scrollbar class="scroll-view">
@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineEmits, ref, Ref, onMounted, watch } from "vue";
+import { ref, Ref, onMounted, watch } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus, Tools, CircleCheckFilled, CircleCloseFilled } from "@element-plus/icons-vue";
 import TextTip from "@/components/text-tip";
@@ -47,7 +47,7 @@ const newBookName = ref("");
 const updateBookId = ref("");
 const updateBookName = ref("");
 
-const emit = defineEmits(["change"]);
+const emit = defineEmits(["change", "books"]);
 
 watch(currentBookId, (val) => {
   emit("change", val);
@@ -67,6 +67,7 @@ const queryBooks = () => {
   BookApi.list()
     .then((res) => {
       books.value = res.data;
+      emit("books", res.data);
     })
     .finally(() => {
       bookLoading.value = false;
@@ -175,6 +176,10 @@ const deleteBookClick = (book: Book) => {
   background: #404040;
   display: flex;
   flex-direction: column;
+  .create-button {
+    height: 60px;
+    border-bottom: 1px solid #555 !important;
+  }
   .el-button--large [class*="el-icon"] + span {
     margin-left: 3px;
   }
@@ -185,10 +190,11 @@ const deleteBookClick = (book: Book) => {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px;
+      padding: 15px;
       cursor: pointer;
       border-left: 3px #404040 solid;
       transition: 0.1s;
+      border-bottom: 1px solid #555;
       .update-view {
         display: flex;
         align-items: center;
@@ -196,11 +202,11 @@ const deleteBookClick = (book: Book) => {
     }
     .item-view:hover {
       background: #666;
-      border-color: #666;
+      border-left-color: #666;
     }
     .item-view.selected {
       background: #666;
-      border-color: #e6a23c;
+      border-left-color: #e6a23c;
     }
     .setting-button {
       margin-left: 10px;

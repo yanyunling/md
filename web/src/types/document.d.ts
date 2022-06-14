@@ -6,3 +6,10 @@ interface Doc {
   createTime?: number;
   updateTime?: number;
 }
+
+interface CurrentDoc {
+  id: string;
+  content: string;
+  originContent: string;
+  updateTime: string;
+}

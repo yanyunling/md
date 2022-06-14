@@ -7,11 +7,11 @@
         <el-button @click="addDocSave" type="primary" size="small">确定</el-button>
       </div>
       <template #reference>
-        <el-button type="primary" size="large" link :icon="Plus" @click="addDocVisible = true">创建文档</el-button>
+        <el-button class="create-button" type="primary" size="large" link :icon="Plus" @click="addDocVisible = true">创建文档</el-button>
       </template>
     </el-popover>
     <el-scrollbar class="scroll-view">
-      <div class="item-view" :class="currentDocId === item.id ? 'selected' : ''" v-for="item in docs" :key="item.id" @click="docClick(item)">
+      <div class="item-view" :class="currentDoc.id === item.id ? 'selected' : ''" v-for="item in docs" :key="item.id" @click="docClick(item)">
         <text-tip :content="item.name"></text-tip>
         <el-dropdown trigger="click" v-if="item.id">
           <el-icon class="setting-button" @click.stop="() => {}"><Tools /></el-icon>
@@ -24,11 +24,29 @@
         </el-dropdown>
       </div>
     </el-scrollbar>
+    <el-dialog
+      v-model="dialog.visible"
+      :title="dialog.isAdd ? '创建文档' : '更新文档信息'"
+      width="400px"
+      :show-close="false"
+      :before-close="dialogClose"
+    >
+      <el-input v-model="dialog.condition.name" size="large" placeholder="请输入文档名称" style="width: 100%"></el-input>
+      <el-select v-model="dialog.condition.bookId" size="large" style="width: 100%; margin-top: 10px">
+        <el-option v-for="item in books" :key="item.id" :label="item.name" :value="item.id"></el-option>
+      </el-select>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button :loading="dialog.loading" @click="dialogClose">取消</el-button>
+          <el-button type="primary" :loading="dialog.loading" @click="dialogSave">保存</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { defineProps, ref, Ref, onMounted, watch } from "vue";
+import { ref, Ref, onMounted, watch, PropType } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus, Tools } from "@element-plus/icons-vue";
 import TextTip from "@/components/text-tip";
@@ -36,14 +54,39 @@ import DocumentApi from "@/api/document";
 
 const docs: Ref<Doc[]> = ref([]);
 const docLoading = ref(false);
-const currentDocId = ref("");
 const addDocVisible = ref(false);
 const newDocName = ref("");
+const dialog = ref({
+  isAdd: true,
+  loading: false,
+  visible: false,
+  condition: {
+    id: "",
+    name: "",
+    content: "",
+    bookId: "",
+  },
+});
+
+const emit = defineEmits(["change"]);
 
 const props = defineProps({
   currentBookId: {
     type: String,
     default: "",
+  },
+  currentDoc: {
+    type: Object as PropType<CurrentDoc>,
+    default: {
+      id: "",
+      content: "",
+      originContent: "",
+      updateTime: "",
+    },
+  },
+  books: {
+    type: Array as PropType<Book[]>,
+    default: [],
   },
 });
 
@@ -74,18 +117,49 @@ const queryDocs = (bookId: string) => {
 };
 
 /**
+ * 校验文档变化
+ */
+const checkDocChange = () => {
+  return new Promise((resolve, reject) => {
+    if (props.currentDoc.content !== props.currentDoc.originContent) {
+      ElMessageBox.confirm("文档未保存，是否继续？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          resolve(null);
+        })
+        .catch(() => {
+          reject();
+        });
+    } else {
+      resolve(null);
+    }
+  });
+};
+
+/**
+ * 回调文档信息
+ */
+const emitDoc = (id: string, content: string, updateTime: string) => {
+  emit("change", id, content, updateTime);
+};
+
+/**
  * 点击文档
  */
 const docClick = (doc: Doc) => {
-  currentDocId.value = doc.id;
-  docLoading.value = true;
-  DocumentApi.get(currentDocId.value)
-    .then((res) => {
-      console.log(res);
-    })
-    .finally(() => {
-      docLoading.value = false;
-    });
+  checkDocChange().then(() => {
+    docLoading.value = true;
+    DocumentApi.get(doc.id)
+      .then((res) => {
+        emitDoc(res.data.id, res.data.content, String(res.data.updateTime));
+      })
+      .finally(() => {
+        docLoading.value = false;
+      });
+  });
 };
 
 /**
@@ -97,15 +171,18 @@ const addDocSave = () => {
     ElMessage.warning("请填写文档名称");
     return;
   }
-  docLoading.value = true;
-  DocumentApi.add({ id: "", name: name, content: "", bookId: props.currentBookId })
-    .then(() => {
-      ElMessage.success("创建成功");
-      queryDocs(props.currentBookId);
-    })
-    .catch(() => {
-      docLoading.value = false;
-    });
+  checkDocChange().then(() => {
+    docLoading.value = true;
+    DocumentApi.add({ id: "", name: name, content: "", bookId: props.currentBookId })
+      .then((res) => {
+        ElMessage.success("创建成功");
+        emitDoc(res.data.id, res.data.content, String(res.data.updateTime));
+        queryDocs(props.currentBookId);
+      })
+      .catch(() => {
+        docLoading.value = false;
+      });
+  });
 };
 
 /**
@@ -119,7 +196,14 @@ const addDocCancel = () => {
 /**
  * 点击修改文档
  */
-const updateDocClick = (doc: Doc) => {};
+const updateDocClick = (doc: Doc) => {
+  dialog.value.condition.id = doc.id;
+  dialog.value.condition.name = doc.name;
+  dialog.value.condition.content = "";
+  dialog.value.condition.bookId = doc.bookId;
+  dialog.value.isAdd = false;
+  dialog.value.visible = true;
+};
 
 /**
  * 点击删除文档
@@ -132,12 +216,55 @@ const deleteDocClick = (doc: Doc) => {
   }).then(() => {
     DocumentApi.delete(doc.id).then(() => {
       ElMessage.success("删除成功");
-      if (currentDocId.value === doc.id) {
-        currentDocId.value = "";
+      if (props.currentDoc.id === doc.id) {
+        emitDoc("", "", "");
       }
       queryDocs(props.currentBookId);
     });
   });
+};
+
+/**
+ * 弹窗关闭
+ */
+const dialogClose = () => {
+  if (dialog.value.loading) {
+    return;
+  }
+  dialog.value.condition.id = "";
+  dialog.value.condition.name = "";
+  dialog.value.condition.content = "";
+  dialog.value.condition.bookId = "";
+  dialog.value.isAdd = true;
+  dialog.value.visible = false;
+};
+
+/**
+ * 弹窗保存
+ */
+const dialogSave = () => {
+  if (dialog.value.isAdd) {
+    // 新增文档
+  } else {
+    // 更新基本信息
+    let name = String(dialog.value.condition.name).trim();
+    if (!name) {
+      ElMessage.warning("请填写文档名称");
+      return;
+    }
+    dialog.value.condition.name = name;
+    dialog.value.loading = true;
+    DocumentApi.update(dialog.value.condition)
+      .then(() => {
+        ElMessage.success("更新成功");
+        dialog.value.loading = false;
+        dialogClose();
+        queryDocs(props.currentBookId);
+      })
+      .catch(() => {
+        dialog.value.loading = false;
+      });
+  }
 };
 </script>
 
@@ -149,6 +276,10 @@ const deleteDocClick = (doc: Doc) => {
   background: #fafafa;
   display: flex;
   flex-direction: column;
+  .create-button {
+    height: 60px;
+    border-bottom: 1px solid #e6e6e6 !important;
+  }
   .el-button--large [class*="el-icon"] + span {
     margin-left: 3px;
   }
@@ -159,10 +290,11 @@ const deleteDocClick = (doc: Doc) => {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px;
+      padding: 15px;
       cursor: pointer;
       border-left: 3px #fafafa solid;
       transition: 0.1s;
+      border-bottom: 1px solid #eaeaea;
       .update-view {
         display: flex;
         align-items: center;
@@ -170,11 +302,11 @@ const deleteDocClick = (doc: Doc) => {
     }
     .item-view:hover {
       background: #e6e6e6;
-      border-color: #e6e6e6;
+      border-left-color: #e6e6e6;
     }
     .item-view.selected {
       background: #e6e6e6;
-      border-color: #0094c1;
+      border-left-color: #0094c1;
     }
     .setting-button {
       margin-left: 10px;

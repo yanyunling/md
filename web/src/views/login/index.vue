@@ -48,6 +48,13 @@ const inputData = ref({
   confirmPassword: "",
 });
 
+onMounted(() => {
+  let nameCache = Token.getName();
+  if (nameCache) {
+    inputData.value.name = nameCache;
+  }
+});
+
 /**
  * 点击注册切换按钮
  */
@@ -100,13 +107,6 @@ const loginClick = () => {
       });
   }
 };
-
-onMounted(() => {
-  let nameCache = Token.getName();
-  if (nameCache) {
-    inputData.value.name = nameCache;
-  }
-});
 </script>
 
 <style lang="scss" scoped>

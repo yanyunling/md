@@ -1,8 +1,6 @@
 import { defineComponent } from "vue";
 import MdEditorV3 from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
-// 编辑器暂时不能读取standaloneJs内链，故在此主动引入
-import "@/assets/standalone.js";
 
 // 编辑器配置
 MdEditorV3.config({

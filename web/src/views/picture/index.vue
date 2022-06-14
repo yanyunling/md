@@ -66,6 +66,10 @@ const tableCondition: Ref<PageCondition<null>> = ref({
   condition: null,
 });
 
+onMounted(() => {
+  queryTableData();
+});
+
 /**
  * 查询表格数据
  */
@@ -126,10 +130,6 @@ const tablePageCurrentChange = (current: number) => {
   tableCondition.value.page.current = current;
   queryTableData();
 };
-
-onMounted(() => {
-  queryTableData();
-});
 </script>
 
 <style lang="scss">

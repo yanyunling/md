@@ -10,8 +10,8 @@
     "compressorjs": "^1.1.1",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.10.7",
-    "element-plus": "^2.2.4",
-    "md-editor-v3": "^2.1.1",
+    "element-plus": "^2.2.5",
+    "md-editor-v3": "^2.1.2",
     "vue": "^3.2.31",
     "vue-router": "^4.0.14",
     "xlsx": "^0.18.5"

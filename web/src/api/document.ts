@@ -20,7 +20,7 @@ class DocumentApi {
    * @returns
    */
   get(id: string) {
-    return request<Doc[]>({
+    return request<Doc>({
       method: "post",
       url: "/doc/get",
       data: { id: id },
@@ -33,7 +33,7 @@ class DocumentApi {
    * @returns
    */
   add(doc: Doc) {
-    return request({
+    return request<Doc>({
       method: "post",
       url: "/doc/add",
       data: doc,
