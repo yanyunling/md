@@ -3,6 +3,7 @@ package dao
 import (
 	"md/model/entity"
 	"md/util"
+	"sort"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -43,9 +44,13 @@ func DocumentList(db *sqlx.DB, bookId, userId string) ([]entity.Document, error)
 	if bookId != "" {
 		sqlCompletion.Eq("book_id", bookId, true)
 	}
-	sqlCompletion.Order("create_time", false)
+	sqlCompletion.Order("create_time", true)
 	result := []entity.Document{}
 	err := db.Select(&result, sqlCompletion.GetSql(), sqlCompletion.GetParams()...)
+	// 按名称升序
+	sort.Slice(result, func(i, j int) bool {
+		return util.StringSort(result[i].Name, result[j].Name)
+	})
 	return result, err
 }
 

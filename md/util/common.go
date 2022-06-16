@@ -2,11 +2,16 @@
 package util
 
 import (
+	"bytes"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
 	"unicode/utf8"
+
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/transform"
 )
 
 // 去除字符串空格或制表符
@@ -55,4 +60,26 @@ func FileExt(filename string) string {
 		ext = strings.ToLower(ext)
 	}
 	return ext
+}
+
+// UTF8转GBK
+func UTF82GBK(src string) ([]byte, error) {
+	GB18030 := simplifiedchinese.All[0]
+	return ioutil.ReadAll(transform.NewReader(bytes.NewReader([]byte(src)), GB18030.NewEncoder()))
+}
+
+// 字符串排序（GBK）
+func StringSort(str1, str2 string) bool {
+	a, _ := UTF82GBK(strings.ToLower(str1))
+	b, _ := UTF82GBK(strings.ToLower(str2))
+	bLen := len(b)
+	for idx, chr := range a {
+		if idx > bLen-1 {
+			return false
+		}
+		if chr != b[idx] {
+			return chr < b[idx]
+		}
+	}
+	return true
 }

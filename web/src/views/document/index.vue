@@ -1,8 +1,8 @@
 <template>
   <div class="page-document">
     <book @change="bookChange" @books="booksFetch"></book>
-    <doc :currentBookId="currentBookId" :currentDoc="currentDoc" :books="books" @change="docChange" ref="docRef"></doc>
-    <md-editor class="editor-view" v-model="currentDoc.content" @onUploadImg="uploadImage" @onSave="saveDoc" />
+    <doc :currentBookId="currentBookId" :currentDoc="currentDoc" :books="books" @change="docChange" @loading="loadingChange" ref="docRef"></doc>
+    <md-editor v-loading="mdloading" class="editor-view" v-model="currentDoc.content" @onUploadImg="uploadImage" @onSave="saveDoc" />
   </div>
 </template>
 
@@ -24,6 +24,7 @@ const currentDoc: Ref<CurrentDoc> = ref({
   originContent: "",
   updateTime: "",
 });
+const mdloading = ref(false);
 
 onMounted(() => {
   currentDoc.value = DocCache.getDoc();
@@ -35,6 +36,13 @@ onBeforeUnmount(() => {
 
 window.onbeforeunload = () => {
   DocCache.setDoc(currentDoc.value);
+};
+
+/**
+ * 文档loading变化
+ */
+const loadingChange = (val: boolean) => {
+  mdloading.value = val;
 };
 
 /**
@@ -78,6 +86,9 @@ const uploadImage = async (files: File[], callback: (urls: string[]) => void) =>
  * 保存文档
  */
 const saveDoc = (content: string) => {
+  if (mdloading.value) {
+    return;
+  }
   docRef.value?.saveDoc(content);
 };
 </script>

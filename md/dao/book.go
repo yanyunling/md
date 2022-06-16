@@ -2,6 +2,8 @@ package dao
 
 import (
 	"md/model/entity"
+	"md/util"
+	"sort"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -32,6 +34,10 @@ func BookList(db *sqlx.DB, userId string) ([]entity.Book, error) {
 	sql := `select id,name,create_time from t_book where user_id=? order by create_time`
 	result := []entity.Book{}
 	err := db.Select(&result, sql, userId)
+	// 按名称升序
+	sort.Slice(result, func(i, j int) bool {
+		return util.StringSort(result[i].Name, result[j].Name)
+	})
 	return result, err
 }
 

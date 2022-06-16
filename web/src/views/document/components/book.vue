@@ -185,15 +185,15 @@ const deleteBookClick = (book: Book) => {
   }
   .scroll-view {
     color: #f2f2f2;
-    font-size: 15px;
+    font-size: 14px;
     .item-view {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 15px;
+      padding: 20px;
       cursor: pointer;
       border-left: 3px #404040 solid;
-      transition: 0.1s;
+      transition: 0.05s;
       border-bottom: 1px solid #555;
       .update-view {
         display: flex;

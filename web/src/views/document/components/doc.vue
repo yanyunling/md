@@ -68,7 +68,7 @@ const dialog = ref({
   },
 });
 
-const emit = defineEmits(["change"]);
+const emit = defineEmits(["change", "loading"]);
 
 const props = defineProps({
   currentBookId: {
@@ -96,6 +96,10 @@ watch(
     queryDocs(val);
   }
 );
+
+watch(docLoading, (val) => {
+  emit("loading", val);
+});
 
 onMounted(() => {
   queryDocs(props.currentBookId);
@@ -326,15 +330,15 @@ defineExpose({ saveDoc });
   }
   .scroll-view {
     color: #595959;
-    font-size: 15px;
+    font-size: 14px;
     .item-view {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 15px;
+      padding: 20px;
       cursor: pointer;
       border-left: 3px #fafafa solid;
-      transition: 0.1s;
+      transition: 0.05s;
       border-bottom: 1px solid #eaeaea;
       .update-view {
         display: flex;

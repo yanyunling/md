@@ -131,7 +131,7 @@ const dialogClose = () => {
     height: 100%;
     flex: 1;
     .title-view {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
       display: flex;
       align-items: center;
@@ -141,6 +141,7 @@ const dialogClose = () => {
       display: flex;
       align-items: center;
       height: 100%;
+      font-size: 14px;
       a {
         text-decoration: none;
         color: #303133;

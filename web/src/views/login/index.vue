@@ -4,8 +4,23 @@
     <transition name="fade">
       <div class="content-view" v-if="isLogin">
         <form>
-          <el-input class="input-view" v-model.trim="inputData.name" size="large" clearable placeholder="请输入用户名"></el-input>
-          <el-input class="input-view" v-model.trim="inputData.password" size="large" type="password" clearable placeholder="请输入密码"></el-input>
+          <el-input
+            class="input-view"
+            v-model.trim="inputData.name"
+            size="large"
+            clearable
+            placeholder="请输入用户名"
+            @keyup.enter.native="loginClick"
+          ></el-input>
+          <el-input
+            class="input-view"
+            v-model.trim="inputData.password"
+            size="large"
+            type="password"
+            clearable
+            placeholder="请输入密码"
+            @keyup.enter.native="loginClick"
+          ></el-input>
         </form>
         <el-button class="register-button" type="primary" link text size="small" @click="registerClick" :disabled="loading">注册</el-button>
         <el-button class="login-button" size="large" type="primary" @click="loginClick" :disabled="loading">登录</el-button>
