@@ -10,11 +10,12 @@
         <el-button class="create-button" type="primary" size="large" link :icon="Plus" @click="addDocVisible = true">创建文档</el-button>
       </template>
     </el-popover>
-    <el-scrollbar class="scroll-view">
+    <el-scrollbar class="scroll-view" ref="scrollRef">
       <div class="item-view" :class="currentDoc.id === item.id ? 'selected' : ''" v-for="item in docs" :key="item.id" @click="docClick(item)">
         <text-tip :content="item.name"></text-tip>
+        <div class="sub-text">{{ formatTime(item.updateTime, "YYYY-MM-DD HH:mm:ss") }}</div>
         <el-dropdown trigger="click" v-if="item.id">
-          <el-icon class="setting-button" @click.stop="() => {}"><Tools /></el-icon>
+          <el-icon class="setting-button" @click.stop="() => {}" title="操作"><Tools /></el-icon>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item style="user-select: none" @click="updateDocClick(item)">修改文档</el-dropdown-item>
@@ -31,10 +32,17 @@
       :show-close="false"
       :before-close="dialogClose"
     >
-      <el-input v-model="dialog.condition.name" size="large" placeholder="请输入文档名称" style="width: 100%"></el-input>
-      <el-select v-model="dialog.condition.bookId" size="large" style="width: 100%; margin-top: 10px">
-        <el-option v-for="item in books" :key="item.id" :label="item.name" :value="item.id"></el-option>
-      </el-select>
+      <el-form label-width="70px" size="large">
+        <el-form-item label="文档名称">
+          <el-input v-model="dialog.condition.name" placeholder="请输入文档名称" style="width: 100%"></el-input>
+        </el-form-item>
+        <el-form-item label="所属文集">
+          <el-select v-model="dialog.condition.bookId" style="width: 100%">
+            <el-option v-for="item in books" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+
       <template #footer>
         <span class="dialog-footer">
           <el-button :loading="dialog.loading" @click="dialogClose">取消</el-button>
@@ -46,11 +54,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, Ref, onMounted, watch, PropType } from "vue";
+import { ref, Ref, onMounted, watch, PropType, nextTick } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus, Tools } from "@element-plus/icons-vue";
 import TextTip from "@/components/text-tip";
 import DocumentApi from "@/api/document";
+import { formatTime } from "@/utils";
 
 const docs: Ref<Doc[]> = ref([]);
 const docLoading = ref(false);
@@ -67,6 +76,7 @@ const dialog = ref({
     bookId: "",
   },
 });
+const scrollRef = ref();
 
 const emit = defineEmits(["change", "loading"]);
 
@@ -114,6 +124,10 @@ const queryDocs = (bookId: string) => {
   DocumentApi.list(bookId)
     .then((res) => {
       docs.value = res.data;
+      // 滚动到当前文档位置
+      nextTick(() => {
+        scrollRef.value.$el.getElementsByClassName("item-view selected")[0]?.scrollIntoView();
+      });
     })
     .finally(() => {
       docLoading.value = false;
@@ -341,9 +355,17 @@ defineExpose({ saveDoc });
       border-left: 3px #fafafa solid;
       transition: 0.05s;
       border-bottom: 1px solid #eaeaea;
+      position: relative;
       .update-view {
         display: flex;
         align-items: center;
+      }
+      .sub-text {
+        position: absolute;
+        font-size: 12px;
+        bottom: 3px;
+        right: 20px;
+        color: #ccc;
       }
     }
     .item-view:hover {

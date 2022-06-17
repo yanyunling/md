@@ -19,7 +19,7 @@
         </div>
         <text-tip :content="item.name" v-else></text-tip>
         <el-dropdown trigger="click" v-if="item.id">
-          <el-icon class="setting-button" @click.stop="() => {}"><Tools /></el-icon>
+          <el-icon class="setting-button" @click.stop="() => {}" title="操作"><Tools /></el-icon>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item style="user-select: none" @click="updateBookClick(item)">修改文集</el-dropdown-item>

@@ -2,7 +2,12 @@
   <div class="page-layout">
     <div class="top-view">
       <div class="left-view">
-        <div class="title-view" :style="isDocument ? 'cursor: pointer' : ''" @click="titleClick">
+        <div
+          class="title-view"
+          :style="isDocument ? 'cursor: pointer' : ''"
+          :title="isDocument ? (collapse ? '显示文档选择' : '隐藏文档选择') : ''"
+          @click="titleClick"
+        >
           <svg-icon name="md" customStyle="width: 20px; height: 20px; margin: 5px 5px 0 0"></svg-icon>
           <span>云文档</span>
         </div>
