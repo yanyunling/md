@@ -4,6 +4,9 @@ import "md-editor-v3/lib/style.css";
 
 // 编辑器配置
 MdEditorV3.config({
+  editorConfig: {
+    renderDelay: 0,
+  },
   markedRenderer(renderer) {
     renderer.link = (href, title, text) => {
       return `<a href="${href}" title="${title}" target="_blank">${text}</a>`;

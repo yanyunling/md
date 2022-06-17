@@ -176,6 +176,7 @@ const deleteBookClick = (book: Book) => {
   background: #404040;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   .create-button {
     height: 60px;
     border-bottom: 1px solid #555 !important;

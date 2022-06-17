@@ -321,6 +321,7 @@ defineExpose({ saveDoc });
   background: #fafafa;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   .create-button {
     height: 60px;
     border-bottom: 1px solid #e6e6e6 !important;

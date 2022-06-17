@@ -2,7 +2,7 @@
   <div class="page-layout">
     <div class="top-view">
       <div class="left-view">
-        <div class="title-view">
+        <div class="title-view" :style="isDocument ? 'cursor: pointer' : ''" @click="titleClick">
           <svg-icon name="md" customStyle="width: 20px; height: 20px; margin: 5px 5px 0 0"></svg-icon>
           <span>云文档</span>
         </div>
@@ -21,7 +21,7 @@
         </template>
       </el-dropdown>
     </div>
-    <router-view class="content-view"></router-view>
+    <router-view class="content-view" :collapse="collapse"></router-view>
     <el-dialog v-model="dialogVisible" title="修改密码" width="400px" :show-close="false" :before-close="dialogClose">
       <form>
         <el-input v-model.trim="form.password" size="large" type="password" clearable placeholder="请输入原密码"></el-input>
@@ -39,17 +39,32 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import SvgIcon from "@/components/svg-icon";
 import Token from "@/store/token";
 import TokenApi from "@/api/token";
 import UserApi from "@/api/user";
+import router from "@/router";
 
 const name = ref(Token.getName());
 const dialogVisible = ref(false);
 const dialogLoading = ref(false);
 const form = ref({ password: "", newPassword: "", confirmPassword: "" });
+const collapse = ref(false);
+const isDocument = ref(true);
+
+watch(
+  () => router.currentRoute.value.name,
+  (val) => {
+    collapse.value = false;
+    if (val === "document") {
+      isDocument.value = true;
+    } else {
+      isDocument.value = false;
+    }
+  }
+);
 
 /**
  * 点击退出登录
@@ -103,6 +118,15 @@ const dialogClose = () => {
   form.value.password = "";
   form.value.newPassword = "";
   form.value.confirmPassword = "";
+};
+
+/**
+ * 点击标题
+ */
+const titleClick = () => {
+  if (isDocument.value) {
+    collapse.value = !collapse.value;
+  }
 };
 </script>
 

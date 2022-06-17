@@ -1,8 +1,16 @@
 <template>
   <div class="page-document">
-    <book @change="bookChange" @books="booksFetch"></book>
-    <doc :currentBookId="currentBookId" :currentDoc="currentDoc" :books="books" @change="docChange" @loading="loadingChange" ref="docRef"></doc>
-    <md-editor v-loading="mdloading" class="editor-view" v-model="currentDoc.content" @onUploadImg="uploadImage" @onSave="saveDoc" />
+    <book :style="props.collapse ? 'display: none' : ''" @change="bookChange" @books="booksFetch"></book>
+    <doc
+      :style="props.collapse ? 'display: none' : ''"
+      :currentBookId="currentBookId"
+      :currentDoc="currentDoc"
+      :books="books"
+      @change="docChange"
+      @loading="loadingChange"
+      ref="docRef"
+    ></doc>
+    <md-editor v-loading="mdloading" class="editor-view" v-model="currentDoc.content" @onUploadImg="uploadImage" @onSave="saveDoc" ref="editorRef" />
   </div>
 </template>
 
@@ -14,7 +22,15 @@ import Book from "./components/book.vue";
 import Doc from "./components/doc.vue";
 import DocCache from "@/store/doc-cache";
 
+const props = defineProps({
+  collapse: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const docRef = ref<InstanceType<typeof Doc>>();
+const editorRef = ref<InstanceType<typeof MdEditor>>();
 const hostUrl = ref(location.origin);
 const books: Ref<Book[]> = ref([]);
 const currentBookId = ref("");
@@ -67,6 +83,9 @@ const docChange = (id: string, content: string, updateTime: string) => {
   currentDoc.value.content = content;
   currentDoc.value.originContent = content;
   currentDoc.value.updateTime = updateTime;
+  if (editorRef.value?.$el.getElementsByClassName("md-input-wrapper")[0]?.getElementsByTagName("textarea")[0]) {
+    editorRef.value.$el.getElementsByClassName("md-input-wrapper")[0].getElementsByTagName("textarea")[0].scrollTop = 0;
+  }
 };
 
 /**
