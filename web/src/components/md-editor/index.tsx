@@ -1,6 +1,14 @@
 import { defineComponent } from "vue";
 import MdEditorV3 from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
+import screenfull from "screenfull";
+import katex from "katex";
+import "katex/dist/katex.css";
+import cropper from "cropperjs";
+import "cropperjs/dist/cropper.css";
+import highlight from "highlight.js";
+import "highlight.js/styles/github.css";
+import mermaid from "mermaid";
 
 // 编辑器配置
 MdEditorV3.config({
@@ -18,32 +26,24 @@ MdEditorV3.config({
   },
   editorExtensions: {
     highlight: {
-      js: "/static/js/highlight.min.js",
-      css: {
-        github: {
-          light: "/static/css/github.min.css",
-          dark: "/static/css/github-dark.min.css",
-        },
-      },
+      instance: highlight,
     },
     prettier: {
-      standaloneJs: "/static/js/standalone.js",
-      parserMarkdownJs: "/static/js/parser-markdown.js",
+      standaloneJs: "/static/MdEditor/standalone.js",
+      parserMarkdownJs: "/static/MdEditor/parser-markdown.js",
     },
     cropper: {
-      js: "/static/js/cropper.min.js",
-      css: "/static/css/cropper.min.css",
+      instance: cropper,
     },
-    iconfont: "/static/js/font_2605852_pqekijay2ij.js",
+    iconfont: "/static/MdEditor/iconfont.js",
     screenfull: {
-      js: "/static/js/screenfull.min.js",
+      instance: screenfull,
     },
     mermaid: {
-      js: "/static/js/mermaid.min.js",
+      instance: mermaid,
     },
     katex: {
-      js: "/static/js/katex.min.js",
-      css: "/static/css/katex.min.css",
+      instance: katex,
     },
   },
 });
