@@ -29,13 +29,13 @@ MdEditorV3.config({
       instance: highlight,
     },
     prettier: {
-      standaloneJs: "/static/MdEditor/standalone.js",
-      parserMarkdownJs: "/static/MdEditor/parser-markdown.js",
+      standaloneJs: "/static/md-editor/standalone.js",
+      parserMarkdownJs: "/static/md-editor/parser-markdown.js",
     },
     cropper: {
       instance: cropper,
     },
-    iconfont: "/static/MdEditor/iconfont.js",
+    iconfont: "/static/md-editor/iconfont.js",
     screenfull: {
       instance: screenfull,
     },
