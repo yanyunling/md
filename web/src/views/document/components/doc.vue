@@ -1,6 +1,6 @@
 <template>
   <div class="page-doc" v-loading="docLoading">
-    <el-popover :visible="addDocVisible" placement="bottom" trigger="click" width="200px">
+    <el-popover v-if="!onlyPreview" :visible="addDocVisible" placement="bottom" trigger="click" width="200px">
       <el-input v-model="newDocName" placeholder="请输入文档名称" style="margin-right: 10px"></el-input>
       <div style="display: flex; margin-top: 8px; justify-content: flex-end">
         <el-button @click="addDocCancel" size="small">取消</el-button>
@@ -10,11 +10,12 @@
         <el-button class="create-button" type="primary" size="large" link :icon="Plus" @click="addDocVisible = true">创建文档</el-button>
       </template>
     </el-popover>
+    <el-button v-else class="create-button" type="primary" size="large" link>文档选择</el-button>
     <el-scrollbar class="scroll-view" ref="scrollRef">
       <div class="item-view" :class="currentDoc.id === item.id ? 'selected' : ''" v-for="item in docs" :key="item.id" @click="docClick(item)">
         <text-tip :content="item.name"></text-tip>
         <div class="sub-text">{{ formatTime(item.updateTime, "YYYY-MM-DD HH:mm:ss") }}</div>
-        <el-dropdown trigger="click" v-if="item.id">
+        <el-dropdown trigger="click" v-if="!onlyPreview && item.id">
           <el-icon class="setting-button" @click.stop="() => {}" title="操作"><Tools /></el-icon>
           <template #dropdown>
             <el-dropdown-menu>
@@ -42,7 +43,6 @@
           </el-select>
         </el-form-item>
       </el-form>
-
       <template #footer>
         <span class="dialog-footer">
           <el-button :loading="dialog.loading" @click="dialogClose">取消</el-button>
@@ -81,6 +81,10 @@ const scrollRef = ref();
 const emit = defineEmits(["change", "loading"]);
 
 const props = defineProps({
+  onlyPreview: {
+    type: Boolean,
+    default: true,
+  },
   currentBookId: {
     type: String,
     default: "",

@@ -1,6 +1,6 @@
 <template>
   <div class="page-book" v-loading="bookLoading">
-    <el-popover :visible="addBookVisible" placement="bottom" trigger="click" width="200px">
+    <el-popover v-if="!onlyPreview" :visible="addBookVisible" placement="bottom" trigger="click" width="200px">
       <el-input v-model="newBookName" placeholder="请输入文集名称" style="margin-right: 10px"></el-input>
       <div style="display: flex; margin-top: 8px; justify-content: flex-end">
         <el-button @click="addBookCancel" size="small">取消</el-button>
@@ -10,6 +10,7 @@
         <el-button class="create-button" type="warning" size="large" link :icon="Plus" @click="addBookVisible = true">创建文集</el-button>
       </template>
     </el-popover>
+    <el-button v-else class="create-button" type="warning" size="large" link>文集选择</el-button>
     <el-scrollbar class="scroll-view">
       <div class="item-view" :class="currentBookId === item.id ? 'selected' : ''" v-for="item in books" :key="item.id" @click="bookClick(item)">
         <div class="update-view" v-if="updateBookId && updateBookId === item.id">
@@ -18,7 +19,7 @@
           <el-button type="danger" link :icon="CircleCloseFilled" @click="updateBookCancel"></el-button>
         </div>
         <text-tip :content="item.name" v-else></text-tip>
-        <el-dropdown trigger="click" v-if="item.id">
+        <el-dropdown trigger="click" v-if="!onlyPreview && item.id">
           <el-icon class="setting-button" @click.stop="() => {}" title="操作"><Tools /></el-icon>
           <template #dropdown>
             <el-dropdown-menu>
@@ -48,6 +49,13 @@ const updateBookId = ref("");
 const updateBookName = ref("");
 
 const emit = defineEmits(["change", "books"]);
+
+defineProps({
+  onlyPreview: {
+    type: Boolean,
+    default: true,
+  },
+});
 
 watch(currentBookId, (val) => {
   emit("change", val);

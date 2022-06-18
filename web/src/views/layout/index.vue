@@ -5,7 +5,7 @@
         <div
           class="title-view"
           :style="isDocument ? 'cursor: pointer' : ''"
-          :title="isDocument ? (collapse ? '显示文档选择' : '隐藏文档选择') : ''"
+          :title="isDocument ? (onlyPreview ? '编辑模式' : '预览模式') : ''"
           @click="titleClick"
         >
           <svg-icon name="md" customStyle="width: 20px; height: 20px; margin: 5px 5px 0 0"></svg-icon>
@@ -26,7 +26,7 @@
         </template>
       </el-dropdown>
     </div>
-    <router-view class="content-view" :collapse="collapse"></router-view>
+    <router-view class="content-view" :onlyPreview="onlyPreview"></router-view>
     <el-dialog v-model="dialogVisible" title="修改密码" width="400px" :show-close="false" :before-close="dialogClose">
       <form>
         <el-input v-model.trim="form.password" size="large" type="password" clearable placeholder="请输入原密码"></el-input>
@@ -56,13 +56,12 @@ const name = ref(Token.getName());
 const dialogVisible = ref(false);
 const dialogLoading = ref(false);
 const form = ref({ password: "", newPassword: "", confirmPassword: "" });
-const collapse = ref(false);
+const onlyPreview = ref(true);
 const isDocument = ref(true);
 
 watch(
   () => router.currentRoute.value.name,
   (val) => {
-    collapse.value = false;
     if (val === "document") {
       isDocument.value = true;
     } else {
@@ -130,7 +129,7 @@ const dialogClose = () => {
  */
 const titleClick = () => {
   if (isDocument.value) {
-    collapse.value = !collapse.value;
+    onlyPreview.value = !onlyPreview.value;
   }
 };
 </script>

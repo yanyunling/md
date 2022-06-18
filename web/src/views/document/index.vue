@@ -1,8 +1,8 @@
 <template>
   <div class="page-document">
-    <book :style="props.collapse ? 'display: none' : ''" @change="bookChange" @books="booksFetch"></book>
+    <book @change="bookChange" @books="booksFetch" :onlyPreview="onlyPreview"></book>
     <doc
-      :style="props.collapse ? 'display: none' : ''"
+      :onlyPreview="onlyPreview"
       :currentBookId="currentBookId"
       :currentDoc="currentDoc"
       :books="books"
@@ -10,22 +10,32 @@
       @loading="loadingChange"
       ref="docRef"
     ></doc>
-    <md-editor v-loading="mdloading" class="editor-view" v-model="currentDoc.content" @onUploadImg="uploadImage" @onSave="saveDoc" ref="editorRef" />
+    <md-preview v-if="onlyPreview" class="editor-view" :content="currentDoc.content" />
+    <md-editor
+      v-else
+      class="editor-view"
+      ref="editorRef"
+      v-model="currentDoc.content"
+      v-loading="mdloading"
+      @onUploadImg="uploadImage"
+      @onSave="saveDoc"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, Ref, onMounted, onBeforeUnmount } from "vue";
 import MdEditor from "@/components/md-editor";
+import MdPreview from "@/components/md-editor/preview.vue";
 import { uploadPicture } from "../picture/util";
 import Book from "./components/book.vue";
 import Doc from "./components/doc.vue";
 import DocCache from "@/store/doc-cache";
 
-const props = defineProps({
-  collapse: {
+defineProps({
+  onlyPreview: {
     type: Boolean,
-    default: false,
+    default: true,
   },
 });
 
@@ -83,8 +93,13 @@ const docChange = (id: string, content: string, updateTime: string) => {
   currentDoc.value.content = content;
   currentDoc.value.originContent = content;
   currentDoc.value.updateTime = updateTime;
-  if (editorRef.value?.$el.getElementsByClassName("md-input-wrapper")[0]?.getElementsByTagName("textarea")[0]) {
-    editorRef.value.$el.getElementsByClassName("md-input-wrapper")[0].getElementsByTagName("textarea")[0].scrollTop = 0;
+  const editorContentDom = editorRef.value?.$el.getElementsByClassName("md-input-wrapper")[0]?.getElementsByTagName("textarea")[0];
+  if (editorContentDom) {
+    editorContentDom.scrollTop = 0;
+  }
+  const editorCatalogDom = editorRef.value?.$el.getElementsByClassName("md-catalog-editor")[0];
+  if (editorCatalogDom) {
+    editorCatalogDom.scrollTop = 0;
   }
 };
 
