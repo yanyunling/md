@@ -1,6 +1,11 @@
 <template>
   <div class="page-picture">
-    <el-table class="table-view" :data="tableData" height="100%" stripe v-loading="tableLoading">
+    <el-table class="table-view" ref="tableRef" :data="tableData" height="100%" stripe border v-loading="tableLoading">
+      <el-table-column prop="name" label="序号" align="center" width="100">
+        <template #default="scope">
+          {{ (tableCondition.page.current - 1) * tableCondition.page.size + scope.$index + 1 }}
+        </template>
+      </el-table-column>
       <el-table-column prop="name" label="图片名称" align="center" />
       <el-table-column prop="path" label="图片地址" align="center">
         <template #default="scope">
@@ -47,7 +52,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, Ref, onMounted } from "vue";
+import { ref, Ref, onMounted, nextTick } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import PictureApi from "@/api/picture";
 import { uploadPicture } from "./util";
@@ -65,6 +70,7 @@ const tableCondition: Ref<PageCondition<null>> = ref({
   },
   condition: null,
 });
+const tableRef = ref();
 
 onMounted(() => {
   queryTableData();
@@ -79,6 +85,9 @@ const queryTableData = () => {
     .then((res) => {
       tableData.value = res.data.records;
       tableTotal.value = res.data.total;
+      nextTick(() => {
+        tableRef.value.setScrollTop(0);
+      });
     })
     .finally(() => {
       tableLoading.value = false;
