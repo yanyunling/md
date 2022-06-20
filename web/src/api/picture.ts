@@ -37,6 +37,7 @@ class PictureApi {
       method: "post",
       url: "/pic/upload",
       data: formData,
+      timeout: 60000,
     });
   }
 }

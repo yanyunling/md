@@ -103,10 +103,15 @@ const deleteClick = (row: PicturePageResult) => {
     cancelButtonText: "取消",
     type: "warning",
   }).then(() => {
-    PictureApi.delete(row.id).then(() => {
-      ElMessage.success("删除成功");
-      tablePageCurrentChange(1);
-    });
+    tableLoading.value = true;
+    PictureApi.delete(row.id)
+      .then(() => {
+        ElMessage.success("删除成功");
+        tablePageCurrentChange(1);
+      })
+      .catch(() => {
+        tableLoading.value = false;
+      });
   });
 };
 
@@ -115,9 +120,14 @@ const deleteClick = (row: PicturePageResult) => {
  */
 const uploadClick = () => {
   openFiles(false, ".jpg,.jpeg,.png,.gif").then((fileList) => {
-    uploadPicture(fileList[0]).then(() => {
-      tablePageCurrentChange(1);
-    });
+    tableLoading.value = true;
+    uploadPicture(fileList[0])
+      .then(() => {
+        tablePageCurrentChange(1);
+      })
+      .catch(() => {
+        tableLoading.value = false;
+      });
   });
 };
 
