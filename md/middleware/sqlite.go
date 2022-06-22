@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/jmoiron/sqlx"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 // 数据库连接
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS t_picture
 func InitSqlite(dataPath string) error {
 	// 开启数据库文件
 	var err error
-	Db, err = sqlx.Connect("sqlite3", dataPath+"md.db")
+	Db, err = sqlx.Connect("sqlite", dataPath+"md.db")
 	if err != nil {
 		Log.Error("开启数据库文件失败：", err)
 		return err
