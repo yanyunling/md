@@ -1,4 +1,4 @@
-import { getFileName } from "@/utils";
+import { Upload } from "@/utils";
 import Compressor from "compressorjs";
 import PictureApi from "@/api/picture";
 import { ElMessage } from "element-plus";
@@ -10,7 +10,7 @@ import { ElMessage } from "element-plus";
  */
 export const uploadPicture = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const fileName = getFileName(file);
+    const fileName = Upload.getFileName(file);
     if (fileName.ext !== "jpg" && fileName.ext !== "jpeg" && fileName.ext !== "png" && fileName.ext !== "gif") {
       ElMessage.warning("请上传以下格式的图片：jpg、jpeg、png、gif");
       reject();

@@ -13,7 +13,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="size" label="图片大小" align="center">
-        <template #default="scope"> {{ formatFileSize(scope.row.size) }} </template>
+        <template #default="scope"> {{ Upload.formatFileSize(scope.row.size) }} </template>
       </el-table-column>
       <el-table-column prop="createTime" label="上传时间" align="center">
         <template #default="scope"> {{ formatTime(scope.row.createTime, "YYYY-MM-DD HH:mm:ss") }} </template>
@@ -56,8 +56,7 @@ import { ref, Ref, onMounted, nextTick } from "vue";
 import { ElMessage, ElMessageBox, ElTable } from "element-plus";
 import PictureApi from "@/api/picture";
 import { uploadPicture } from "./util";
-import { formatTime, formatFileSize } from "@/utils";
-import { openFiles } from "@/utils";
+import { formatTime, Upload } from "@/utils";
 
 const hostUrl = ref(location.origin);
 const tableData: Ref<PicturePageResult[]> = ref([]);
@@ -119,7 +118,7 @@ const deleteClick = (row: PicturePageResult) => {
  * 上传图片
  */
 const uploadClick = () => {
-  openFiles(false, ".jpg,.jpeg,.png,.gif").then((fileList) => {
+  Upload.openFiles(false, ".jpg,.jpeg,.png,.gif").then((fileList) => {
     tableLoading.value = true;
     uploadPicture(fileList[0])
       .then(() => {

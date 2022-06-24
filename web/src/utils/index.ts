@@ -1,7 +1,7 @@
-export * from "./file";
 export * from "./number";
 export * from "./string";
 export * from "./time";
+export * from "./Upload";
 
 /**
  * 复制对象
