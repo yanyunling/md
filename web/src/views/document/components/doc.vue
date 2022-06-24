@@ -1,5 +1,6 @@
 <template>
   <div class="page-doc" v-loading="docLoading">
+    <div class="mask-view" v-if="docDisabled"></div>
     <el-popover v-if="!onlyPreview" :visible="addDocVisible" placement="bottom" trigger="click" width="200px">
       <el-input v-model="newDocName" placeholder="请输入文档名称" style="margin-right: 10px"></el-input>
       <div style="display: flex; margin-top: 8px; justify-content: flex-end">
@@ -63,6 +64,7 @@ import { formatTime } from "@/utils";
 
 const docs: Ref<Doc[]> = ref([]);
 const docLoading = ref(false);
+const docDisabled = ref(false);
 const addDocVisible = ref(false);
 const newDocName = ref("");
 const dialog = ref({
@@ -127,6 +129,15 @@ const queryDocs = (bookId: string) => {
   docLoading.value = true;
   DocumentApi.list(bookId)
     .then((res) => {
+      // 如果文档id相同，但更新时间不同，丢弃缓存内容
+      for (let item of res.data) {
+        if (item.id === props.currentDoc.id) {
+          if (String(item.updateTime) !== props.currentDoc.updateTime) {
+            emitDoc("", "", "");
+          }
+          break;
+        }
+      }
       docs.value = res.data;
       // 滚动到当前文档位置
       nextTick(() => {
@@ -164,8 +175,8 @@ const checkDocChange = () => {
 /**
  * 回调文档信息
  */
-const emitDoc = (id: string, content: string, updateTime: string) => {
-  emit("change", id, content, updateTime);
+const emitDoc = (id: string, content: string, updateTime: string, noRender?: boolean) => {
+  emit("change", id, content, updateTime, noRender);
 };
 
 /**
@@ -173,13 +184,15 @@ const emitDoc = (id: string, content: string, updateTime: string) => {
  */
 const docClick = (doc: Doc) => {
   checkDocChange().then(() => {
-    docLoading.value = true;
+    docDisabled.value = true;
+    emit("loading", true);
     DocumentApi.get(doc.id)
       .then((res) => {
         emitDoc(res.data.id, res.data.content, String(res.data.updateTime));
       })
       .finally(() => {
-        docLoading.value = false;
+        docDisabled.value = false;
+        emit("loading", false);
       });
   });
 };
@@ -311,10 +324,9 @@ const saveDoc = (content: string) => {
     DocumentApi.updateContent({ id: props.currentDoc.id, name: "", content: content, bookId: "" })
       .then((res) => {
         ElMessage.success("保存成功");
-        emitDoc(res.data.id, res.data.content, String(res.data.updateTime));
-        queryDocs(props.currentBookId);
+        emitDoc(res.data.id, res.data.content, String(res.data.updateTime), true);
       })
-      .catch(() => {
+      .finally(() => {
         docLoading.value = false;
       });
   } else {
@@ -340,6 +352,13 @@ defineExpose({ saveDoc });
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  position: relative;
+  .mask-view {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+  }
   .create-button {
     height: 60px;
     border-bottom: 1px solid #e6e6e6 !important;

@@ -10,11 +10,11 @@
       @loading="loadingChange"
       ref="docRef"
     ></doc>
-    <md-preview v-if="onlyPreview" class="editor-view" :content="currentDoc.content" />
+    <md-preview v-if="onlyPreview" :key="'preview' + mdKey" class="editor-view" :content="currentDoc.content" />
     <md-editor
       v-else
+      :key="'editor' + mdKey"
       class="editor-view"
-      ref="editorRef"
       v-model="currentDoc.content"
       v-loading="mdloading"
       @onUploadImg="uploadImage"
@@ -40,7 +40,6 @@ defineProps({
 });
 
 const docRef = ref<InstanceType<typeof Doc>>();
-const editorRef = ref<InstanceType<typeof MdEditor>>();
 const hostUrl = ref(location.origin);
 const books: Ref<Book[]> = ref([]);
 const currentBookId = ref("");
@@ -51,6 +50,7 @@ const currentDoc: Ref<CurrentDoc> = ref({
   updateTime: "",
 });
 const mdloading = ref(false);
+const mdKey = ref(0);
 
 onMounted(() => {
   currentDoc.value = DocCache.getDoc();
@@ -88,18 +88,13 @@ const booksFetch = (bookList: Book[]) => {
 /**
  * 文档选择变化
  */
-const docChange = (id: string, content: string, updateTime: string) => {
+const docChange = (id: string, content: string, updateTime: string, noRender: boolean) => {
   currentDoc.value.id = id;
   currentDoc.value.content = content;
   currentDoc.value.originContent = content;
   currentDoc.value.updateTime = updateTime;
-  const editorContentDom = editorRef.value?.$el.getElementsByClassName("md-input-wrapper")[0]?.getElementsByTagName("textarea")[0];
-  if (editorContentDom) {
-    editorContentDom.scrollTop = 0;
-  }
-  const editorCatalogDom = editorRef.value?.$el.getElementsByClassName("md-catalog-editor")[0];
-  if (editorCatalogDom) {
-    editorCatalogDom.scrollTop = 0;
+  if (!noRender) {
+    mdKey.value++;
   }
 };
 

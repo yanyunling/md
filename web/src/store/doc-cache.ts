@@ -35,6 +35,13 @@ class DocCache {
       updateTime: "",
     };
   }
+
+  /**
+   * 清空文档缓存
+   */
+  removeDoc() {
+    localStorage.removeItem(Token.getName() + this.docCacheKey);
+  }
 }
 
 export default new DocCache();

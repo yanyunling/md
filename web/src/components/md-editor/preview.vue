@@ -1,43 +1,25 @@
 <template>
   <div class="md-preview_component">
-    <md-editor class="preview-view" ref="previewRef" v-model="content" editorId="MdPreview" preview-only />
-    <el-scrollbar class="catalog-view" ref="catalogRef">
-      <md-catalog editorId="MdPreview" />
+    <md-editor class="preview-view" v-model="content" editorId="MdPreview" preview-only />
+    <el-scrollbar class="catalog-view">
+      <md-catalog editorId="MdPreview" :markedHeadingId="generateId" />
     </el-scrollbar>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, nextTick, watch } from "vue";
 import MdEditor from "@/components/md-editor";
 import MdEditorV3 from "md-editor-v3";
 const MdCatalog = MdEditorV3.MdCatalog;
 
-const props = defineProps({
+defineProps({
   content: {
     type: String,
     default: "",
   },
 });
 
-const previewRef = ref();
-const catalogRef = ref();
-
-watch(
-  () => props.content,
-  () => {
-    nextTick(() => {
-      const previewContentDom = previewRef.value?.$el.getElementsByClassName("md-preview-wrapper")[0];
-      if (previewContentDom) {
-        previewContentDom.scrollTop = 0;
-      }
-      const catalogContentDom = catalogRef.value.$el.getElementsByClassName("el-scrollbar__wrap")[0];
-      if (catalogContentDom) {
-        catalogContentDom.scrollTop = 0;
-      }
-    });
-  }
-);
+const generateId = (text: any, level: any, index: any) => `heading-${index}`;
 </script>
 
 <style lang="scss">

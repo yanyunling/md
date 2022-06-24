@@ -53,7 +53,7 @@
 
 <script lang="ts" setup>
 import { ref, Ref, onMounted, nextTick } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox, ElTable } from "element-plus";
 import PictureApi from "@/api/picture";
 import { uploadPicture } from "./util";
 import { formatTime, formatFileSize } from "@/utils";
@@ -70,7 +70,7 @@ const tableCondition: Ref<PageCondition<null>> = ref({
   },
   condition: null,
 });
-const tableRef = ref();
+const tableRef = ref<InstanceType<typeof ElTable>>();
 
 onMounted(() => {
   queryTableData();
@@ -86,7 +86,7 @@ const queryTableData = () => {
       tableData.value = res.data.records;
       tableTotal.value = res.data.total;
       nextTick(() => {
-        tableRef.value.setScrollTop(0);
+        tableRef.value?.setScrollTop(0);
       });
     })
     .finally(() => {
