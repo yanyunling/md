@@ -325,6 +325,13 @@ const saveDoc = (content: string) => {
       .then((res) => {
         ElMessage.success("保存成功");
         emitDoc(res.data.id, res.data.content, String(res.data.updateTime), true);
+        // 更新当前文档的更新时间
+        for (let item of docs.value) {
+          if (item.id === res.data.id) {
+            item.updateTime = res.data.updateTime;
+            break;
+          }
+        }
       })
       .finally(() => {
         docLoading.value = false;
