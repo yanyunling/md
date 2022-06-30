@@ -35,7 +35,7 @@
       </form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button :loading="dialogLoading" @click="dialogVisible = false">取消</el-button>
+          <el-button :loading="dialogLoading" @click="dialogClose">取消</el-button>
           <el-button type="primary" :loading="dialogLoading" @click="updatePassword">保存</el-button>
         </span>
       </template>
