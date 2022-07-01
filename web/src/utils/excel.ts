@@ -1,46 +1,48 @@
-import XLSX from "xlsx";
+import { read, utils } from "xlsx";
 
 export class Excel {
   /**
    * 获取excel的sheet
    * @param data
-   * @param sheetNum 从0开始
+   * @param sheetNum sheet序号，从1开始
    * @returns
    */
-  static getExcelSheet(data: string | ArrayBuffer, sheetNum: number) {
-    const workbook = XLSX.read(data, { type: "array" });
-    const firstSheetName = workbook.SheetNames[sheetNum];
+  static getExcelSheet(data: string | ArrayBuffer, sheetNum: number = 1) {
+    const workbook = read(data, { type: "array" });
+    const firstSheetName = workbook.SheetNames[sheetNum - 1];
     return workbook.Sheets[firstSheetName];
   }
 
   /**
    * 获取表格数据
    * @param data
-   * @param sheetNum 从0开始
+   * @param headerRow 表头行号，从1开始
+   * @param sheetNum sheet序号，从1开始
    * @returns
    */
-  static getExcelJson<T>(data: string | ArrayBuffer, sheetNum: number) {
+  static getExcelJson<T>(data: string | ArrayBuffer, headerRow: number = 1, sheetNum: number = 1) {
     const sheet = Excel.getExcelSheet(data, sheetNum);
-    return XLSX.utils.sheet_to_json<T>(sheet);
+    return utils.sheet_to_json<T>(sheet, { range: headerRow - 1 });
   }
 
   /**
    * 获取表头行
-   * @param sheet
+   * @param data
+   * @param headerRow 表头行号，从1开始
+   * @param sheetNum sheet序号，从1开始
    * @returns
    */
-  static getExcelHeaders(data: string | ArrayBuffer, sheetNum: number) {
+  static getExcelHeaders(data: string | ArrayBuffer, headerRow: number = 1, sheetNum: number = 1) {
     const sheet = Excel.getExcelSheet(data, sheetNum);
     const headers = [];
     if (sheet["!ref"]) {
-      const range = XLSX.utils.decode_range(sheet["!ref"]);
-      let C;
-      const R = range.s.r;
-      for (C = range.s.c; C <= range.e.c; ++C) {
-        let cell = sheet[XLSX.utils.encode_cell({ c: C, r: R })];
-        let hdr = "UNKNOWN " + C;
+      const range = utils.decode_range(sheet["!ref"]);
+      const row = range.s.r + headerRow - 1;
+      for (let i = range.s.c; i <= range.e.c; ++i) {
+        let cell = sheet[utils.encode_cell({ c: i, r: row })];
+        let hdr = "UNKNOWN " + i;
         if (cell && cell.t) {
-          hdr = XLSX.utils.format_cell(cell);
+          hdr = utils.format_cell(cell);
         }
         headers.push(hdr);
       }
