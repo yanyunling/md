@@ -1,8 +1,9 @@
 <template>
   <div class="page-document">
-    <book @change="bookChange" @books="booksFetch" :onlyPreview="onlyPreview"></book>
+    <book @change="bookChange" @books="booksFetch" :onlyPreview="onlyPreview" :isStretch="isStretch"></book>
     <doc
       :onlyPreview="onlyPreview"
+      :isStretch="isStretch"
       :currentBookId="currentBookId"
       :currentDoc="currentDoc"
       :books="books"
@@ -34,6 +35,10 @@ import DocCache from "@/store/doc-cache";
 
 defineProps({
   onlyPreview: {
+    type: Boolean,
+    default: true,
+  },
+  isStretch: {
     type: Boolean,
     default: true,
   },
@@ -129,7 +134,10 @@ const saveDoc = (content: string) => {
   .editor-view {
     height: 100%;
     flex: 1;
-    min-width: 900px;
+    min-width: 860px;
+  }
+  .editor-view.md-fullscreen {
+    min-width: unset;
   }
 }
 </style>

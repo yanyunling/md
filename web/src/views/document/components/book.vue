@@ -1,5 +1,5 @@
 <template>
-  <div class="page-book" v-loading="bookLoading">
+  <div class="page-book" v-loading="bookLoading" :style="isStretch ? '' : 'margin-left: -240px'">
     <el-popover v-if="!onlyPreview" :visible="addBookVisible" placement="bottom" trigger="click" width="200px">
       <el-input v-model="newBookName" placeholder="请输入文集名称" style="margin-right: 10px"></el-input>
       <div style="display: flex; margin-top: 8px; justify-content: flex-end">
@@ -52,6 +52,10 @@ const emit = defineEmits(["change", "books"]);
 
 defineProps({
   onlyPreview: {
+    type: Boolean,
+    default: true,
+  },
+  isStretch: {
     type: Boolean,
     default: true,
   },
@@ -185,6 +189,7 @@ const deleteBookClick = (book: Book) => {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  transition: margin-left 0.3s;
   .create-button {
     height: 60px;
     border-bottom: 1px solid #555 !important;

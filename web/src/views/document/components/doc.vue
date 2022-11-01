@@ -1,5 +1,5 @@
 <template>
-  <div class="page-doc" v-loading="docLoading">
+  <div class="page-doc" v-loading="docLoading" :style="isStretch ? '' : 'margin-left: -300px'">
     <div class="mask-view" v-if="docDisabled"></div>
     <el-popover v-if="!onlyPreview" :visible="addDocVisible" placement="bottom" trigger="click" width="200px">
       <el-input v-model="newDocName" placeholder="请输入文档名称" style="margin-right: 10px"></el-input>
@@ -84,6 +84,10 @@ const emit = defineEmits(["change", "loading"]);
 
 const props = defineProps({
   onlyPreview: {
+    type: Boolean,
+    default: true,
+  },
+  isStretch: {
     type: Boolean,
     default: true,
   },
@@ -360,6 +364,7 @@ defineExpose({ saveDoc });
   flex-direction: column;
   overflow-x: hidden;
   position: relative;
+  transition: margin-left 0.3s;
   .mask-view {
     position: absolute;
     width: 100%;

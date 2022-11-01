@@ -2,14 +2,13 @@
   <div class="page-layout">
     <div class="top-view">
       <div class="left-view">
-        <div
-          class="title-view"
-          :style="isDocument ? 'cursor: pointer' : ''"
-          :title="isDocument ? (onlyPreview ? '编辑模式' : '预览模式') : ''"
-          @click="titleClick"
-        >
-          <svg-icon name="md" customStyle="width: 20px; height: 20px; margin: 5px 5px 0 0"></svg-icon>
-          <span>云文档</span>
+        <div class="title-view">
+          <span :style="isDocument ? 'cursor: pointer' : ''" :title="isDocument ? (isStretch ? '收起侧栏' : '弹出侧栏') : ''" @click="iconClick">
+            <svg-icon name="md" customStyle="width: 20px; height: 20px; margin: 5px 5px 0 0"></svg-icon>
+          </span>
+          <span :style="isDocument ? 'cursor: pointer' : ''" :title="isDocument ? (onlyPreview ? '编辑模式' : '预览模式') : ''" @click="titleClick">
+            云文档
+          </span>
         </div>
         <div class="menu-view">
           <router-link to="/document">文档</router-link>
@@ -26,7 +25,7 @@
         </template>
       </el-dropdown>
     </div>
-    <router-view class="content-view" :onlyPreview="onlyPreview"></router-view>
+    <router-view class="content-view" :onlyPreview="onlyPreview" :isStretch="isStretch"></router-view>
     <el-dialog v-model="dialogVisible" title="修改密码" width="400px" :show-close="false" :before-close="dialogClose">
       <form>
         <el-input v-model.trim="form.password" size="large" type="password" clearable placeholder="请输入原密码"></el-input>
@@ -57,6 +56,7 @@ const dialogVisible = ref(false);
 const dialogLoading = ref(false);
 const form = ref({ password: "", newPassword: "", confirmPassword: "" });
 const onlyPreview = ref(true);
+const isStretch = ref(true);
 const isDocument = ref(true);
 
 watch(
@@ -130,6 +130,15 @@ const dialogClose = () => {
 const titleClick = () => {
   if (isDocument.value) {
     onlyPreview.value = !onlyPreview.value;
+  }
+};
+
+/**
+ * 点击标题图标
+ */
+const iconClick = () => {
+  if (isDocument.value) {
+    isStretch.value = !isStretch.value;
   }
 };
 </script>
