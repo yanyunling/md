@@ -4,11 +4,15 @@ import (
 	"md/middleware"
 	"md/model/common"
 
+	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris/v12"
 )
 
 // 初始化iris路由
 func InitRouter(app *iris.Application) {
+	// 允许跨域
+	app.UseRouter(cors.AllowAll())
+
 	app.PartyFunc("/api", func(api iris.Party) {
 		// token相关接口
 		api.PartyFunc("/token", func(token iris.Party) {

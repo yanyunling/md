@@ -27,10 +27,10 @@ const generateId = (text: any, level: any, index: any) => `heading-${index}`;
   display: flex;
   .preview-view {
     flex: 1;
-    .md-content {
+    .md-editor-content {
       display: flex;
       justify-content: center;
-      .md-preview-wrapper {
+      .md-editor-preview-wrapper {
         padding: 0 20px;
         max-width: 1200px;
       }

@@ -47,14 +47,6 @@ func main() {
 	// gzip压缩
 	app.Use(iris.Compression)
 
-	// 预检请求
-	app.Options("*", func(ctx iris.Context) {
-		ctx.Next()
-	})
-
-	// CORS跨域
-	app.UseGlobal(middleware.CORS)
-
 	// 初始化雪花算法节点
 	err := util.InitSnowflake(0)
 	if err != nil {
