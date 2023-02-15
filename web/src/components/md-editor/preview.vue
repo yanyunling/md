@@ -1,6 +1,6 @@
 <template>
   <div class="md-preview_component">
-    <md-editor class="preview-view" v-model="content" editorId="MdPreview" preview-only />
+    <md-editor class="preview-view" v-model="contentData" editorId="MdPreview" preview-only />
     <el-scrollbar class="catalog-view">
       <md-catalog editorId="MdPreview" :markedHeadingId="generateId" />
     </el-scrollbar>
@@ -10,12 +10,22 @@
 <script lang="ts" setup>
 import MdEditor from "@/components/md-editor";
 import MdEditorV3 from "md-editor-v3";
+import { computed } from "vue";
 const MdCatalog = MdEditorV3.MdCatalog;
 
-defineProps({
+const props = defineProps({
   content: {
     type: String,
     default: "",
+  },
+});
+
+const emit = defineEmits(["update:content"]);
+
+const contentData = computed({
+  get: () => props.content,
+  set: (val) => {
+    emit("update:content", val);
   },
 });
 
