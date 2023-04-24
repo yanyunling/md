@@ -2,13 +2,13 @@ import { defineConfig } from "vite";
 import { resolve } from "path";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
-import viteSvgIcons from "vite-plugin-svg-icons";
+import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 
 export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
-    viteSvgIcons({
+    createSvgIconsPlugin({
       iconDirs: [resolve(process.cwd(), "src/icons")],
       symbolId: "icon-[dir]-[name]",
     }),
@@ -30,6 +30,7 @@ export default defineConfig({
     outDir: "dist",
     assetsDir: "assets",
     sourcemap: false,
+    minify: "terser",
     terserOptions: {
       compress: {
         drop_console: true,
