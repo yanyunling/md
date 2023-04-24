@@ -140,4 +140,14 @@ const saveDoc = (content: string) => {
     min-width: unset;
   }
 }
+@media (max-width: 860px) {
+  .page-document {
+    .editor-view {
+      min-width: 100%;
+      .catalog-view {
+        display: none;
+      }
+    }
+  }
+}
 </style>
