@@ -11,6 +11,7 @@ import screenfull from "screenfull";
 import mermaid from "mermaid";
 import katex from "katex";
 import "katex/dist/katex.css";
+import "./index.scss";
 
 // 编辑器配置
 MdEditorV3.config({
@@ -57,6 +58,7 @@ export default defineComponent({
     return () => {
       return (
         <MdEditorV3
+          class="md-editor_component"
           toolbarsExclude={["github", "pageFullscreen", "fullscreen"]}
           previewTheme="cyanosis"
           codeTheme="github"

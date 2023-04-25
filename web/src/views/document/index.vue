@@ -134,13 +134,13 @@ const saveDoc = (content: string) => {
   .editor-view {
     height: 100%;
     flex: 1;
-    min-width: 860px;
+    min-width: 720px;
   }
   .editor-view.md-fullscreen {
     min-width: unset;
   }
 }
-@media (max-width: 860px) {
+@media (max-width: 720px) {
   .page-document {
     .editor-view {
       min-width: 100%;

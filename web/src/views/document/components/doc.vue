@@ -13,7 +13,13 @@
     </el-popover>
     <el-button v-else class="create-button" type="primary" size="large" link>文档选择</el-button>
     <el-scrollbar class="scroll-view" ref="scrollRef">
-      <div class="item-view" :class="currentDoc.id === item.id ? 'selected' : ''" v-for="item in docs" :key="item.id" @click="docClick(item)">
+      <div
+        class="item-view"
+        :class="docIdTemp === item.id || (!docIdTemp && currentDoc.id === item.id) ? 'selected' : ''"
+        v-for="item in docs"
+        :key="item.id"
+        @click="docClick(item)"
+      >
         <text-tip :content="item.name"></text-tip>
         <div class="sub-text">{{ formatTime(item.updateTime, "YYYY-MM-DD HH:mm:ss") }}</div>
         <el-dropdown trigger="click" v-if="!onlyPreview && item.id">
@@ -67,6 +73,7 @@ const docLoading = ref(false);
 const docDisabled = ref(false);
 const addDocVisible = ref(false);
 const newDocName = ref("");
+const docIdTemp = ref("");
 const dialog = ref({
   isAdd: true,
   loading: false,
@@ -188,6 +195,7 @@ const emitDoc = (id: string, content: string, updateTime: string, noRender?: boo
  */
 const docClick = (doc: Doc) => {
   checkDocChange().then(() => {
+    docIdTemp.value = doc.id;
     docDisabled.value = true;
     emit("loading", true);
     DocumentApi.get(doc.id)
@@ -195,6 +203,7 @@ const docClick = (doc: Doc) => {
         emitDoc(res.data.id, res.data.content, String(res.data.updateTime));
       })
       .finally(() => {
+        docIdTemp.value = "";
         docDisabled.value = false;
         emit("loading", false);
       });
