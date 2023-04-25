@@ -1,5 +1,5 @@
 <template>
-  <div class="page-doc" v-loading="docLoading" :style="isStretch ? '' : 'margin-left: -300px'">
+  <div class="page-doc" v-loading="docLoading" :class="{ 'page-doc-shrink': !isStretch }">
     <div class="mask-view" v-if="docDisabled"></div>
     <el-popover v-if="!onlyPreview" :visible="addDocVisible" placement="bottom" trigger="click" width="200px">
       <el-input v-model="newDocName" placeholder="请输入文档名称" style="margin-right: 10px"></el-input>
@@ -430,6 +430,18 @@ defineExpose({ saveDoc });
   }
   .el-loading-mask {
     background: #fafafa;
+  }
+}
+.page-doc-shrink {
+  margin-left: -300px;
+}
+@media (max-width: 540px) {
+  .page-doc {
+    min-width: 55%;
+    width: 55%;
+  }
+  .page-doc-shrink {
+    margin-left: -55%;
   }
 }
 </style>

@@ -58,7 +58,6 @@ export default defineComponent({
     return () => {
       return (
         <MdEditorV3
-          class="md-editor_component"
           toolbarsExclude={["github", "pageFullscreen", "fullscreen"]}
           previewTheme="cyanosis"
           codeTheme="github"
