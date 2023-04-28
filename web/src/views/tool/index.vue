@@ -1,11 +1,11 @@
 <template>
   <div class="page-tool">
+    <el-divider content-position="center">JSON格式化</el-divider>
+    <json-format class="tool-card" />
     <el-divider content-position="center">随机数、UUID、当前时间生成</el-divider>
     <generate class="tool-card" />
     <el-divider content-position="center">文本转换、编码、解码、加密</el-divider>
     <encryption class="tool-card" />
-    <el-divider content-position="center">JSON格式化</el-divider>
-    <json-format class="tool-card" />
     <el-divider content-position="center">图片压缩</el-divider>
     <image-compression class="tool-card" />
   </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="page-json-format">
     <el-input v-model="content" type="textarea" :rows="5" resize="none" placeholder="请输入JSON文本"></el-input>
-    <JsonViewer class="json-view" :value="jsonContent" copyable sort previewMode theme="light" />
+    <json-viewer class="json-view" :value="jsonContent" copyable sort previewMode expanded theme="light" />
   </div>
 </template>
 
