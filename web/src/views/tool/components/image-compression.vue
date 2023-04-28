@@ -120,21 +120,19 @@ const clear = () => {
   flex-direction: column;
   align-items: center;
   .el-form {
-    width: 100%;
-    .el-slider {
-      width: calc(100% - 10px);
-    }
+    width: 400px;
+    max-width: 100%;
   }
   .image-view {
-    width: 96%;
-    margin: 0 2% 20px 2%;
+    width: calc(100% - 40px);
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 300px;
+    height: 50vh;
     background: #eee;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 6px;
     img {
       max-width: 100%;
       max-height: 100%;

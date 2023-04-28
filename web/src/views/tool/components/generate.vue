@@ -1,6 +1,10 @@
 <template>
   <div class="page-generate">
-    <el-input v-model="inputText" placeholder="请输入位数" :maxLength="3"></el-input>
+    <el-form label-width="100px">
+      <el-form-item label="随机位数">
+        <el-input-number v-model="inputText" placeholder="请输入" :min="1" :max="9999"></el-input-number>
+      </el-form-item>
+    </el-form>
     <el-input v-model="outputText" type="textarea" :rows="5" resize="none" placeholder="结果文本" readonly></el-input>
     <div class="button-group">
       <el-button type="success" size="large" @click="generate('randomNum')">数字</el-button>
@@ -18,7 +22,7 @@ import { ElMessage } from "element-plus";
 import { formatTime, checkNaN, randomStr } from "@/utils";
 import { uuid } from "@/utils";
 
-const inputText = ref("");
+const inputText = ref(6);
 const outputText = ref("");
 
 const generate = (type: string) => {
@@ -38,32 +42,14 @@ const generate = (type: string) => {
         if (!inputText.value || checkNaN(inputText.value)) {
           outputText.value = "";
         } else {
-          outputText.value =
-            randomStr(parseInt(inputText.value), true) +
-            "\n" +
-            randomStr(parseInt(inputText.value), true) +
-            "\n" +
-            randomStr(parseInt(inputText.value), true) +
-            "\n" +
-            randomStr(parseInt(inputText.value), true) +
-            "\n" +
-            randomStr(parseInt(inputText.value), true);
+          outputText.value = randomStr(inputText.value, true);
         }
         break;
       case "randomStr":
-        if (!inputText.value || checkNaN(inputText.value.trim())) {
+        if (!inputText.value || checkNaN(inputText.value)) {
           outputText.value = "";
         } else {
-          outputText.value =
-            randomStr(parseInt(inputText.value)) +
-            "\n" +
-            randomStr(parseInt(inputText.value)) +
-            "\n" +
-            randomStr(parseInt(inputText.value)) +
-            "\n" +
-            randomStr(parseInt(inputText.value)) +
-            "\n" +
-            randomStr(parseInt(inputText.value));
+          outputText.value = randomStr(inputText.value);
         }
         break;
     }
@@ -80,8 +66,9 @@ const generate = (type: string) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  .el-input + .el-textarea {
-    margin-top: 10px;
+  .el-form {
+    width: 400px;
+    max-width: 100%;
   }
   .button-group {
     width: 100%;
