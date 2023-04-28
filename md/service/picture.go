@@ -79,12 +79,15 @@ func PictureUpload(pictureFile, thumbnailFile multipart.File, pictureInfo, thumb
 
 	// 获取文件后缀
 	pictureExt := util.FileExt(pictureInfo.Filename)
-	thumbnailExt := util.FileExt(pictureInfo.Filename)
+	thumbnailExt := util.FileExt(thumbnailInfo.Filename)
 	if pictureExt != ".jpg" && pictureExt != ".jpeg" && pictureExt != ".png" && pictureExt != ".gif" {
 		panic(common.NewError("不支持的图片格式，支持格式：jpg、png、gif"))
 	}
 	if thumbnailExt != ".jpg" && thumbnailExt != ".jpeg" && thumbnailExt != ".png" && thumbnailExt != ".gif" {
 		panic(common.NewError("不支持的缩略图格式，支持格式：jpg、png、gif"))
+	}
+	if util.StringLength(pictureInfo.Filename) > 1000 || util.StringLength(thumbnailInfo.Filename) > 1000 {
+		panic(common.NewError("图片文件名称过长"))
 	}
 
 	// 读取文件
