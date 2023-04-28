@@ -13,6 +13,7 @@
     "dayjs": "^1.10.7",
     "element-plus": "^2.2.30",
     "highlight.js": "^11.7.0",
+    "js-base64": "^3.7.5",
     "katex": "^0.16.0",
     "md-editor-v3": "2.10.0",
     "mermaid": "^9.4.0",
@@ -21,10 +22,12 @@
     "screenfull": "^6.0.1",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
+    "vue3-json-viewer": "^2.2.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
+    "@types/js-base64": "^3.3.1",
     "@types/katex": "^0.14.0",
     "@types/marked": "^4.0.7",
     "@types/mermaid": "^8.2.9",

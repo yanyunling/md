@@ -13,6 +13,7 @@
         <div class="menu-view">
           <router-link to="/document">文档</router-link>
           <router-link to="/picture">图片</router-link>
+          <router-link to="/tool">工具</router-link>
         </div>
       </div>
       <el-dropdown class="right-view">
@@ -57,7 +58,7 @@ const dialogLoading = ref(false);
 const form = ref({ password: "", newPassword: "", confirmPassword: "" });
 const onlyPreview = ref(true);
 const isStretch = ref(true);
-const isDocument = ref(true);
+const isDocument = ref(router.currentRoute.value.name === "document");
 
 watch(
   () => router.currentRoute.value.name,

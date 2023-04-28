@@ -3,6 +3,7 @@ import Layout from "@/views/layout/index.vue";
 import Login from "@/views/login/index.vue";
 import Document from "@/views/document/index.vue";
 import Picture from "@/views/picture/index.vue";
+import Tool from "@/views/tool/index.vue";
 import Token from "@/store/token";
 
 const routes = [
@@ -15,6 +16,7 @@ const routes = [
     children: [
       { path: "/document", name: "document", component: Document },
       { path: "/picture", name: "picture", component: Picture },
+      { path: "/tool", name: "tool", component: Tool },
     ],
   },
 ];

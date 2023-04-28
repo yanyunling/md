@@ -11,6 +11,15 @@ export const formatTime = (date: dayjs.ConfigType, pattern: string): string => {
 };
 
 /**
+ * 转为时间格式
+ * @param date
+ * @returns
+ */
+export const parseTime = (date: string | number) => {
+  return dayjs(date).toDate();
+};
+
+/**
  * 增加指定时间
  * @param date
  * @param value
