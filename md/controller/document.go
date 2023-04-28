@@ -14,7 +14,6 @@ func DocumentAdd(ctx iris.Context) {
 	document := entity.Document{}
 	resolveParam(ctx, &document)
 	document.UserId = middleware.CurrentUserId(ctx)
-
 	ctx.JSON(common.NewSuccessData("添加成功", service.DocumentAdd(document)))
 }
 

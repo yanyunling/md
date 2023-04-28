@@ -19,6 +19,12 @@ func DocumentAdd(document entity.Document) entity.Document {
 	if document.Name == "" {
 		panic(common.NewError("文档名称不可为空"))
 	}
+	if util.StringLength(document.Name) > 1000 {
+		panic(common.NewError("文档名称过长，请小于1000个字符"))
+	}
+	if util.StringLength(document.Content) > 1000000 {
+		panic(common.NewError("文档内容过多，请小于100万个字符"))
+	}
 	document.Id = util.SnowflakeString()
 	document.CreateTime = time.Now().UnixMilli()
 	document.UpdateTime = time.Now().UnixMilli()
@@ -42,7 +48,10 @@ func DocumentUpdate(document entity.Document) {
 
 	document.Name = strings.TrimSpace(document.Name)
 	if document.Name == "" {
-		panic(common.NewError("文集名称不可为空"))
+		panic(common.NewError("文档名称不可为空"))
+	}
+	if util.StringLength(document.Name) > 1000 {
+		panic(common.NewError("文档名称过长，请小于1000个字符"))
 	}
 	err := dao.DocumentUpdate(tx, document)
 	if err != nil {
@@ -60,6 +69,9 @@ func DocumentUpdateContent(document entity.Document) entity.Document {
 	tx := middleware.Db.MustBegin()
 	defer tx.Rollback()
 
+	if util.StringLength(document.Content) > 1000000 {
+		panic(common.NewError("文档内容过多，请小于100万个字符"))
+	}
 	document.UpdateTime = time.Now().UnixMilli()
 	err := dao.DocumentUpdateContent(tx, document)
 	if err != nil {

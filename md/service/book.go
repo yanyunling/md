@@ -22,6 +22,9 @@ func BookAdd(book entity.Book) {
 	if book.Name == "全部" {
 		panic(common.NewError("已存在同名文集"))
 	}
+	if util.StringLength(book.Name) > 1000 {
+		panic(common.NewError("文集名称过长，请小于1000个字符"))
+	}
 
 	// 根据名称查询文集列表
 	books, err := dao.BookListByName(tx, book.Name, book.UserId)
@@ -57,6 +60,9 @@ func BookUpdate(book entity.Book) {
 	}
 	if book.Name == "全部" {
 		panic(common.NewError("已存在同名文集"))
+	}
+	if util.StringLength(book.Name) > 1000 {
+		panic(common.NewError("文集名称过长，请小于1000个字符"))
 	}
 
 	// 根据名称查询文集列表
