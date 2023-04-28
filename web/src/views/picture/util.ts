@@ -30,7 +30,7 @@ export const uploadPicture = (file: File): Promise<string> => {
         // 上传图片
         const formData = new FormData();
         formData.append("picture", file);
-        formData.append("thumbnail", result);
+        formData.append("thumbnail", new File([result], file.name));
         PictureApi.upload(formData)
           .then((res) => {
             ElMessage.success(res.message);
