@@ -12,7 +12,7 @@ import { JsonViewer } from "vue3-json-viewer";
 import "vue3-json-viewer/dist/index.css";
 
 const content = ref("");
-const jsonContent = ref({});
+const jsonContent = ref("");
 
 watch(
   () => content.value,

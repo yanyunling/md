@@ -1,10 +1,11 @@
 <template>
   <div class="page-encryption">
-    <el-input v-model="inputText" type="textarea" :rows="5" resize="none" placeholder="请输入文本"></el-input>
-    <el-input v-model="outputText" type="textarea" :rows="5" resize="none" placeholder="结果文本" readonly></el-input>
+    <el-input v-model="inputText" type="textarea" :rows="10" resize="none" placeholder="请输入文本"></el-input>
+    <el-input v-model="outputText" type="textarea" :rows="10" resize="none" placeholder="结果文本" readonly></el-input>
     <div class="button-group">
       <el-button type="warning" size="large" @click="encrypt('count')">字符数</el-button>
       <el-button type="warning" size="large" @click="encrypt('countNotBlank')">字符数(无空格换行)</el-button>
+      <el-button type="success" size="large" @click="encrypt('removeBlank')">去除空格</el-button>
       <el-button type="success" size="large" @click="encrypt('timestampToDate')">时间戳转日期</el-button>
       <el-button type="success" size="large" @click="encrypt('dateToTimestamp')">日期转时间戳</el-button>
       <el-button type="success" size="large" @click="encrypt('lowerToUpper')">小写转大写</el-button>
@@ -49,6 +50,9 @@ const encrypt = (type: string) => {
         break;
       case "countNotBlank":
         outputText.value = inputText.value.replace(/\s+/g, "").length.toString();
+        break;
+      case "removeBlank":
+        outputText.value = inputText.value.replace(/\s+/g, "");
         break;
       case "timestampToDate":
         outputText.value = formatTime(parseInt(inputText.value), "YYYY/MM/DD HH:mm:ss.SSS");
