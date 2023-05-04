@@ -1,0 +1,20 @@
+FROM node:20-alpine as nodejs
+COPY ./web /build/web
+WORKDIR /build/web
+RUN npm config set registry https://registry.npm.taobao.org/
+RUN npm install
+RUN npm run build
+
+FROM golang:1.20-alpine as go
+ENV GOPROXY=https://goproxy.cn,direct
+COPY ./md /build/md
+COPY --from=nodejs /build/web/dist /build/md/web
+WORKDIR /build/md
+RUN go build
+
+FROM alpine:latest
+COPY --from=go /build/md/md /md/
+ENV reg=true
+EXPOSE 9900
+RUN chmod +x /md/md
+CMD /md/md -p 9900 -log /md/logs -data /md/data -reg=${reg}
