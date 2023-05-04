@@ -12,20 +12,12 @@ import mermaid from "mermaid";
 import katex from "katex";
 import "katex/dist/katex.css";
 import "./index.scss";
+import { lineNumbers } from "@codemirror/view";
 
 // 编辑器配置
 MdEditorV3.config({
   editorConfig: {
     renderDelay: 0,
-  },
-  markedRenderer(renderer) {
-    renderer.link = (href, title, text) => {
-      return `<a href="${href}" target="_blank">${text}</a>`;
-    };
-    renderer.heading = (text, level, raw, slugger, index) => {
-      return `<h${level} id="heading-${index}">${text}</h${level}>`;
-    };
-    return renderer;
   },
   editorExtensions: {
     iconfont: "/static/md-editor/iconfont.js",
@@ -49,6 +41,9 @@ MdEditorV3.config({
       instance: katex,
     },
   },
+  codeMirrorExtensions(_theme, extensions) {
+    return [...extensions, lineNumbers()];
+  },
 });
 
 export default defineComponent({
@@ -62,7 +57,7 @@ export default defineComponent({
           previewTheme="cyanosis"
           codeTheme="github"
           showCodeRowNumber
-          markedHeadingId={generateId}
+          mdHeadingId={generateId}
         />
       );
     };

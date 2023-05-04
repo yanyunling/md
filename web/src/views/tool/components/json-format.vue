@@ -7,6 +7,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from "vue";
+import { jsonrepair } from "jsonrepair";
 import { JsonViewer } from "vue3-json-viewer";
 import "vue3-json-viewer/dist/index.css";
 
@@ -17,9 +18,9 @@ watch(
   () => content.value,
   (val) => {
     try {
-      jsonContent.value = JSON.parse(val);
+      jsonContent.value = JSON.parse(jsonrepair(val));
     } catch (e) {
-      jsonContent.value = content.value;
+      jsonContent.value = val;
       console.error(e);
     }
   }

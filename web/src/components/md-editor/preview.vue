@@ -2,7 +2,7 @@
   <div class="md-preview_component">
     <md-editor class="preview-view" v-model="contentData" editorId="MdPreview" preview-only />
     <el-scrollbar class="catalog-view">
-      <md-catalog editorId="MdPreview" :markedHeadingId="generateId" />
+      <md-catalog editorId="MdPreview" :mdHeadingId="generateId" />
     </el-scrollbar>
   </div>
 </template>
