@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, Ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, Ref, onMounted, onBeforeUnmount, nextTick } from "vue";
 import MdEditor from "@/components/md-editor";
 import MdPreview from "@/components/md-editor/preview.vue";
 import { uploadPicture } from "../picture/util";
@@ -99,7 +99,9 @@ const docChange = (id: string, content: string, updateTime: string, noRender: bo
   currentDoc.value.originContent = content;
   currentDoc.value.updateTime = updateTime;
   if (!noRender) {
-    mdKey.value++;
+    nextTick(() => {
+      mdKey.value++;
+    })
   }
 };
 
