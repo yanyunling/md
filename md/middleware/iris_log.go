@@ -27,13 +27,13 @@ func InitLog(prefixPath string, logger *golog.Logger) {
 	if lastTime == "" {
 		// 创建目录
 		prefixPath = util.PathCompletion(prefixPath)
-		err := os.MkdirAll(prefixPath, 0666)
+		err := os.MkdirAll(prefixPath, 0777)
 		if err != nil {
 			panic(err)
 		}
 		// 生成日志文件
 		lastTime = time.Now().Format("20060102")
-		currentFile, err := os.OpenFile(prefixPath+lastTime+".log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		currentFile, err := os.OpenFile(prefixPath+lastTime+".log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0777)
 		if err != nil {
 			panic(err)
 		}
@@ -49,7 +49,7 @@ func InitLog(prefixPath string, logger *golog.Logger) {
 			currentTime := time.Now().Format("20060102")
 			// 时间不一致，则生成新的日志文件
 			if lastTime != currentTime {
-				currentFile, err := os.OpenFile(prefixPath+currentTime+".log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+				currentFile, err := os.OpenFile(prefixPath+currentTime+".log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0777)
 				if err != nil {
 					Log.Error("日志文件创建失败：", err)
 					continue
