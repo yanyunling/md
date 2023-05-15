@@ -1,6 +1,13 @@
 <template>
   <div class="md-preview_component">
-    <md-editor class="preview-view" v-model="contentData" editorId="MdPreview" preview-only />
+    <md-preview
+      class="preview-view"
+      v-model="contentData"
+      editorId="MdPreview"
+      previewTheme="cyanosis"
+      codeTheme="github"
+      :mdHeadingId="generateId"
+    />
     <el-scrollbar class="catalog-view">
       <md-catalog editorId="MdPreview" :mdHeadingId="generateId" />
     </el-scrollbar>
@@ -8,10 +15,9 @@
 </template>
 
 <script lang="ts" setup>
-import MdEditor from "@/components/md-editor";
-import MdEditorV3 from "md-editor-v3";
 import { computed } from "vue";
-const MdCatalog = MdEditorV3.MdCatalog;
+import { MdPreview, MdCatalog } from "md-editor-v3";
+import { generateId } from "./config";
 
 const props = defineProps({
   content: {
@@ -28,8 +34,6 @@ const contentData = computed({
     emit("update:content", val);
   },
 });
-
-const generateId = (text: any, level: any, index: any) => `heading-${index}`;
 </script>
 
 <style lang="scss">
@@ -37,13 +41,12 @@ const generateId = (text: any, level: any, index: any) => `heading-${index}`;
   display: flex;
   .preview-view {
     flex: 1;
-    .md-editor-content {
-      display: flex;
-      justify-content: center;
-      .md-editor-preview-wrapper {
-        padding: 0 20px;
-        max-width: 1200px;
-      }
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    .md-editor-preview-wrapper {
+      padding: 0 20px;
+      max-width: 1200px;
     }
   }
   .catalog-view {
