@@ -27,7 +27,7 @@
 <script lang="ts" setup>
 import { ref, Ref, onMounted, onBeforeUnmount, nextTick } from "vue";
 import MdEditor from "@/components/md-editor";
-import MdPreview from "@/components/md-editor/preview.vue";
+import MdPreview from "@/components/md-editor/preview";
 import { uploadPicture } from "../picture/util";
 import Book from "./components/book.vue";
 import Doc from "./components/doc.vue";
