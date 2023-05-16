@@ -25,6 +25,21 @@ stages:
         artifacts: []
         isCache: false
         parameter: {}
-        notify: []
+        notify:
+          - certificate: a0aa1290-d602-013b-0da7-7aca5f14f71c
+            events:
+              - success
+              - fail
+              - cancel
+              - skip
+            content:
+              - repository
+              - pipeline
+              - stage
+              - task
+              - operator
+              - branch
+              - detail
+            type: weixin
         strategy:
           retry: '0'
