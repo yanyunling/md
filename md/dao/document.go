@@ -64,7 +64,7 @@ func DocumentGetById(db *sqlx.DB, id, userId string) (entity.Document, error) {
 
 // 清空文档的bookId
 func DocumentClearBookId(tx *sqlx.Tx, bookId string) error {
-	sql := `update t_document set book_id='' where book_id=:book_id`
+	sql := `update t_document set book_id='' where book_id=?`
 	_, err := tx.Exec(sql, bookId)
 	return err
 }
