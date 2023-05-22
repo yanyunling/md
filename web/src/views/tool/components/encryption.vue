@@ -4,8 +4,8 @@
     <el-input v-model="outputText" type="textarea" :rows="10" resize="none" placeholder="结果文本" readonly></el-input>
     <div class="button-group">
       <el-button type="warning" size="large" @click="encrypt('count')">字符数</el-button>
-      <el-button type="warning" size="large" @click="encrypt('countNotBlank')">字符数(无空格换行)</el-button>
-      <el-button type="success" size="large" @click="encrypt('removeBlank')">去除空格</el-button>
+      <el-button type="warning" size="large" @click="encrypt('countNotBlank')">字符数(无空白)</el-button>
+      <el-button type="success" size="large" @click="encrypt('removeBlank')">去除空白</el-button>
       <el-button type="success" size="large" @click="encrypt('timestampToDate')">时间戳转日期</el-button>
       <el-button type="success" size="large" @click="encrypt('dateToTimestamp')">日期转时间戳</el-button>
       <el-button type="success" size="large" @click="encrypt('lowerToUpper')">小写转大写</el-button>
@@ -14,6 +14,7 @@
       <el-button type="danger" size="large" @click="encrypt('URLDecode')">URL解码</el-button>
       <el-button type="danger" size="large" @click="encrypt('Base64Encode')">Base64编码</el-button>
       <el-button type="danger" size="large" @click="encrypt('Base64Decode')">Base64解码</el-button>
+      <el-button type="danger" size="large" @click="encrypt('Base64ToHex')">Base64解码(16进制)</el-button>
       <el-button type="primary" size="large" @click="encrypt('MD5')">MD5</el-button>
       <el-button type="primary" size="large" @click="encrypt('SHA1')">SHA1</el-button>
       <el-button type="primary" size="large" @click="encrypt('SHA224')">SHA224</el-button>
@@ -32,7 +33,7 @@
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
 import crypto from "crypto-js";
-import { encode, decode } from "js-base64";
+import { encode, decode, toUint8Array } from "js-base64";
 import { formatTime, parseTime } from "@/utils";
 
 const inputText = ref("");
@@ -77,6 +78,9 @@ const encrypt = (type: string) => {
         break;
       case "Base64Decode":
         outputText.value = decode(inputText.value);
+        break;
+      case "Base64ToHex":
+        outputText.value = Array.prototype.map.call(toUint8Array(inputText.value), (t) => ("00" + t.toString(16)).slice(-2)).join("");
         break;
       case "MD5":
         outputText.value = crypto.MD5(inputText.value).toString();
