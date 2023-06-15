@@ -14,7 +14,7 @@ import { lineNumbers } from "@codemirror/view";
 
 config({
   editorConfig: {
-    renderDelay: 0,
+    renderDelay: 500,
   },
   editorExtensions: {
     iconfont: "/static/md-editor/iconfont.js",
