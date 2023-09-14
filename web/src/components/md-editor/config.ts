@@ -12,6 +12,27 @@ import "katex/dist/katex.css";
 import "./index.scss";
 import { lineNumbers } from "@codemirror/view";
 
+/**
+ * 扩展：链接打开新窗口
+ * @param md
+ */
+const targetBlankExtension = (md: any) => {
+  const defaultRender =
+    md.renderer.rules.link_open ||
+    function (tokens: any, idx: any, options: any, env: any, self: any) {
+      return self.renderToken(tokens, idx, options);
+    };
+  md.renderer.rules.link_open = function (tokens: any, idx: any, options: any, env: any, self: any) {
+    const aIndex = tokens[idx].attrIndex("target");
+    if (aIndex < 0) {
+      tokens[idx].attrPush(["target", "_blank"]);
+    } else {
+      tokens[idx].attrs[aIndex][1] = "_blank";
+    }
+    return defaultRender(tokens, idx, options, env, self);
+  };
+};
+
 config({
   editorConfig: {
     renderDelay: 500,
@@ -40,6 +61,9 @@ config({
   },
   codeMirrorExtensions(_theme: any, extensions: any) {
     return [...extensions, lineNumbers()];
+  },
+  markdownItConfig(md) {
+    md.use(targetBlankExtension);
   },
 });
 
