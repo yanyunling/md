@@ -32,6 +32,7 @@ class DocCache {
       id: "",
       content: "",
       originContent: "",
+      type: "",
       updateTime: "",
     };
   }

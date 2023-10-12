@@ -14,6 +14,11 @@ func InitRouter(app *iris.Application) {
 	app.UseRouter(cors.AllowAll())
 
 	app.PartyFunc("/api", func(api iris.Party) {
+		// 开放接口
+		api.PartyFunc("/open", func(open iris.Party) {
+			open.Get("/doc/get/{id}", DocumentGetPublished)
+		})
+
 		// token相关接口
 		api.PartyFunc("/token", func(token iris.Party) {
 			token.Use(middleware.TokenAuth)

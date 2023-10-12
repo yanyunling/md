@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>接口文档</title>
+    <script src="/static/stoplight-elements-7.13.4/web-components.min.js"></script>
+    <link rel="stylesheet" href="/static/stoplight-elements-7.13.4/styles.min.css" />
+    <style>
+      body {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+      #mosaic-provider-react-aria-0-1
+        > div
+        > div
+        > div
+        > div.sl-flex
+        > div.sl-flex.sl-overflow-y-auto.sl-flex-col.sl-sticky.sl-inset-y-0.sl-pt-8.sl-bg-canvas-100.sl-border-r
+        > a {
+        display: none;
+      }
+      #mosaic-provider-react-aria-0-1
+        > div
+        > div
+        > div
+        > div.sl-flex
+        > div.sl-flex.sl-overflow-y-auto.sl-flex-col.sl-sticky.sl-inset-y-0.sl-pt-8.sl-bg-canvas-100.sl-border-r {
+        padding-top: 10px;
+      }
+    </style>
+  </head>
+  <body onload="onload()">
+    <script>
+      function onload() {
+        let url = location.search;
+        if (url.indexOf("?") !== -1) {
+          let path = location.origin + "/api/open/doc/get/" + url.substr(1);
+          let elementsApi = document.createElement("elements-api");
+          elementsApi.setAttribute("router", "hash");
+          elementsApi.setAttribute("apiDescriptionUrl", path);
+          document.body.appendChild(elementsApi);
+        }
+      }
+    </script>
+  </body>
+</html>

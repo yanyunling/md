@@ -22,8 +22,11 @@ func DocumentAdd(document entity.Document) entity.Document {
 	if util.StringLength(document.Name) > 1000 {
 		panic(common.NewError("文档名称过长，请小于1000个字符"))
 	}
-	if util.StringLength(document.Content) > 1000000 {
-		panic(common.NewError("文档内容过多，请小于100万个字符"))
+	if util.StringLength(document.Content) > 10000000 {
+		panic(common.NewError("文档内容过多，请小于1000万个字符"))
+	}
+	if document.Type != entity.DocMd && document.Type != entity.DocOpenApi {
+		panic(common.NewError("不支持的文档类型"))
 	}
 	document.Id = util.SnowflakeString()
 	document.CreateTime = time.Now().UnixMilli()
@@ -69,8 +72,8 @@ func DocumentUpdateContent(document entity.Document) entity.Document {
 	tx := middleware.Db.MustBegin()
 	defer tx.Rollback()
 
-	if util.StringLength(document.Content) > 1000000 {
-		panic(common.NewError("文档内容过多，请小于100万个字符"))
+	if util.StringLength(document.Content) > 10000000 {
+		panic(common.NewError("文档内容过多，请小于1000万个字符"))
 	}
 	document.UpdateTime = time.Now().UnixMilli()
 	err := dao.DocumentUpdateContent(tx, document)
@@ -83,7 +86,7 @@ func DocumentUpdateContent(document entity.Document) entity.Document {
 		panic(common.NewErr("更新失败", err))
 	}
 
-	return document
+	return DocumentGet(document.Id, document.UserId)
 }
 
 // 删除文档
@@ -114,6 +117,15 @@ func DocumentList(bookId, userId string) []entity.Document {
 // 查询文档
 func DocumentGet(id, userId string) entity.Document {
 	document, err := dao.DocumentGetById(middleware.Db, id, userId)
+	if err != nil {
+		panic(common.NewErr("查询失败", err))
+	}
+	return document
+}
+
+// 查询公开发布文档
+func DocumentGetPublished(id string) entity.Document {
+	document, err := dao.DocumentGetPublished(middleware.Db, id)
 	if err != nil {
 		panic(common.NewErr("查询失败", err))
 	}

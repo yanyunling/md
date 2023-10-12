@@ -11,16 +11,24 @@
       @loading="loadingChange"
       ref="docRef"
     ></doc>
-    <md-preview v-if="onlyPreview" :key="'preview' + mdKey" class="editor-view" :content="currentDoc.content" />
-    <md-editor
-      v-else
-      :key="'editor' + mdKey"
-      class="editor-view"
+    <codemirror-editor
+      v-if="currentDoc.type === 'openApi'"
       v-model="currentDoc.content"
-      v-loading="mdloading"
-      @onUploadImg="uploadImage"
-      @onSave="saveDoc"
+      :disabled="onlyPreview"
+      @save="saveDoc(currentDoc.content)"
     />
+    <template v-else>
+      <md-preview v-if="onlyPreview" :key="'preview' + mdKey" class="editor-view" :content="currentDoc.content" />
+      <md-editor
+        v-else
+        :key="'editor' + mdKey"
+        class="editor-view"
+        v-model="currentDoc.content"
+        v-loading="mdloading"
+        @onUploadImg="uploadImage"
+        @onSave="saveDoc"
+      />
+    </template>
   </div>
 </template>
 
@@ -28,6 +36,7 @@
 import { ref, Ref, onMounted, onBeforeUnmount, nextTick } from "vue";
 import MdEditor from "@/components/md-editor";
 import MdPreview from "@/components/md-editor/preview";
+import CodemirrorEditor from "@/components/codemirror-editor";
 import { uploadPicture } from "../picture/util";
 import Book from "./components/book.vue";
 import Doc from "./components/doc.vue";
@@ -52,6 +61,7 @@ const currentDoc: Ref<CurrentDoc> = ref({
   id: "",
   content: "",
   originContent: "",
+  type: "",
   updateTime: "",
 });
 const mdloading = ref(false);
@@ -93,15 +103,16 @@ const booksFetch = (bookList: Book[]) => {
 /**
  * 文档选择变化
  */
-const docChange = (id: string, content: string, updateTime: string, noRender: boolean) => {
+const docChange = (id: string, content: string, type: string, updateTime: string, noRender?: boolean) => {
   currentDoc.value.id = id;
   currentDoc.value.content = content;
+  currentDoc.value.type = type;
   currentDoc.value.originContent = content;
   currentDoc.value.updateTime = updateTime;
   if (!noRender) {
     nextTick(() => {
       mdKey.value++;
-    })
+    });
   }
 };
 

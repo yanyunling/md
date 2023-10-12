@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS t_document
 	id TEXT PRIMARY KEY NOT NULL,
 	name TEXT NOT NULL,
 	content TEXT NOT NULL,
+	type TEXT NOT NULL,
+	published BOOLEAN NOT NULL,
 	create_time INTEGER NOT NULL,
 	update_time INTEGER NOT NULL,
 	book_id TEXT NOT NULL,

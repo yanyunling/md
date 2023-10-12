@@ -1,4 +1,4 @@
-import { defineComponent, computed } from "vue";
+import { defineComponent } from "vue";
 import { MdPreview, MdCatalog } from "md-editor-v3";
 import "md-editor-v3/lib/preview.css";
 import { generateId } from "./config";

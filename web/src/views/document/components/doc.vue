@@ -1,8 +1,12 @@
 <template>
   <div class="page-doc" v-loading="docLoading" :class="{ 'page-doc-shrink': !isStretch }">
     <div class="mask-view" v-if="docDisabled"></div>
-    <el-popover v-if="!onlyPreview" :visible="addDocVisible" placement="bottom" trigger="click" width="200px">
+    <el-popover v-if="!onlyPreview" :visible="addDocVisible" placement="bottom" trigger="click" width="240px">
       <el-input v-model="newDocName" placeholder="请输入文档名称" style="margin-right: 10px"></el-input>
+      <el-radio-group v-model="newDocType" style="margin-top: 8px">
+        <el-radio-button label="md">markdown</el-radio-button>
+        <el-radio-button label="openApi">OpenApi</el-radio-button>
+      </el-radio-group>
       <div style="display: flex; margin-top: 8px; justify-content: flex-end">
         <el-button @click="addDocCancel" size="small">取消</el-button>
         <el-button @click="addDocSave" type="primary" size="small">确定</el-button>
@@ -22,6 +26,7 @@
       >
         <text-tip :content="item.name"></text-tip>
         <div class="sub-text">{{ formatTime(item.updateTime, "YYYY-MM-DD HH:mm:ss") }}</div>
+        <div v-if="item.published" class="published-view" @click.stop="copyPublishedClick(item)" title="已发布"></div>
         <el-dropdown trigger="click" v-if="!onlyPreview && item.id">
           <el-icon class="setting-button" @click.stop="() => {}" title="操作"><Tools /></el-icon>
           <template #dropdown>
@@ -43,6 +48,15 @@
       <el-form label-width="70px" size="large">
         <el-form-item label="文档名称">
           <el-input v-model="dialog.condition.name" placeholder="请输入文档名称" style="width: 100%"></el-input>
+        </el-form-item>
+        <el-form-item label="文档类型">
+          <el-radio-group v-model="dialog.condition.type" :disabled="!dialog.isAdd">
+            <el-radio-button label="md">markdown</el-radio-button>
+            <el-radio-button label="openApi">OpenApi</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="公开发布">
+          <el-switch v-model="dialog.condition.published" />
         </el-form-item>
         <el-form-item label="所属文集">
           <el-select v-model="dialog.condition.bookId" style="width: 100%">
@@ -68,11 +82,13 @@ import TextTip from "@/components/text-tip";
 import DocumentApi from "@/api/document";
 import { formatTime } from "@/utils";
 
+const hostUrl = ref(location.origin);
 const docs: Ref<Doc[]> = ref([]);
 const docLoading = ref(false);
 const docDisabled = ref(false);
 const addDocVisible = ref(false);
 const newDocName = ref("");
+const newDocType = ref("md");
 const docIdTemp = ref("");
 const dialog = ref({
   isAdd: true,
@@ -83,6 +99,8 @@ const dialog = ref({
     name: "",
     content: "",
     bookId: "",
+    type: "md",
+    published: false,
   },
 });
 const scrollRef = ref();
@@ -144,7 +162,7 @@ const queryDocs = (bookId: string) => {
       for (let item of res.data) {
         if (item.id === props.currentDoc.id) {
           if (String(item.updateTime) !== props.currentDoc.updateTime) {
-            emitDoc("", "", "");
+            emitDoc("", "", "", "");
           }
           break;
         }
@@ -186,8 +204,8 @@ const checkDocChange = () => {
 /**
  * 回调文档信息
  */
-const emitDoc = (id: string, content: string, updateTime: string, noRender?: boolean) => {
-  emit("change", id, content, updateTime, noRender);
+const emitDoc = (id: string, content: string, type: string, updateTime: string, noRender?: boolean) => {
+  emit("change", id, content, type, updateTime, noRender);
 };
 
 /**
@@ -200,7 +218,7 @@ const docClick = (doc: Doc) => {
     emit("loading", true);
     DocumentApi.get(doc.id)
       .then((res) => {
-        emitDoc(res.data.id, res.data.content, String(res.data.updateTime));
+        emitDoc(res.data.id, res.data.content, res.data.type!, String(res.data.updateTime));
       })
       .finally(() => {
         docIdTemp.value = "";
@@ -221,10 +239,10 @@ const addDocSave = () => {
   }
   checkDocChange().then(() => {
     docLoading.value = true;
-    DocumentApi.add({ id: "", name: name, content: "", bookId: props.currentBookId })
+    DocumentApi.add({ id: "", name: name, content: "", type: newDocType.value, bookId: props.currentBookId })
       .then((res) => {
         ElMessage.success("创建成功");
-        emitDoc(res.data.id, res.data.content, String(res.data.updateTime));
+        emitDoc(res.data.id, res.data.content, res.data.type!, String(res.data.updateTime));
         queryDocs(props.currentBookId);
       })
       .catch(() => {
@@ -239,6 +257,7 @@ const addDocSave = () => {
 const addDocCancel = () => {
   addDocVisible.value = false;
   newDocName.value = "";
+  newDocType.value = "md";
 };
 
 /**
@@ -249,6 +268,8 @@ const updateDocClick = (doc: Doc) => {
   dialog.value.condition.name = doc.name;
   dialog.value.condition.content = "";
   dialog.value.condition.bookId = doc.bookId;
+  dialog.value.condition.type = doc.type!;
+  dialog.value.condition.published = doc.published!;
   dialog.value.isAdd = false;
   dialog.value.visible = true;
 };
@@ -265,11 +286,34 @@ const deleteDocClick = (doc: Doc) => {
     DocumentApi.delete(doc.id).then(() => {
       ElMessage.success("删除成功");
       if (props.currentDoc.id === doc.id) {
-        emitDoc("", "", "");
+        emitDoc("", "", "", "");
       }
       queryDocs(props.currentBookId);
     });
   });
+};
+
+/**
+ * 点击发布地址
+ * @param doc
+ */
+const copyPublishedClick = (doc: Doc) => {
+  let url = hostUrl.value;
+  if (doc.type === "openApi") {
+    url += "/api.html?" + doc.id;
+  } else {
+    url += "/#/open/document?id=" + doc.id;
+  }
+  navigator.clipboard
+    .writeText(url)
+    .then(() => {
+      ElMessage.success("发布地址已复制到剪切板");
+    })
+    .catch((e) => {
+      ElMessage.success("发布地址已复制失败，请通过控制台查看");
+      console.error(e);
+      console.log(url);
+    });
 };
 
 /**
@@ -283,6 +327,8 @@ const dialogClose = () => {
   dialog.value.condition.name = "";
   dialog.value.condition.content = "";
   dialog.value.condition.bookId = "";
+  dialog.value.condition.type = "md";
+  dialog.value.condition.published = false;
   dialog.value.isAdd = true;
   dialog.value.visible = false;
 };
@@ -297,7 +343,7 @@ const dialogSave = () => {
     DocumentApi.add(dialog.value.condition)
       .then((res) => {
         ElMessage.success("创建成功");
-        emitDoc(res.data.id, res.data.content, String(res.data.updateTime));
+        emitDoc(res.data.id, res.data.content, res.data.type!, String(res.data.updateTime));
         docLoading.value = false;
         dialogClose();
         queryDocs(props.currentBookId);
@@ -337,7 +383,7 @@ const saveDoc = (content: string) => {
     DocumentApi.updateContent({ id: props.currentDoc.id, name: "", content: content, bookId: "" })
       .then((res) => {
         ElMessage.success("保存成功");
-        emitDoc(res.data.id, res.data.content, String(res.data.updateTime), true);
+        emitDoc(res.data.id, res.data.content, res.data.type!, String(res.data.updateTime), true);
         // 更新当前文档的更新时间
         for (let item of docs.value) {
           if (item.id === res.data.id) {
@@ -355,6 +401,8 @@ const saveDoc = (content: string) => {
     dialog.value.condition.name = "";
     dialog.value.condition.content = content;
     dialog.value.condition.bookId = "";
+    dialog.value.condition.type = "md";
+    dialog.value.condition.published = false;
     dialog.value.isAdd = true;
     dialog.value.visible = true;
   }
@@ -410,6 +458,15 @@ defineExpose({ saveDoc });
         bottom: 3px;
         right: 20px;
         color: #ccc;
+      }
+      .published-view {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-top: 20px solid skyblue;
+        border-left: 20px solid transparent;
       }
     }
     .item-view:hover {

@@ -58,3 +58,10 @@ func DocumentGet(ctx iris.Context) {
 	userId := middleware.CurrentUserId(ctx)
 	ctx.JSON(common.NewSuccessData("查询成功", service.DocumentGet(document.Id, userId)))
 }
+
+// 查询公开发布文档
+func DocumentGetPublished(ctx iris.Context) {
+	id := ctx.Params().Get("id")
+	result := service.DocumentGetPublished(id)
+	ctx.WriteString(result.Content)
+}
