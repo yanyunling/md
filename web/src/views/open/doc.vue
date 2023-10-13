@@ -36,4 +36,11 @@ onMounted(() => {
   height: 100%;
   width: 100%;
 }
+@media (max-width: 720px) {
+  .page-open-document {
+    .catalog-view {
+      display: none;
+    }
+  }
+}
 </style>
