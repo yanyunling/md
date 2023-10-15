@@ -4,7 +4,6 @@ package util
 import (
 	"math/rand"
 	"strings"
-	"time"
 
 	uuid "github.com/iris-contrib/go.uuid"
 )
@@ -44,7 +43,6 @@ func RandomNumber(length int) string {
 
 // 从对应字符集中随机生成指定长度字符串
 func random(length int, arr []rune) string {
-	rand.Seed(time.Now().Unix())
 	b := make([]rune, length)
 	for i := range b {
 		b[i] = arr[rand.Intn(len(arr))]
