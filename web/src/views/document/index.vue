@@ -12,10 +12,13 @@
       ref="docRef"
     ></doc>
     <codemirror-editor
-      v-if="currentDoc.type === 'openApi'"
+      v-if="docType === 'openApi'"
+      :style="{ visibility: codemirrorVisibility }"
+      ref="codemirrorRef"
       v-model="currentDoc.content"
       :disabled="onlyPreview"
       @save="saveDoc(currentDoc.content)"
+      @ready="codemirrorReday"
     />
     <template v-else>
       <md-preview v-if="onlyPreview" :key="'preview' + mdKey" class="editor-view" :content="currentDoc.content" />
@@ -33,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, Ref, onMounted, onBeforeUnmount, nextTick } from "vue";
+import { ref, Ref, onMounted, onBeforeUnmount, nextTick, computed, watch } from "vue";
 import MdEditor from "@/components/md-editor";
 import MdPreview from "@/components/md-editor/preview";
 import CodemirrorEditor from "@/components/codemirror-editor";
@@ -54,6 +57,7 @@ defineProps({
 });
 
 const docRef = ref<InstanceType<typeof Doc>>();
+const codemirrorRef = ref();
 const hostUrl = ref(location.origin);
 const books: Ref<Book[]> = ref([]);
 const currentBookId = ref("");
@@ -66,6 +70,17 @@ const currentDoc: Ref<CurrentDoc> = ref({
 });
 const mdloading = ref(false);
 const mdKey = ref(0);
+const codemirrorVisibility = ref("hidden");
+
+const docType = computed(() => {
+  return currentDoc.value.type;
+});
+
+watch(docType, (newVal, oldVal) => {
+  if (oldVal && oldVal !== newVal && newVal === "openApi") {
+    codemirrorVisibility.value = "hidden";
+  }
+});
 
 onMounted(() => {
   currentDoc.value = DocCache.getDoc();
@@ -112,8 +127,23 @@ const docChange = (id: string, content: string, type: string, updateTime: string
   if (!noRender) {
     nextTick(() => {
       mdKey.value++;
+      if (codemirrorRef.value) {
+        codemirrorRef.value.$el.getElementsByClassName("cm-scroller")[0].scrollTop = 0;
+      }
     });
   }
+};
+
+/**
+ * codemirror加载完成
+ */
+const codemirrorReday = () => {
+  setTimeout(() => {
+    if (codemirrorRef.value) {
+      codemirrorRef.value.$el.getElementsByClassName("cm-scroller")[0].scrollTop = 0;
+      codemirrorVisibility.value = "unset";
+    }
+  }, 100);
 };
 
 /**
