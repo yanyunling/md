@@ -11,15 +11,16 @@
       @loading="loadingChange"
       ref="docRef"
     ></doc>
-    <codemirror-editor
-      v-if="docType === 'openApi'"
-      :style="{ visibility: codemirrorVisibility }"
-      ref="codemirrorRef"
-      v-model="currentDoc.content"
-      :disabled="onlyPreview"
-      @save="saveDoc(currentDoc.content)"
-      @ready="codemirrorReday"
-    />
+    <div class="codemirror-view" v-if="docType === 'openApi'">
+      <codemirror-editor
+        :style="{ visibility: codemirrorVisibility }"
+        ref="codemirrorRef"
+        v-model="currentDoc.content"
+        :disabled="onlyPreview"
+        @save="saveDoc(currentDoc.content)"
+        @ready="codemirrorReday"
+      />
+    </div>
     <template v-else>
       <md-preview v-if="onlyPreview" :key="'preview' + mdKey" class="editor-view" :content="currentDoc.content" />
       <md-editor
@@ -181,6 +182,11 @@ const saveDoc = (content: string) => {
   }
   .editor-view.md-fullscreen {
     min-width: unset;
+  }
+  .codemirror-view {
+    height: 100%;
+    flex: 1;
+    overflow: hidden;
   }
 }
 @media (max-width: 720px) {
