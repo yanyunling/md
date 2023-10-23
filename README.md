@@ -19,3 +19,12 @@
 - `-log`：日志目录，存放近30天的日志。默认值：**./logs**
 - `-data`：数据目录，存放数据库文件和图片。默认值：**./data**
 - `-reg`：是否允许注册（即使禁止注册，在没有任何用户的情况时仍可注册）。默认值：**true**
+
+## docker镜像
+- [https://hub.docker.com/r/streamerzero/md](https://hub.docker.com/r/streamerzero/md)
+
+## 隐含的功能按钮
+- 编辑模式：“云文档”标题
+- 收缩边栏：“云文档”标题左边图标
+- OpenApi保存：Ctrl + s
+- 发布链接：文档列表蓝色倒三角
