@@ -186,6 +186,7 @@ const saveDoc = (content: string) => {
   .codemirror-view {
     height: 100%;
     flex: 1;
+    min-width: 720px;
     overflow: hidden;
   }
 }
@@ -196,6 +197,9 @@ const saveDoc = (content: string) => {
       .catalog-view {
         display: none;
       }
+    }
+    .codemirror-view {
+      min-width: 100%;
     }
   }
 }
