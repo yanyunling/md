@@ -1,5 +1,5 @@
 <template>
-  <el-tabs v-model="activeName" class="page-tool">
+  <el-tabs v-model="activeName" class="page-tool" stretch>
     <el-tab-pane label="JSON格式化" name="JsonFormat">
       <json-format class="tool-card" />
     </el-tab-pane>
@@ -47,10 +47,6 @@ const activeName = ref("JsonFormat");
     .el-tab-pane {
       height: 100%;
     }
-  }
-  .el-tabs__nav-scroll {
-    display: flex;
-    justify-content: center;
   }
   .tool-card {
     height: 100%;
