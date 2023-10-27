@@ -32,9 +32,11 @@ const formatClick = () => {
   align-items: center;
   .json-view {
     margin-top: 5px;
-    height: 80vh;
-    width: 100%;
+    height: calc(100% - 43px);
+    width: calc(100% - 2px);
     border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
   }
 }
 </style>

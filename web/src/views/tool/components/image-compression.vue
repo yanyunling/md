@@ -125,11 +125,11 @@ const clear = () => {
   }
   .image-view {
     width: calc(100% - 40px);
-    margin-bottom: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 50vh;
+    min-height: 200px;
     background: #eee;
     padding: 20px;
     border-radius: 6px;

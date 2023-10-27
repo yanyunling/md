@@ -1,31 +1,27 @@
 <template>
   <div class="page-encryption">
+    <div class="button-group">
+      <el-button type="warning" @click="encrypt('count')">字符数</el-button>
+      <el-button type="warning" @click="encrypt('countNotBlank')">字符数(无空白)</el-button>
+      <el-button type="success" @click="encrypt('removeBlank')">去除空白</el-button>
+      <el-button type="success" @click="encrypt('timestampToDate')">时间戳转日期</el-button>
+      <el-button type="success" @click="encrypt('dateToTimestamp')">日期转时间戳</el-button>
+      <el-button type="success" @click="encrypt('lowerToUpper')">小写转大写</el-button>
+      <el-button type="success" @click="encrypt('upperToLower')">大写转小写</el-button>
+      <el-button type="danger" @click="encrypt('URLEncode')">URL编码</el-button>
+      <el-button type="danger" @click="encrypt('URLDecode')">URL解码</el-button>
+      <el-button type="danger" @click="encrypt('Base64Encode')">Base64编码</el-button>
+      <el-button type="danger" @click="encrypt('Base64Decode')">Base64解码</el-button>
+      <el-button type="danger" @click="encrypt('Base64ToHex')">Base64解码(16进制)</el-button>
+      <el-button type="primary" @click="encrypt('MD5')">MD5</el-button>
+      <el-button type="primary" @click="encrypt('SHA1')">SHA1</el-button>
+      <el-button type="primary" @click="encrypt('SHA256')">SHA256</el-button>
+      <el-button type="primary" @click="encrypt('SHA512')">SHA512</el-button>
+      <el-button type="primary" @click="encrypt('SHA3-256')">SHA3-256</el-button>
+      <el-button type="primary" @click="encrypt('SHA3-512')">SHA3-512</el-button>
+    </div>
     <el-input v-model="inputText" type="textarea" :rows="10" resize="none" placeholder="请输入文本"></el-input>
     <el-input v-model="outputText" type="textarea" :rows="10" resize="none" placeholder="结果文本" readonly></el-input>
-    <div class="button-group">
-      <el-button type="warning" size="large" @click="encrypt('count')">字符数</el-button>
-      <el-button type="warning" size="large" @click="encrypt('countNotBlank')">字符数(无空白)</el-button>
-      <el-button type="success" size="large" @click="encrypt('removeBlank')">去除空白</el-button>
-      <el-button type="success" size="large" @click="encrypt('timestampToDate')">时间戳转日期</el-button>
-      <el-button type="success" size="large" @click="encrypt('dateToTimestamp')">日期转时间戳</el-button>
-      <el-button type="success" size="large" @click="encrypt('lowerToUpper')">小写转大写</el-button>
-      <el-button type="success" size="large" @click="encrypt('upperToLower')">大写转小写</el-button>
-      <el-button type="danger" size="large" @click="encrypt('URLEncode')">URL编码</el-button>
-      <el-button type="danger" size="large" @click="encrypt('URLDecode')">URL解码</el-button>
-      <el-button type="danger" size="large" @click="encrypt('Base64Encode')">Base64编码</el-button>
-      <el-button type="danger" size="large" @click="encrypt('Base64Decode')">Base64解码</el-button>
-      <el-button type="danger" size="large" @click="encrypt('Base64ToHex')">Base64解码(16进制)</el-button>
-      <el-button type="primary" size="large" @click="encrypt('MD5')">MD5</el-button>
-      <el-button type="primary" size="large" @click="encrypt('SHA1')">SHA1</el-button>
-      <el-button type="primary" size="large" @click="encrypt('SHA224')">SHA224</el-button>
-      <el-button type="primary" size="large" @click="encrypt('SHA256')">SHA256</el-button>
-      <el-button type="primary" size="large" @click="encrypt('SHA384')">SHA384</el-button>
-      <el-button type="primary" size="large" @click="encrypt('SHA512')">SHA512</el-button>
-      <el-button type="primary" size="large" @click="encrypt('SHA3-224')">SHA3-224</el-button>
-      <el-button type="primary" size="large" @click="encrypt('SHA3-256')">SHA3-256</el-button>
-      <el-button type="primary" size="large" @click="encrypt('SHA3-384')">SHA3-384</el-button>
-      <el-button type="primary" size="large" @click="encrypt('SHA3-512')">SHA3-512</el-button>
-    </div>
   </div>
 </template>
 
@@ -88,26 +84,14 @@ const encrypt = (type: string) => {
       case "SHA1":
         outputText.value = crypto.SHA1(inputText.value).toString();
         break;
-      case "SHA224":
-        outputText.value = crypto.SHA224(inputText.value).toString();
-        break;
       case "SHA256":
         outputText.value = crypto.SHA256(inputText.value).toString();
-        break;
-      case "SHA384":
-        outputText.value = crypto.SHA384(inputText.value).toString();
         break;
       case "SHA512":
         outputText.value = crypto.SHA512(inputText.value).toString();
         break;
-      case "SHA3-224":
-        outputText.value = crypto.SHA3(inputText.value, { outputLength: 224 }).toString();
-        break;
       case "SHA3-256":
         outputText.value = crypto.SHA3(inputText.value, { outputLength: 256 }).toString();
-        break;
-      case "SHA3-384":
-        outputText.value = crypto.SHA3(inputText.value, { outputLength: 384 }).toString();
         break;
       case "SHA3-512":
         outputText.value = crypto.SHA3(inputText.value, { outputLength: 512 }).toString();
@@ -131,7 +115,7 @@ const encrypt = (type: string) => {
   }
   .button-group {
     width: 100%;
-    margin-top: 10px;
+    margin-bottom: 10px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

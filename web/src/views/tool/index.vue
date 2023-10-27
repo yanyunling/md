@@ -1,45 +1,61 @@
 <template>
-  <div class="page-tool">
-    <el-divider content-position="center">JSON格式化</el-divider>
-    <json-format class="tool-card" />
-    <el-divider content-position="center">文本转换、编码、解码、加密</el-divider>
-    <encryption class="tool-card" />
-    <el-divider content-position="center">随机数、UUID、当前时间生成</el-divider>
-    <generate class="tool-card" />
-    <el-divider content-position="center">图片压缩</el-divider>
-    <image-compression class="tool-card" />
-  </div>
+  <el-tabs v-model="activeName" class="page-tool">
+    <el-tab-pane label="JSON格式化" name="JsonFormat">
+      <json-format class="tool-card" />
+    </el-tab-pane>
+    <el-tab-pane label="文本转换" name="Encryption">
+      <encryption class="tool-card" />
+    </el-tab-pane>
+    <el-tab-pane label="RSA加密" name="Rsa">
+      <rsa class="tool-card" />
+    </el-tab-pane>
+    <el-tab-pane label="随机数" name="Generate">
+      <generate class="tool-card" />
+    </el-tab-pane>
+    <el-tab-pane label="正则表达式" name="Regular">
+      <regular class="tool-card" />
+    </el-tab-pane>
+    <el-tab-pane label="图片压缩" name="ImageCompression">
+      <image-compression class="tool-card" />
+    </el-tab-pane>
+  </el-tabs>
 </template>
 
 <script lang="ts" setup>
-import Encryption from "./components/encryption.vue";
-import Generate from "./components/generate.vue";
+import { ref } from "vue";
 import JsonFormat from "./components/json-format.vue";
+import Encryption from "./components/encryption.vue";
+import Rsa from "./components/rsa.vue";
+import Generate from "./components/generate.vue";
+import Regular from "./components/regular.vue";
 import ImageCompression from "./components/image-compression.vue";
+
+const activeName = ref("JsonFormat");
 </script>
 
 <style lang="scss">
 .page-tool {
-  .el-divider {
-    width: 96%;
-    margin: 30px 2%;
+  overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
+  .el-tabs__item {
     user-select: none;
-    .el-divider__text {
-      font-size: 16px;
-      font-weight: bold;
-      color: #0094c1;
+  }
+  .el-tabs__content {
+    overflow: auto;
+    flex: 1;
+    .el-tab-pane {
+      height: 100%;
     }
   }
-  .el-divider--horizontal {
-    border-top-color: #87cadf;
+  .el-tabs__nav-scroll {
+    display: flex;
+    justify-content: center;
   }
   .tool-card {
+    height: 100%;
     width: 96%;
     margin: 0 2%;
-    overflow: hidden;
-  }
-  .tool-card + .el-divider {
-    margin-top: 100px;
   }
 }
 </style>

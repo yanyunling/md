@@ -5,14 +5,14 @@
         <el-input-number v-model="inputText" placeholder="请输入" :min="1" :max="9999"></el-input-number>
       </el-form-item>
     </el-form>
-    <el-input v-model="outputText" type="textarea" :rows="5" resize="none" placeholder="结果文本" readonly></el-input>
     <div class="button-group">
-      <el-button type="success" size="large" @click="generate('randomNum')">数字</el-button>
-      <el-button type="success" size="large" @click="generate('randomStr')">字符串</el-button>
-      <el-button type="primary" size="large" @click="generate('UUID')">UUID</el-button>
-      <el-button type="primary" size="large" @click="generate('date')">日期</el-button>
-      <el-button type="primary" size="large" @click="generate('timestamp')">时间戳</el-button>
+      <el-button type="success" @click="generate('randomNum')">数字</el-button>
+      <el-button type="success" @click="generate('randomStr')">字符串</el-button>
+      <el-button type="primary" @click="generate('UUID')">UUID</el-button>
+      <el-button type="primary" @click="generate('date')">日期</el-button>
+      <el-button type="primary" @click="generate('timestamp')">时间戳</el-button>
     </div>
+    <el-input v-model="outputText" type="textarea" :rows="10" resize="none" placeholder="结果文本" readonly></el-input>
   </div>
 </template>
 
@@ -67,12 +67,13 @@ const generate = (type: string) => {
   flex-direction: column;
   align-items: center;
   .el-form {
-    width: 400px;
-    max-width: 100%;
+    .el-form-item {
+      margin-bottom: 0;
+    }
   }
   .button-group {
     width: 100%;
-    margin-top: 10px;
+    margin-bottom: 10px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

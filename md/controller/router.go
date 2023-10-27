@@ -58,6 +58,14 @@ func InitRouter(app *iris.Application) {
 				pic.Post("/delete", PictureDelete)
 				pic.Post("/upload", PictureUpload)
 			})
+
+			data.PartyFunc("/rsa", func(pic iris.Party) {
+				pic.Post("/generate", RSAGenerateKey)
+				pic.Post("/encrypt", RSAEncrypt)
+				pic.Post("/decrypt", RSADecrypt)
+				pic.Post("/sign", RSASign)
+				pic.Post("/verify", RSAVerify)
+			})
 		})
 	})
 }
