@@ -27,7 +27,7 @@
     </el-form-item>
     <el-form-item label="结果">
       <div class="codemirror-view">
-        <codemirror-editor v-model="outText" disabled />
+        <codemirror-editor v-model="outText" />
       </div>
     </el-form-item>
   </el-form>
