@@ -24,7 +24,8 @@
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
     "xlsx": "^0.18.5",
-    "vue-codemirror": "^6.1.1"
+    "vue-codemirror": "^6.1.1",
+    "qrcode.vue": "^3.4.1"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
