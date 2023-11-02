@@ -179,8 +179,14 @@ const publicKeyVerify = () => {
 .page-rsa {
   width: 100%;
   .select-view {
-    margin-right: 10px;
     width: 100px;
+    margin: 1px 0;
+  }
+  .el-button {
+    margin: 1px 10px;
+  }
+  .el-button + .el-button {
+    margin-left: 0;
   }
 }
 </style>

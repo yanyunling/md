@@ -65,7 +65,7 @@ watch(
  * 上传图片
  */
 const upload = () => {
-  Upload.openFiles(false, ".jpg,.jpeg,.png,.gif").then((fileList) => {
+  Upload.openFiles(false, ".jpg,.jpeg,.jfif,.png,.gif,.bmp").then((fileList) => {
     file.value = fileList[0];
     originalSize.value = Upload.formatFileSize(file.value.size);
     compress();
@@ -88,6 +88,7 @@ const compress = () => {
       Upload.readBlobToBase64(result)
         .then((res) => {
           compressBase64.value = res;
+          console.info(res);
         })
         .catch((err) => {
           clear();

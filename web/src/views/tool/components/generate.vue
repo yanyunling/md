@@ -11,6 +11,7 @@
       <el-button type="primary" @click="generate('UUID')">UUID</el-button>
       <el-button type="primary" @click="generate('date')">日期</el-button>
       <el-button type="primary" @click="generate('timestamp')">时间戳</el-button>
+      <el-button type="primary" @click="generate('color')">颜色</el-button>
     </div>
     <el-input v-model="outputText" type="textarea" :rows="10" resize="none" placeholder="结果文本" readonly></el-input>
   </div>
@@ -19,18 +20,23 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
-import { formatTime, checkNaN, randomStr } from "@/utils";
+import { formatTime, checkNaN, randomStr, random } from "@/utils";
 import { uuid } from "@/utils";
 
 const inputText = ref(6);
 const outputText = ref("");
+const colorText = ref("0123456789abcdef");
 
 const generate = (type: string) => {
   try {
     let date = new Date();
     switch (type) {
       case "UUID":
-        outputText.value = uuid() + "\n" + uuid() + "\n" + uuid() + "\n" + uuid() + "\n" + uuid();
+        let uuidArr = [];
+        for (let i = 0; i < 10; i++) {
+          uuidArr.push(uuid());
+        }
+        outputText.value = uuidArr.join("\n");
         break;
       case "date":
         outputText.value = formatTime(date, "YYYY/MM/DD HH:mm:ss.SSS");
@@ -51,6 +57,13 @@ const generate = (type: string) => {
         } else {
           outputText.value = randomStr(inputText.value);
         }
+        break;
+      case "color":
+        let colorArr = [];
+        for (let i = 0; i < 10; i++) {
+          colorArr.push("#" + random(colorText.value, 6));
+        }
+        outputText.value = colorArr.join("\n");
         break;
     }
   } catch (e) {

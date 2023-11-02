@@ -9,25 +9,35 @@ export const uuid = () => {
 
 /**
  * 生成随机字符串
- * @param {*} len 长度
- * @param {*} onlyNumber 数字型
+ * @param optional 可选字符
+ * @param len 长度
+ * @returns
  */
-export const randomStr = (len: number, onlyNumber?: boolean) => {
+export const random = (optional: string, len: number) => {
   let result = "";
-  if (len <= 0) {
+  if (len <= 0 || !optional) {
     return result;
-  }
-  let optional;
-  if (onlyNumber) {
-    optional = "0123456789";
-  } else {
-    optional = "abcdefghijklmnopqrstuvwxyz0123456789";
   }
   const optionalLen = optional.length;
   for (let i = 0; i < len; i++) {
     result += optional.charAt(Math.floor(Math.random() * optionalLen));
   }
   return result;
+};
+
+/**
+ * 生成随机字符串
+ * @param {*} len 长度
+ * @param {*} onlyNumber 数字型
+ */
+export const randomStr = (len: number, onlyNumber?: boolean) => {
+  let optional;
+  if (onlyNumber) {
+    optional = "0123456789";
+  } else {
+    optional = "abcdefghijklmnopqrstuvwxyz0123456789";
+  }
+  return random(optional, len);
 };
 
 /**
