@@ -1,4 +1,9 @@
 import Token from "./token";
+import localforage from "localforage";
+
+localforage.config({
+  name: "doc",
+});
 
 interface DocCache {
   docCacheKey: string;
@@ -14,34 +19,48 @@ class DocCache {
    * @param currentDoc
    */
   setDoc(currentDoc: CurrentDoc) {
-    localStorage.setItem(Token.getName() + this.docCacheKey, JSON.stringify(currentDoc));
+    localforage.setItem(Token.getName() + this.docCacheKey, JSON.stringify(currentDoc));
   }
 
   /**
    * 获取文档内容
    * @returns
    */
-  getDoc(): CurrentDoc {
-    try {
-      let cacheJson = localStorage.getItem(Token.getName() + this.docCacheKey);
-      if (cacheJson) {
-        return JSON.parse(cacheJson);
-      }
-    } catch (e) {}
-    return {
-      id: "",
-      content: "",
-      originContent: "",
-      type: "",
-      updateTime: "",
-    };
+  async getDoc(): Promise<CurrentDoc | null> {
+    return new Promise((resolve, reject) => {
+      localforage
+        .getItem<string>(Token.getName() + this.docCacheKey)
+        .then((res) => {
+          if (res) {
+            resolve(JSON.parse(res));
+          } else {
+            resolve({
+              id: "",
+              content: "",
+              originContent: "",
+              type: "",
+              updateTime: "",
+            });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          resolve({
+            id: "",
+            content: "",
+            originContent: "",
+            type: "",
+            updateTime: "",
+          });
+        });
+    });
   }
 
   /**
    * 清空文档缓存
    */
   removeDoc() {
-    localStorage.removeItem(Token.getName() + this.docCacheKey);
+    localforage.removeItem(Token.getName() + this.docCacheKey);
   }
 }
 

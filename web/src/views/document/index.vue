@@ -84,7 +84,11 @@ watch(docType, (newVal, oldVal) => {
 });
 
 onMounted(() => {
-  currentDoc.value = DocCache.getDoc();
+  DocCache.getDoc().then((res) => {
+    if (res) {
+      currentDoc.value = res;
+    }
+  });
 });
 
 onBeforeUnmount(() => {
@@ -133,6 +137,7 @@ const docChange = (id: string, content: string, type: string, updateTime: string
       }
     });
   }
+  DocCache.setDoc(currentDoc.value);
 };
 
 /**
