@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"io"
-	"io/ioutil"
 	"md/util"
 	"os"
 	"path"
@@ -72,12 +71,13 @@ func InitLog(prefixPath string, logger *golog.Logger) {
 
 // 删除早于指定天数的文件
 func removeOvertimeFile(dirPath string, days int64) {
-	files, err := ioutil.ReadDir(dirPath)
+	files, err := os.ReadDir(dirPath)
 	if err == nil {
 		for _, f := range files {
 			// 删除早于指定时间的日志文件
 			if !f.IsDir() && path.Ext(f.Name()) == ".log" {
-				if f.ModTime().UnixNano() < time.Now().UnixNano()-days*int64(time.Hour)*24 {
+				info, err := f.Info()
+				if err == nil && info.ModTime().UnixNano() < time.Now().UnixNano()-days*int64(time.Hour)*24 {
 					_ = os.Remove(dirPath + f.Name())
 				}
 			}

@@ -3,7 +3,7 @@ package util
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -19,7 +19,7 @@ func RemoveBlank(str string) string {
 	if str == "" {
 		return ""
 	}
-	reg, err := regexp.Compile("\\s+")
+	reg, err := regexp.Compile(`\s+`)
 	if err != nil {
 		return str
 	}
@@ -65,7 +65,7 @@ func FileExt(filename string) string {
 // UTF8转GBK
 func UTF82GBK(src string) ([]byte, error) {
 	GB18030 := simplifiedchinese.All[0]
-	return ioutil.ReadAll(transform.NewReader(bytes.NewReader([]byte(src)), GB18030.NewEncoder()))
+	return io.ReadAll(transform.NewReader(bytes.NewReader([]byte(src)), GB18030.NewEncoder()))
 }
 
 // 字符串排序（GBK）
