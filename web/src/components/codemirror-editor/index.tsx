@@ -10,8 +10,8 @@ export default defineComponent({
       return (
         <Codemirror
           style={{ width: "100%" }}
-          autofocus={true}
-          indent-with-tab={true}
+          autofocus
+          indent-with-tab
           tab-size={2}
           extensions={[
             json(),
