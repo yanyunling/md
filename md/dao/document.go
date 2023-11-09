@@ -72,6 +72,6 @@ func DocumentClearBookId(tx *sqlx.Tx, bookId string) error {
 func DocumentGetPublished(db *sqlx.DB, id string) (entity.Document, error) {
 	sql := `select id,name,content,type,published,create_time,update_time,book_id from t_document where id=? and published=true`
 	result := entity.Document{}
-	err := db.Get(&result, sql, id, true)
+	err := db.Get(&result, sql, id)
 	return result, err
 }
