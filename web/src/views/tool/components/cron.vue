@@ -1,8 +1,8 @@
 <template>
   <div class="page-cron">
     <el-button type="primary" @click="cronConvert">解析</el-button>
-    <el-input class="input-view" v-model="cronText" placeholder="请输入Cron表达式"></el-input>
-    <el-input class="input-view" v-model="translateText" type="textarea" :rows="3" resize="none" placeholder="Cron解析" readonly></el-input>
+    <el-input class="input-view" v-model="cronText" placeholder="请输入Cron表达式" clearable @clear="clear"></el-input>
+    <el-input class="input-view" v-model="translateText" type="textarea" :rows="3" resize="none" placeholder="Cron解析结果" readonly></el-input>
     <el-input class="input-view" v-model="nextText" type="textarea" :rows="5" resize="none" placeholder="近5次执行时间" readonly></el-input>
   </div>
 </template>
@@ -40,6 +40,11 @@ const cronConvert = () => {
     nextText.value = "解析失败";
   }
 };
+
+const clear = () => {
+  translateText.value = "";
+  nextText.value = "";
+};
 </script>
 
 <style lang="scss" scoped>
@@ -49,6 +54,8 @@ const cronConvert = () => {
   align-items: center;
   .input-view {
     margin-top: 10px;
+    width: 400px;
+    max-width: 100%;
   }
 }
 </style>

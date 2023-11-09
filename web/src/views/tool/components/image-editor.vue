@@ -106,8 +106,6 @@ const init = () => {
 };
 </script>
 
-<style lang="scss" scoped></style>
-
 <style lang="scss">
 .tui-image-editor-header-logo {
   display: none !important;
