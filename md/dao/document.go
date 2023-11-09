@@ -44,7 +44,6 @@ func DocumentList(db *sqlx.DB, bookId, userId string) ([]entity.Document, error)
 	if bookId != "" {
 		sqlCompletion.Eq("book_id", bookId, true)
 	}
-	sqlCompletion.Order("create_time", true)
 	result := []entity.Document{}
 	err := db.Select(&result, sqlCompletion.GetSql(), sqlCompletion.GetParams()...)
 	// 按名称升序
@@ -71,7 +70,7 @@ func DocumentClearBookId(tx *sqlx.Tx, bookId string) error {
 
 // 根据id查询公开发布文档
 func DocumentGetPublished(db *sqlx.DB, id string) (entity.Document, error) {
-	sql := `select id,name,content,type,published,create_time,update_time,book_id from t_document where id=? and published=?`
+	sql := `select id,name,content,type,published,create_time,update_time,book_id from t_document where id=? and published=true`
 	result := entity.Document{}
 	err := db.Get(&result, sql, id, true)
 	return result, err

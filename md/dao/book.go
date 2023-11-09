@@ -31,7 +31,7 @@ func BookDeleteById(tx *sqlx.Tx, id, userId string) error {
 
 // 查询文集列表
 func BookList(db *sqlx.DB, userId string) ([]entity.Book, error) {
-	sql := `select id,name,create_time from t_book where user_id=? order by create_time`
+	sql := `select id,name,create_time from t_book where user_id=?`
 	result := []entity.Book{}
 	err := db.Select(&result, sql, userId)
 	// 按名称升序
@@ -43,8 +43,8 @@ func BookList(db *sqlx.DB, userId string) ([]entity.Book, error) {
 
 // 根据名称查询文集列表
 func BookListByName(tx *sqlx.Tx, name, userId string) ([]entity.Book, error) {
-	sql := `select * from t_book where name=? and user_id=?`
+	sql := `select * from t_book where user_id=? and name=?`
 	result := []entity.Book{}
-	err := tx.Select(&result, sql, name, userId)
+	err := tx.Select(&result, sql, userId, name)
 	return result, err
 }

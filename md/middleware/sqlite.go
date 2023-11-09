@@ -49,6 +49,33 @@ CREATE TABLE IF NOT EXISTS t_picture
 	create_time INTEGER NOT NULL,
 	user_id TEXT NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS "book_user_id"
+ON "t_book" (
+  "user_id" ASC
+);
+
+CREATE INDEX IF NOT EXISTS "document_user_id_book_id"
+ON "t_document" (
+  "user_id" ASC,
+  "book_id" ASC
+);
+
+CREATE INDEX IF NOT EXISTS "picture_size_hash"
+ON "t_picture" (
+  "size" ASC,
+  "hash" ASC
+);
+
+CREATE INDEX IF NOT EXISTS "picture_user_id"
+ON "t_picture" (
+  "user_id" ASC
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS "user_name"
+ON "t_user" (
+  "name" ASC
+);
 `
 
 // 初始化sqlite
