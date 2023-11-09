@@ -29,7 +29,8 @@
     "localforage": "^1.10.0",
     "composerize": "^1.4.1",
     "cronstrue": "^2.41.0",
-    "cron-parser": "^4.9.0"
+    "cron-parser": "^4.9.0",
+    "tui-image-editor": "^3.15.3"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
