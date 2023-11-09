@@ -88,7 +88,6 @@ const compress = () => {
       Upload.readBlobToBase64(result)
         .then((res) => {
           compressBase64.value = res;
-          console.info(res);
         })
         .catch((err) => {
           clear();

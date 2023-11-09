@@ -6,7 +6,7 @@ import dayjs, { ManipulateType } from "dayjs";
  * @param pattern
  * @returns
  */
-export const formatTime = (date: dayjs.ConfigType, pattern: string): string => {
+export const formatTime = (date: dayjs.ConfigType, pattern: string = "YYYY-MM-DD HH:mm:ss"): string => {
   return dayjs(date).format(pattern);
 };
 
@@ -28,4 +28,15 @@ export const parseTime = (date: string | number) => {
  */
 export const addTime = (date: Date, value: number, unit: ManipulateType) => {
   return dayjs(date).add(value, unit).toDate();
+};
+
+/**
+ * 获取时间是周几
+ * @param date
+ * @returns
+ */
+export const getWeek = (date: Date) => {
+  const weekNum = dayjs(date).day();
+  var week = ["日", "一", "二", "三", "四", "五", "六"];
+  return "周" + week[weekNum];
 };

@@ -28,6 +28,7 @@ const convert = () => {
   try {
     composeResult.value = composerize(dockerRun.value, existCompose.value);
   } catch (e) {
+    console.error(e);
     ElMessage.warning("docker run 命令有误");
   }
 };
