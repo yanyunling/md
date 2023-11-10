@@ -12,7 +12,9 @@
       ref="docRef"
     ></doc>
     <div class="codemirror-view" v-if="docType === 'openApi'">
+      <open-api v-if="onlyPreview" :content="currentDoc.content"></open-api>
       <codemirror-editor
+        v-else
         :style="{ visibility: codemirrorVisibility }"
         ref="codemirrorRef"
         v-model="currentDoc.content"
@@ -41,6 +43,7 @@ import { ref, Ref, onMounted, onBeforeUnmount, nextTick, computed, watch } from 
 import MdEditor from "@/components/md-editor";
 import MdPreview from "@/components/md-editor/preview";
 import CodemirrorEditor from "@/components/codemirror-editor";
+import OpenApi from "@/components/open-api/index.vue";
 import { uploadPicture } from "../picture/util";
 import Book from "./components/book.vue";
 import Doc from "./components/doc.vue";

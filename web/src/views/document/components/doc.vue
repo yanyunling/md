@@ -298,21 +298,15 @@ const deleteDocClick = (doc: Doc) => {
  * @param doc
  */
 const copyPublishedClick = (doc: Doc) => {
-  let url = hostUrl.value;
-  if (doc.type === "openApi") {
-    url += "/api.html?" + doc.id;
-  } else {
-    url += "/#/open/document?id=" + doc.id;
-  }
+  let url = hostUrl.value + "/#/open/document?id=" + doc.id;
   navigator.clipboard
     .writeText(url)
     .then(() => {
       ElMessage.success("发布地址已复制到剪切板");
     })
     .catch((e) => {
-      ElMessage.success("发布地址已复制失败，请通过控制台查看");
+      ElMessage.error("复制到剪切板失败，地址：" + url);
       console.error(e);
-      console.log(url);
     });
 };
 

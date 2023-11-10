@@ -34,18 +34,18 @@
       }
     </style>
   </head>
-  <body onload="onload()">
+  <body>
     <script>
-      function onload() {
-        let url = location.search;
-        if (url.indexOf("?") !== -1) {
-          let path = location.origin + "/api/open/doc/get/" + url.substr(1);
-          let elementsApi = document.createElement("elements-api");
-          elementsApi.setAttribute("router", "hash");
-          elementsApi.setAttribute("apiDescriptionUrl", path);
-          document.body.appendChild(elementsApi);
+      var child;
+      window.addEventListener("message", function (e) {
+        if (child) {
+          document.body.removeChild(child);
         }
-      }
+        child = document.createElement("elements-api");
+        child.setAttribute("router", "hash");
+        child.setAttribute("apiDescriptionDocument", e.data);
+        document.body.appendChild(child);
+      });
     </script>
   </body>
 </html>

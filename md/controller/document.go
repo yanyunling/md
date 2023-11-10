@@ -62,6 +62,5 @@ func DocumentGet(ctx iris.Context) {
 // 查询公开发布文档
 func DocumentGetPublished(ctx iris.Context) {
 	id := ctx.Params().Get("id")
-	result := service.DocumentGetPublished(id)
-	ctx.WriteString(result.Content)
+	ctx.JSON(common.NewSuccessData("查询成功", service.DocumentGetPublished(id)))
 }
