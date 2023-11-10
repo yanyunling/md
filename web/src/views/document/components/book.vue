@@ -183,8 +183,8 @@ const deleteBookClick = (book: Book) => {
 <style lang="scss">
 .page-book {
   height: 100%;
-  min-width: 240px;
-  width: 240px;
+  min-width: 220px;
+  width: 220px;
   background: #404040;
   display: flex;
   flex-direction: column;
@@ -199,12 +199,12 @@ const deleteBookClick = (book: Book) => {
   }
   .scroll-view {
     color: #f2f2f2;
-    font-size: 14px;
+    font-size: 13px;
     .item-view {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20px;
+      padding: 18px 15px;
       cursor: pointer;
       border-left: 3px #404040 solid;
       transition: 0.05s;
@@ -235,7 +235,7 @@ const deleteBookClick = (book: Book) => {
   }
 }
 .page-book-shrink {
-  margin-left: -240px;
+  margin-left: -220px;
 }
 @media (max-width: 540px) {
   .page-book {

@@ -408,8 +408,8 @@ defineExpose({ saveDoc });
 <style lang="scss">
 .page-doc {
   height: 100%;
-  min-width: 300px;
-  width: 300px;
+  min-width: 260px;
+  width: 260px;
   background: #fafafa;
   display: flex;
   flex-direction: column;
@@ -431,12 +431,12 @@ defineExpose({ saveDoc });
   }
   .scroll-view {
     color: #595959;
-    font-size: 14px;
+    font-size: 13px;
     .item-view {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20px;
+      padding: 18px 15px;
       cursor: pointer;
       border-left: 3px #fafafa solid;
       transition: 0.05s;
@@ -484,7 +484,7 @@ defineExpose({ saveDoc });
   }
 }
 .page-doc-shrink {
-  margin-left: -300px;
+  margin-left: -260px;
 }
 @media (max-width: 540px) {
   .page-doc {
