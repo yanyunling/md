@@ -48,6 +48,7 @@ import { uploadPicture } from "../picture/util";
 import Book from "./components/book.vue";
 import Doc from "./components/doc.vue";
 import DocCache from "@/store/doc-cache";
+import { host } from "@/config";
 
 defineProps({
   onlyPreview: {
@@ -62,7 +63,7 @@ defineProps({
 
 const docRef = ref<InstanceType<typeof Doc>>();
 const codemirrorRef = ref();
-const hostUrl = ref(location.origin);
+const hostUrl = ref("");
 const books: Ref<Book[]> = ref([]);
 const currentBookId = ref("");
 const currentDoc: Ref<CurrentDoc> = ref({
@@ -87,6 +88,7 @@ watch(docType, (newVal, oldVal) => {
 });
 
 onMounted(() => {
+  hostUrl.value = process.env.NODE_ENV === "production" ? location.origin : host;
   DocCache.getDoc().then((res) => {
     if (res) {
       currentDoc.value = res;
