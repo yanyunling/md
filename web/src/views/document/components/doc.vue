@@ -486,7 +486,7 @@ defineExpose({ saveDoc });
 .page-doc-shrink {
   margin-left: -260px;
 }
-@media (max-width: 540px) {
+@media (max-width: 480px) {
   .page-doc {
     min-width: 55%;
     width: 55%;

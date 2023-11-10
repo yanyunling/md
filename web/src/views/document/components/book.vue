@@ -237,7 +237,7 @@ const deleteBookClick = (book: Book) => {
 .page-book-shrink {
   margin-left: -220px;
 }
-@media (max-width: 540px) {
+@media (max-width: 480px) {
   .page-book {
     min-width: 45%;
     width: 45%;
