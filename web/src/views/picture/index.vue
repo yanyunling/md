@@ -57,8 +57,9 @@ import { ElMessage, ElMessageBox, ElTable } from "element-plus";
 import PictureApi from "@/api/picture";
 import { uploadPicture } from "./util";
 import { formatTime, Upload } from "@/utils";
+import { host } from "@/config";
 
-const hostUrl = ref(location.origin);
+const hostUrl = ref("");
 const tableData: Ref<PicturePageResult[]> = ref([]);
 const tableTotal = ref(0);
 const tableLoading = ref(false);
@@ -72,6 +73,7 @@ const tableCondition: Ref<PageCondition<null>> = ref({
 const tableRef = ref<InstanceType<typeof ElTable>>();
 
 onMounted(() => {
+  hostUrl.value = process.env.NODE_ENV === "production" ? location.origin : host;
   queryTableData();
 });
 
