@@ -1,35 +1,76 @@
 <template>
-  <iframe class="open-api_component" ref="openApiRef" :src="hostUrl + '/api.html'"></iframe>
+  <iframe class="open-api_component" ref="openApiRef" :src="hostUrl + '/api.html' + sharpUrl"></iframe>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 
 const props = defineProps({
   content: {
     type: String,
     default: "",
   },
+  mixUrl: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const hostUrl = ref(location.origin);
 const openApiRef = ref();
+const sharpUrl = ref("");
 
 onMounted(() => {
+  let pathArr = window.location.href.split("#");
+  if (pathArr.length >= 2) {
+    sharpUrl.value = "#" + pathArr[2];
+  }
   openApiRef.value.onload = () => {
-    postMessage();
+    postMessage({ type: "content", val: props.content });
   };
+  if (props.mixUrl) {
+    window.addEventListener("message", receiveMessage, false);
+  }
+});
+
+onBeforeUnmount(() => {
+  if (props.mixUrl) {
+    window.removeEventListener("message", receiveMessage, false);
+  }
 });
 
 watch(
   () => props.content,
   (val) => {
-    postMessage();
+    postMessage({ type: "content", val: val });
   }
 );
 
-const postMessage = () => {
-  openApiRef.value?.contentWindow?.postMessage(props.content);
+/**
+ * 向iframe发送消息
+ * @param val
+ */
+const postMessage = (val: object) => {
+  openApiRef.value?.contentWindow?.postMessage(JSON.stringify(val), "*");
+};
+
+/**
+ * 接收iframe消息
+ * @param e
+ */
+const receiveMessage = (e: any) => {
+  let data = JSON.parse(e.data);
+  if (data.type === "url") {
+    let pathArr = window.location.href.split("#");
+    let path = pathArr[0] + "#" + pathArr[1];
+    if (pathArr.length >= 2) {
+      if (!path.endsWith("/")) {
+        path += "/";
+      }
+      path = path + "#" + data.val;
+      window.location.href = path;
+    }
+  }
 };
 </script>
 

@@ -38,13 +38,21 @@
     <script>
       var child;
       window.addEventListener("message", function (e) {
-        if (child) {
-          document.body.removeChild(child);
+        var data = JSON.parse(e.data);
+        if (data.type === "content") {
+          if (child) {
+            document.body.removeChild(child);
+          }
+          child = document.createElement("elements-api");
+          child.setAttribute("router", "hash");
+          child.setAttribute("apiDescriptionDocument", data.val);
+          document.body.appendChild(child);
         }
-        child = document.createElement("elements-api");
-        child.setAttribute("router", "hash");
-        child.setAttribute("apiDescriptionDocument", e.data);
-        document.body.appendChild(child);
+      });
+
+      window.addEventListener("popstate", function (e) {
+        var params = document.location.href.split("#");
+        window.parent.postMessage(JSON.stringify({ type: "url", val: params[params.length - 1] }), "*");
       });
     </script>
   </body>

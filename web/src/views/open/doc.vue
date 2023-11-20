@@ -1,7 +1,7 @@
 <template>
   <div class="page-open-document">
     <md-preview v-if="docType === 'md'" class="md-view" :content="content" />
-    <open-api v-if="docType === 'openApi'" :content="content"></open-api>
+    <open-api v-if="docType === 'openApi'" :content="content" mixUrl></open-api>
     <div v-if="docType === 'error'" class="error-view">文档加载失败</div>
   </div>
 </template>
