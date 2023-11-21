@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount, onBeforeMount } from "vue";
 
 const props = defineProps({
   content: {
@@ -20,11 +20,16 @@ const hostUrl = ref(location.origin);
 const openApiRef = ref();
 const sharpUrl = ref("");
 
-onMounted(() => {
-  let pathArr = window.location.href.split("#");
-  if (pathArr.length >= 2) {
-    sharpUrl.value = "#" + pathArr[2];
+onBeforeMount(() => {
+  if (props.mixUrl) {
+    let pathArr = window.location.href.split("#");
+    if (pathArr.length > 2) {
+      sharpUrl.value = "/#" + pathArr[2];
+    }
   }
+});
+
+onMounted(() => {
   openApiRef.value.onload = () => {
     postMessage({ type: "content", val: props.content });
   };
