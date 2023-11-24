@@ -1,5 +1,6 @@
 <template>
   <div class="page-login">
+    <TextRain class="text-rain-background"></TextRain>
     <div class="title-view">云文档</div>
     <transition name="fade">
       <div class="content-view" v-if="isLogin">
@@ -51,6 +52,7 @@ import Token from "@/store/token";
 import TokenApi from "@/api/token";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
+import TextRain from "@/components/text-rain/index.vue";
 
 const router = useRouter();
 const loading = ref(false);
@@ -133,7 +135,7 @@ const loginClick = () => {
   right: 0;
   top: 0;
   bottom: 0;
-  background-color: #f5f5f5;
+  background: linear-gradient(0deg, rgba(255, 238, 213, 1) 0%, rgba(148, 210, 233, 1) 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -150,6 +152,8 @@ const loginClick = () => {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 30px 20px;
     .input-view {
       width: 100%;
       margin-top: 10px;
@@ -163,6 +167,10 @@ const loginClick = () => {
     .register-button + .login-button {
       margin-left: 0;
     }
+  }
+  .text-rain-background {
+    position: absolute;
+    z-index: -1;
   }
 }
 </style>
