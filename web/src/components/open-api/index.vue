@@ -1,5 +1,5 @@
 <template>
-  <iframe class="open-api_component" ref="openApiRef" :src="hostUrl + '/api.html' + sharpUrl"></iframe>
+  <iframe class="open-api_component" ref="openApiRef" :src="hostUrl + '/api.html?' + current() + sharpUrl"></iframe>
 </template>
 
 <script lang="ts" setup>
@@ -76,6 +76,10 @@ const receiveMessage = (e: any) => {
       window.location.href = path;
     }
   }
+};
+
+const current = () => {
+  return new Date().getTime();
 };
 </script>
 

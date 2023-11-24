@@ -1,6 +1,6 @@
 <template>
   <div class="page-login">
-    <TextRain class="text-rain-background"></TextRain>
+    <text-rain class="text-rain-background"></text-rain>
     <div class="title-view">云文档</div>
     <transition name="fade">
       <div class="content-view" v-if="isLogin">
