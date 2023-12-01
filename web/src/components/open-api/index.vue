@@ -1,5 +1,5 @@
 <template>
-  <iframe class="open-api_component" ref="openApiRef" :src="hostUrl + '/api.html?' + current() + sharpUrl"></iframe>
+  <iframe class="open-api_component" ref="openApiRef" :src="hostUrl + '/api.html?' + current + sharpUrl"></iframe>
 </template>
 
 <script lang="ts" setup>
@@ -19,6 +19,7 @@ const props = defineProps({
 const hostUrl = ref(location.origin);
 const openApiRef = ref();
 const sharpUrl = ref("");
+const current = ref(new Date().getTime());
 
 onBeforeMount(() => {
   if (props.mixUrl) {
@@ -76,10 +77,6 @@ const receiveMessage = (e: any) => {
       window.location.href = path;
     }
   }
-};
-
-const current = () => {
-  return new Date().getTime();
 };
 </script>
 
