@@ -131,3 +131,13 @@ func DocumentGetPublished(id string) entity.Document {
 	}
 	return document
 }
+
+// 分页查询公开发布文档列表
+func DocumentPagePulished(pageCondition common.PageCondition[entity.DocumentPageCondition]) common.PageResult[entity.DocumentPageResult] {
+	records, total, err := dao.DocumentPagePulished(middleware.Db, pageCondition)
+	if err != nil {
+		panic(common.NewErr("查询失败", err))
+	}
+	pageResult := common.PageResult[entity.DocumentPageResult]{Records: records, Total: total}
+	return pageResult
+}

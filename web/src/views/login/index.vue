@@ -1,7 +1,7 @@
 <template>
   <div class="page-login">
     <text-rain class="text-rain-background"></text-rain>
-    <div class="title-view">云文档</div>
+    <div class="title-view" title="查看公开文档" @click="publishClick">云文档</div>
     <transition name="fade">
       <div class="content-view" v-if="isLogin">
         <form>
@@ -54,6 +54,7 @@ import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import TextRain from "@/components/text-rain/index.vue";
 
+const hostUrl = ref(location.origin);
 const router = useRouter();
 const loading = ref(false);
 // 登录/注册
@@ -124,6 +125,14 @@ const loginClick = () => {
       });
   }
 };
+
+/**
+ * 点击公开文档
+ */
+const publishClick = () => {
+  let url = hostUrl.value + "/#/open/publish";
+  window.open(url, "_blank");
+};
 </script>
 
 <style lang="scss" scoped>
@@ -135,7 +144,7 @@ const loginClick = () => {
   right: 0;
   top: 0;
   bottom: 0;
-  background: linear-gradient(0deg, rgba(255, 238, 213, 1) 0%, rgba(148, 210, 233, 1) 100%);
+  background: linear-gradient(0deg, rgba(255, 238, 213, 1) 0%, rgba(148, 210, 233, 1) 70%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -145,6 +154,8 @@ const loginClick = () => {
     margin-top: 10vh;
     font-size: 24px;
     font-weight: bold;
+    color: #3f3f3f;
+    cursor: pointer;
   }
   .content-view {
     margin-top: 20px;

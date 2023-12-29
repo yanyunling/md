@@ -1,7 +1,7 @@
 <template>
   <div class="page-open-document">
     <md-preview v-if="docType === 'md'" class="md-view" :content="content" />
-    <open-api v-if="docType === 'openApi'" :content="content" mixUrl></open-api>
+    <open-api-preview v-if="docType === 'openApi'" :content="content" mixUrl></open-api-preview>
     <div v-if="docType === 'error'" class="error-view">文档加载失败</div>
   </div>
 </template>
@@ -9,29 +9,18 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import MdPreview from "@/components/md-editor/preview";
-import OpenApi from "@/components/open-api/index.vue";
+import OpenApiPreview from "@/components/open-api/index.vue";
 import { useRoute } from "vue-router";
-import axios from "axios";
-import { host } from "@/config";
+import OpenApi from "@/api/open";
 
-const hostUrl = ref("");
 const content = ref("");
 const docType = ref("");
 
 onMounted(() => {
-  hostUrl.value = process.env.NODE_ENV === "production" ? location.origin : host;
-  axios
-    .get(hostUrl.value + "/api/open/doc/get/" + useRoute().query.id, {
-      responseType: "json",
-    })
+  OpenApi.getDoc(String(useRoute().query.id))
     .then((res) => {
-      if (res.data.code === 200) {
-        content.value = res.data.data.content;
-        docType.value = res.data.data.type;
-      } else {
-        console.error(res);
-        docType.value = "error";
-      }
+      content.value = res.data.content;
+      docType.value = res.data.type!;
     })
     .catch((err) => {
       console.error(err);

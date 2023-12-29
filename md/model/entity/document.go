@@ -12,6 +12,22 @@ type Document struct {
 	UserId     string       `json:"userId" db:"user_id"`
 }
 
+type DocumentPageResult struct {
+	Id         string       `json:"id" db:"id"`
+	Name       string       `json:"name" db:"name"`
+	Type       DocumentType `json:"type" db:"type"`
+	CreateTime int64        `json:"createTime" db:"create_time"`
+	UpdateTime int64        `json:"updateTime" db:"update_time"`
+	Username   string       `json:"username" db:"username"`
+	BookName   string       `json:"bookName" db:"book_name"`
+}
+
+type DocumentPageCondition struct {
+	Username string       `json:"username"`
+	Name     string       `json:"name"`
+	Type     DocumentType `json:"type"`
+}
+
 type DocumentType string
 
 const (

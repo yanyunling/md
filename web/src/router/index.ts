@@ -5,6 +5,7 @@ import Document from "@/views/document/index.vue";
 import Picture from "@/views/picture/index.vue";
 import Tool from "@/views/tool/index.vue";
 import OpenDocument from "@/views/open/doc.vue";
+import OpenPublish from "@/views/open/publish.vue";
 import Token from "@/store/token";
 
 const routes = [
@@ -21,6 +22,7 @@ const routes = [
     ],
   },
   { path: "/open/document", name: "openDocument", component: OpenDocument },
+  { path: "/open/publish", name: "openPublish", component: OpenPublish },
 ];
 
 const router = createRouter({
@@ -29,7 +31,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-  if (to.name === "openDocument") {
+  if (to.name === "openDocument" || to.name === "openPublish") {
     return;
   }
   if (!Token.getAccessToken() && to.name !== "login") {

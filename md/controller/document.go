@@ -64,3 +64,10 @@ func DocumentGetPublished(ctx iris.Context) {
 	id := ctx.Params().Get("id")
 	ctx.JSON(common.NewSuccessData("查询成功", service.DocumentGetPublished(id)))
 }
+
+// 分页查询公开发布文档列表
+func DocumentPagePulished(ctx iris.Context) {
+	pageCondition := common.PageCondition[entity.DocumentPageCondition]{}
+	resolveParam(ctx, &pageCondition)
+	ctx.JSON(common.NewSuccessData("查询成功", service.DocumentPagePulished(pageCondition)))
+}

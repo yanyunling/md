@@ -20,6 +20,7 @@
         <div class="text-view">{{ name }}</div>
         <template #dropdown>
           <el-dropdown-menu>
+            <el-dropdown-item style="user-select: none" @click="publishClick">公开文档</el-dropdown-item>
             <el-dropdown-item style="user-select: none" @click="dialogVisible = true">修改密码</el-dropdown-item>
             <el-dropdown-item style="user-select: none" @click="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
@@ -52,6 +53,7 @@ import TokenApi from "@/api/token";
 import UserApi from "@/api/user";
 import router from "@/router";
 
+const hostUrl = ref(location.origin);
 const name = ref(Token.getName());
 const dialogVisible = ref(false);
 const dialogLoading = ref(false);
@@ -141,6 +143,14 @@ const iconClick = () => {
   if (isDocument.value) {
     isStretch.value = !isStretch.value;
   }
+};
+
+/**
+ * 点击公开文档
+ */
+const publishClick = () => {
+  let url = hostUrl.value + "/#/open/publish";
+  window.open(url, "_blank");
 };
 </script>
 

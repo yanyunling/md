@@ -33,7 +33,7 @@ onBeforeUnmount(() => {
 });
 
 const randomText = () => {
-  return props.letters[Math.floor(Math.random() * props.letters.length)];
+  return props.letters[Math.round(Math.random() * (props.letters.length - 1))];
 };
 
 const rain = () => {

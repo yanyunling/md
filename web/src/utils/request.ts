@@ -25,6 +25,12 @@ const authInstance = axios.create({
   timeout: 10000,
 });
 
+// 开放接口axios实例
+const openInstance = axios.create({
+  baseURL: host + context + "/open",
+  timeout: 20000,
+});
+
 /**
  * 数据接口request拦截器
  */
@@ -164,6 +170,29 @@ authInstance.interceptors.response.use(
 );
 
 /**
+ * 开放接口respone拦截器
+ */
+openInstance.interceptors.response.use(
+  (response) => {
+    // 请求结果码
+    if (response.status === 200) {
+      // 业务结果码
+      if (response.data.code === 200) {
+        return response;
+      }
+      ElMessage.error(response.data.message ? response.data.message : "服务器错误");
+    } else {
+      ElMessage.error(response.statusText ? response.statusText : "连接超时");
+    }
+    return Promise.reject(response);
+  },
+  (error) => {
+    ElMessage.error("连接超时");
+    return Promise.reject(error);
+  }
+);
+
+/**
  * 调用数据接口
  * @param config
  * @returns
@@ -189,6 +218,24 @@ export default <T>(config: AxiosRequestConfig) => {
 export const authRequest = <T>(config: AxiosRequestConfig) => {
   return new Promise<ResponseResult<T>>((resolve, reject) => {
     authInstance
+      .request<ResponseResult<T>>(config)
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        reject(err.data ? err.data : err);
+      });
+  });
+};
+
+/**
+ * 调用开放权接口
+ * @param config
+ * @returns
+ */
+export const openRequest = <T>(config: AxiosRequestConfig) => {
+  return new Promise<ResponseResult<T>>((resolve, reject) => {
+    openInstance
       .request<ResponseResult<T>>(config)
       .then((res) => {
         resolve(res.data);

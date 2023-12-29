@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"md/model/common"
 	"md/model/entity"
 	"md/util"
 	"sort"
@@ -74,4 +75,47 @@ func DocumentGetPublished(db *sqlx.DB, id string) (entity.Document, error) {
 	result := entity.Document{}
 	err := db.Get(&result, sql, id)
 	return result, err
+}
+
+// 分页查询公开发布文档列表
+func DocumentPagePulished(db *sqlx.DB, pageCondition common.PageCondition[entity.DocumentPageCondition]) ([]entity.DocumentPageResult, int, error) {
+	sqlCompletion := util.SqlCompletion{}
+	sqlCompletion.InitSql(
+		`select a.id, a.name, a.type, a.create_time, a.update_time, ifnull(b.name, '') as username, ifnull(c.name, '') as book_name 
+		from t_document a 
+		left join t_user b on a.user_id = b.id 
+		left join t_book c on a.book_id = c.id`,
+		`select count(*) as count 
+		from t_document a 
+		left join t_user b on a.user_id = b.id 
+		left join t_book c on a.book_id = c.id`,
+	)
+	sqlCompletion.Eq("a.published", true, true)
+	if pageCondition.Condition.Username != "" {
+		sqlCompletion.Like("b.name", pageCondition.Condition.Username, true)
+	}
+	if pageCondition.Condition.Name != "" {
+		sqlCompletion.Like("a.name", pageCondition.Condition.Name, true)
+	}
+	if pageCondition.Condition.Type != "" {
+		sqlCompletion.Like("a.type", pageCondition.Condition.Type, true)
+	}
+	sqlCompletion.Order("a.create_time", false)
+	sqlCompletion.Limit(pageCondition.Page.Current, pageCondition.Page.Size)
+
+	// 查询分页数据
+	result := []entity.DocumentPageResult{}
+	err := db.Select(&result, sqlCompletion.GetSql(), sqlCompletion.GetParams()...)
+	if err != nil {
+		return result, 0, err
+	}
+
+	// 查询总记录数
+	countResult := common.CountResult{}
+	err = db.Get(&countResult, sqlCompletion.GetCountSql(), sqlCompletion.GetCountParams()...)
+	if err != nil {
+		return result, 0, err
+	}
+
+	return result, countResult.Count, err
 }
