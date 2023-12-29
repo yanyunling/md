@@ -229,7 +229,7 @@ export const authRequest = <T>(config: AxiosRequestConfig) => {
 };
 
 /**
- * 调用开放权接口
+ * 调用开放接口
  * @param config
  * @returns
  */
