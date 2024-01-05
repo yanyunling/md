@@ -9,7 +9,7 @@ import OpenPublish from "@/views/open/publish.vue";
 import Token from "@/store/token";
 
 const routes = [
-  { path: "/login", name: "login", component: Login, redirect: "" },
+  { path: "/login", name: "login", component: Login },
   {
     path: "/",
     name: "layout",
@@ -21,8 +21,8 @@ const routes = [
       { path: "/tool", name: "tool", component: Tool },
     ],
   },
-  { path: "/open/document", name: "openDocument", component: OpenDocument, redirect: "" },
-  { path: "/open/publish", name: "openPublish", component: OpenPublish, redirect: "" },
+  { path: "/open/document", name: "openDocument", component: OpenDocument },
+  { path: "/open/publish", name: "openPublish", component: OpenPublish },
 ];
 
 const router = createRouter({
