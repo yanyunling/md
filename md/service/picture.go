@@ -1,7 +1,7 @@
 package service
 
 import (
-	"io/ioutil"
+	"io"
 	"md/dao"
 	"md/middleware"
 	"md/model/common"
@@ -91,11 +91,11 @@ func PictureUpload(pictureFile, thumbnailFile multipart.File, pictureInfo, thumb
 	}
 
 	// 读取文件
-	pictureByte, err := ioutil.ReadAll(pictureFile)
+	pictureByte, err := io.ReadAll(pictureFile)
 	if err != nil {
 		panic(common.NewErr("图片解析失败", err))
 	}
-	thumbnailByte, err := ioutil.ReadAll(thumbnailFile)
+	thumbnailByte, err := io.ReadAll(thumbnailFile)
 	if err != nil {
 		panic(common.NewErr("缩略图解析失败", err))
 	}
