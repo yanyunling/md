@@ -81,6 +81,7 @@ import { Plus, Tools } from "@element-plus/icons-vue";
 import TextTip from "@/components/text-tip";
 import DocumentApi from "@/api/document";
 import { formatTime } from "@/utils";
+import copy from "copy-to-clipboard";
 
 const hostUrl = ref(location.origin);
 const docs: Ref<Doc[]> = ref([]);
@@ -299,15 +300,12 @@ const deleteDocClick = (doc: Doc) => {
  */
 const copyPublishedClick = (doc: Doc) => {
   let url = hostUrl.value + "/#/open/document?id=" + doc.id;
-  navigator.clipboard
-    .writeText(url)
-    .then(() => {
-      ElMessage.success("发布地址已复制到剪切板");
-    })
-    .catch((e) => {
-      ElMessage.error("复制到剪切板失败，地址：" + url);
-      console.error(e);
-    });
+  const result = copy(url);
+  if (result) {
+    ElMessage.success("发布地址已复制到剪切板");
+  } else {
+    ElMessage.error("复制到剪切板失败，地址：" + url);
+  }
 };
 
 /**

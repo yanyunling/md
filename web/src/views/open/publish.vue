@@ -73,6 +73,7 @@ import { ref, Ref, nextTick, onMounted } from "vue";
 import { ElTable, ElMessage } from "element-plus";
 import OpenApi from "@/api/open";
 import { formatTime } from "@/utils";
+import copy from "copy-to-clipboard";
 
 const hostUrl = ref(location.origin);
 const tableCondition = ref({
@@ -167,15 +168,12 @@ const tablePageCurrentChange = (current: number) => {
  */
 const copyClick = (id: string) => {
   let url = hostUrl.value + "/#/open/document?id=" + id;
-  navigator.clipboard
-    .writeText(url)
-    .then(() => {
-      ElMessage.success("发布地址已复制到剪切板");
-    })
-    .catch((e) => {
-      ElMessage.error("复制到剪切板失败，地址：" + url);
-      console.error(e);
-    });
+  const result = copy(url);
+  if (result) {
+    ElMessage.success("发布地址已复制到剪切板");
+  } else {
+    ElMessage.error("复制到剪切板失败，地址：" + url);
+  }
 };
 
 /**
