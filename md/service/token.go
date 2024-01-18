@@ -109,10 +109,10 @@ func SignOut(tokenResult common.TokenResult) {
 	if err == nil {
 		tokenCache := res.Data().(*common.TokenCache)
 		if tokenCache.RefreshToken != "" {
-			cache2go.Cache(common.RefreshTokenCache).Delete(tokenResult.RefreshToken)
+			cache2go.Cache(common.RefreshTokenCache).Delete(tokenCache.RefreshToken)
 		}
 		if tokenCache.AccessToken != "" {
-			cache2go.Cache(common.AccessTokenCache).Delete(tokenResult.AccessToken)
+			cache2go.Cache(common.AccessTokenCache).Delete(tokenCache.AccessToken)
 		}
 	}
 }
