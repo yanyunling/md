@@ -1,7 +1,7 @@
 FROM node:20-alpine as nodejs
 COPY ./web /build/web
 WORKDIR /build/web
-RUN npm config set registry https://registry.npm.taobao.org/
+RUN npm config set registry https://registry.npmmirror.com
 RUN npm install
 RUN npm run build
 
