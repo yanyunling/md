@@ -13,15 +13,23 @@
     ></doc>
     <div class="codemirror-view" v-if="docType === 'openApi'">
       <open-api v-if="onlyPreview" :content="currentDoc.content"></open-api>
-      <codemirror-editor
-        v-else
-        :style="{ visibility: codemirrorVisibility }"
-        ref="codemirrorRef"
-        v-model="currentDoc.content"
-        :disabled="onlyPreview"
-        @save="saveDoc(currentDoc.content)"
-        @ready="codemirrorReday"
-      />
+      <template v-else>
+        <div class="codemirror-toolbar">
+          <div class="icon-save" title="保存" @click="saveDoc(currentDoc.content)">
+            <svg-icon name="save" className="icon-save-inner"></svg-icon>
+          </div>
+        </div>
+        <div class="codemirror-inner">
+          <codemirror-editor
+            :style="{ visibility: codemirrorVisibility }"
+            ref="codemirrorRef"
+            v-model="currentDoc.content"
+            :disabled="onlyPreview"
+            @save="saveDoc(currentDoc.content)"
+            @ready="codemirrorReday"
+          />
+        </div>
+      </template>
     </div>
     <template v-else>
       <md-preview v-if="onlyPreview" :key="'preview' + mdKey" class="editor-view" :content="currentDoc.content" />
@@ -44,6 +52,7 @@ import MdEditor from "@/components/md-editor";
 import MdPreview from "@/components/md-editor/preview";
 import CodemirrorEditor from "@/components/codemirror-editor";
 import OpenApi from "@/components/open-api/index.vue";
+import SvgIcon from "@/components/svg-icon";
 import { uploadPicture } from "../picture/util";
 import Book from "./components/book.vue";
 import Doc from "./components/doc.vue";
@@ -197,6 +206,32 @@ const saveDoc = (content: string) => {
     height: 100%;
     flex: 1;
     min-width: 720px;
+    overflow: hidden;
+  }
+  .codemirror-toolbar {
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border: #e6e6e6 1px solid;
+    padding-right: 10px;
+    .icon-save {
+      width: 26px;
+      height: 24px;
+      color: #3f4a54;
+      cursor: pointer;
+      .icon-save-inner {
+        width: 20px;
+        height: 20px;
+        margin: 2px 3px;
+      }
+    }
+    .icon-save:hover {
+      background: #f6f6f6;
+    }
+  }
+  .codemirror-inner {
+    height: calc(100% - 32px);
     overflow: hidden;
   }
 }
