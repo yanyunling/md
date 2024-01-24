@@ -222,6 +222,7 @@ const publishClick = () => {
       padding: 0 20px;
       transition: all 0.3s;
       color: #303133;
+      outline: none;
     }
     .text-view:hover {
       color: #0094c1;

@@ -1,28 +1,21 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Layout from "@/views/layout/index.vue";
-import Login from "@/views/login/index.vue";
-import Document from "@/views/document/index.vue";
-import Picture from "@/views/picture/index.vue";
-import Tool from "@/views/tool/index.vue";
-import OpenDocument from "@/views/open/doc.vue";
-import OpenPublish from "@/views/open/publish.vue";
 import Token from "@/store/token";
 
 const routes = [
-  { path: "/login", name: "login", component: Login },
+  { path: "/login", name: "login", component: () => import("@/views/login/index.vue") },
   {
     path: "/",
     name: "layout",
-    component: Layout,
+    component: () => import("@/views/layout/index.vue"),
     redirect: "/document",
     children: [
-      { path: "/document", name: "document", component: Document },
-      { path: "/picture", name: "picture", component: Picture },
-      { path: "/tool", name: "tool", component: Tool },
+      { path: "/document", name: "document", component: () => import("@/views/document/index.vue") },
+      { path: "/picture", name: "picture", component: () => import("@/views/picture/index.vue") },
+      { path: "/tool", name: "tool", component: () => import("@/views/tool/index.vue") },
     ],
   },
-  { path: "/open/document", name: "openDocument", component: OpenDocument },
-  { path: "/open/publish", name: "openPublish", component: OpenPublish },
+  { path: "/open/document", name: "openDocument", component: () => import("@/views/open/doc.vue") },
+  { path: "/open/publish", name: "openPublish", component: () => import("@/views/open/publish.vue") },
 ];
 
 const router = createRouter({
