@@ -4,7 +4,7 @@
 一个简单的markdown文档服务器
 
 ## 软件架构
-- go1.20
+- go1.21
 - sqlite
 - vue3
 

@@ -231,7 +231,7 @@ const saveDoc = (content: string) => {
     }
   }
   .codemirror-inner {
-    height: calc(100% - 32px);
+    height: calc(100% - 36px);
     overflow: hidden;
   }
 }
