@@ -21,17 +21,26 @@
         <template #header="scope">
           <el-popover v-model:visible="typePopover" width="170" trigger="click" :hide-after="0" @hide="tablePopoverHide">
             <el-select v-model="tableCondition.condition.type" placeholder="文档类型筛选" clearable @clear="typePopover = false">
-              <el-option label="markdown" value="md" />
-              <el-option label="OpenApi" value="openApi" />
+              <el-option label="Markdown" value="md" />
+              <el-option label="OpenAPI" value="openApi" />
             </el-select>
             <template #reference>
               <div style="cursor: pointer">文档类型</div>
             </template>
           </el-popover>
         </template>
-        <template #default="scope"> {{ scope.row.type === "md" ? "markdown" : "OpenApi" }} </template>
+        <template #default="scope"> {{ scope.row.type === "md" ? "Markdown" : "OpenAPI" }} </template>
       </el-table-column>
-      <el-table-column prop="bookName" label="文集名称" align="center" />
+      <el-table-column prop="bookName" label="文集名称" align="center" :label-class-name="columnClass.bookName">
+        <template #header="scope">
+          <el-popover v-model:visible="bookNamePopover" width="170" trigger="click" :hide-after="0" @hide="tablePopoverHide">
+            <el-input v-model="tableCondition.condition.bookName" placeholder="文集名称筛选" clearable @clear="bookNamePopover = false"></el-input>
+            <template #reference>
+              <div style="cursor: pointer">文集名称</div>
+            </template>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column prop="username" label="作者" align="center" :label-class-name="columnClass.username">
         <template #header="scope">
           <el-popover v-model:visible="usernamePopover" width="170" trigger="click" :hide-after="0" @hide="tablePopoverHide">
@@ -78,11 +87,12 @@ import copy from "copy-to-clipboard";
 const hostUrl = ref(location.origin);
 const tableCondition = ref({
   page: { current: 1, size: 100 },
-  condition: { name: "", type: "", username: "" },
+  condition: { name: "", type: "", bookName: "", username: "" },
 });
 const columnClass = ref({
   name: "",
   type: "",
+  bookName: "",
   username: "",
 });
 const lastCondition = ref("");
@@ -92,6 +102,7 @@ const tableLoading = ref(false);
 const tableRef = ref<InstanceType<typeof ElTable>>();
 const namePopover = ref(false);
 const typePopover = ref(false);
+const bookNamePopover = ref(false);
 const usernamePopover = ref(false);
 
 onMounted(() => {
@@ -130,6 +141,11 @@ const tablePopoverHide = () => {
     columnClass.value.type = "column-active";
   } else {
     columnClass.value.type = "";
+  }
+  if (tableCondition.value.condition.bookName) {
+    columnClass.value.bookName = "column-active";
+  } else {
+    columnClass.value.bookName = "";
   }
   if (tableCondition.value.condition.username) {
     columnClass.value.username = "column-active";

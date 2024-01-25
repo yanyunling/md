@@ -26,6 +26,7 @@ type DocumentPageCondition struct {
 	Username string       `json:"username"`
 	Name     string       `json:"name"`
 	Type     DocumentType `json:"type"`
+	BookName string       `json:"bookName"`
 }
 
 type DocumentType string

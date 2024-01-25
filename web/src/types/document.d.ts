@@ -30,5 +30,6 @@ interface DocPageResult {
 interface DocPageCondition {
   name?: string;
   type?: string;
+  bookName?: string;
   username?: string;
 }

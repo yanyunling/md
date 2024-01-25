@@ -100,6 +100,9 @@ func DocumentPagePulished(db *sqlx.DB, pageCondition common.PageCondition[entity
 	if pageCondition.Condition.Type != "" {
 		sqlCompletion.Like("a.type", pageCondition.Condition.Type, true)
 	}
+	if pageCondition.Condition.BookName != "" {
+		sqlCompletion.Like("c.name", pageCondition.Condition.BookName, true)
+	}
 	sqlCompletion.Order("a.create_time", false)
 	sqlCompletion.Limit(pageCondition.Page.Current, pageCondition.Page.Size)
 
