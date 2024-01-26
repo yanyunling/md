@@ -25,6 +25,7 @@
             ref="codemirrorRef"
             v-model="currentDoc.content"
             :disabled="onlyPreview"
+            noRadius
             @save="saveDoc(currentDoc.content)"
             @ready="codemirrorReday"
           />
@@ -214,6 +215,7 @@ const saveDoc = (content: string) => {
     align-items: center;
     justify-content: flex-end;
     border: #e6e6e6 1px solid;
+    border-bottom: none;
     padding-right: 10px;
     .icon-save {
       width: 26px;
@@ -231,7 +233,7 @@ const saveDoc = (content: string) => {
     }
   }
   .codemirror-inner {
-    height: calc(100% - 36px);
+    height: calc(100% - 35px);
     overflow: hidden;
   }
 }

@@ -26,6 +26,7 @@
             :preview-src-list="[hostUrl + scope.row.picturePrefix + scope.row.path]"
             fit="contain"
             preview-teleported
+            hide-on-click-modal
           />
         </template>
       </el-table-column>

@@ -42,9 +42,6 @@ const convert = () => {
 
   .codemirror-view {
     width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    overflow: hidden;
     margin-top: 5px;
   }
 }

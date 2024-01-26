@@ -167,9 +167,6 @@ const regClick = (val: string) => {
   .codemirror-view {
     width: 100%;
     height: 200px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    overflow: hidden;
   }
 }
 </style>
