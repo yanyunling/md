@@ -5,10 +5,6 @@ const store = localforage.createInstance({
   name: "doc",
 });
 
-interface DocCache {
-  docCacheKey: string;
-}
-
 const getKey = () => {
   return "DocCache_" + Token.getName();
 };
