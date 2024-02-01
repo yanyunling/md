@@ -37,9 +37,6 @@ const openInstance = axios.create({
 dataInstance.interceptors.request.use(
   (config) => {
     // 设置请求头认证信息
-    if (!config.headers) {
-      config.headers = {};
-    }
     if (!config.headers.Authorization) {
       config.headers.Authorization = "Bearer " + Token.getAccessToken();
     }
@@ -56,9 +53,6 @@ dataInstance.interceptors.request.use(
 authInstance.interceptors.request.use(
   (config) => {
     // 设置请求头认证信息
-    if (!config.headers) {
-      config.headers = {};
-    }
     if (!config.headers.Authorization) {
       let token = sha256(basicTokenKey + Math.floor(new Date().getTime() / 600000)).toString();
       config.headers.Authorization = "Basic " + token;
@@ -92,9 +86,6 @@ dataInstance.interceptors.response.use(
                 // 刷新token成功，保存新的token
                 Token.setToken(tokenResult.data.data);
                 // 重设头信息中的token
-                if (!response.config.headers) {
-                  response.config.headers = {};
-                }
                 response.config.headers.Authorization = "Bearer " + Token.getAccessToken();
                 // 重新进行上一次的请求
                 dataInstance(response.config)
@@ -117,9 +108,6 @@ dataInstance.interceptors.response.use(
               if (!refreshing) {
                 clearInterval(interval);
                 // 重设头信息中的token
-                if (!response.config.headers) {
-                  response.config.headers = {};
-                }
                 response.config.headers.Authorization = "Bearer " + Token.getAccessToken();
                 // 重新进行上一次的请求
                 dataInstance(response.config)
