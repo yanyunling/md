@@ -9,18 +9,18 @@ interface DocCache {
   docCacheKey: string;
 }
 
-class DocCache {
-  constructor() {
-    this.docCacheKey = "DocCache";
-  }
+const getKey = () => {
+  return "DocCache_" + Token.getName();
+};
 
+class DocCache {
   /**
    * 缓存文档内容
    * @param currentDoc
    * @returns
    */
   setDoc(currentDoc: CurrentDoc) {
-    return store.setItem(Token.getName() + this.docCacheKey, JSON.parse(JSON.stringify(currentDoc)));
+    return store.setItem(getKey(), JSON.parse(JSON.stringify(currentDoc)));
   }
 
   /**
@@ -30,7 +30,7 @@ class DocCache {
   async getDoc(): Promise<CurrentDoc> {
     return new Promise((resolve, reject) => {
       store
-        .getItem<CurrentDoc>(Token.getName() + this.docCacheKey)
+        .getItem<CurrentDoc>(getKey())
         .then((res) => {
           resolve(res);
         })
@@ -52,7 +52,7 @@ class DocCache {
    * @returns
    */
   removeDoc() {
-    return store.removeItem(Token.getName() + this.docCacheKey);
+    return store.removeItem(getKey());
   }
 }
 
