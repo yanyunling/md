@@ -12,7 +12,7 @@ interface Doc {
 interface CurrentDoc {
   id: string;
   content: string;
-  originContent: string;
+  originMD5: string;
   type: string;
   updateTime: string;
 }

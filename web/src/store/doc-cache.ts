@@ -1,7 +1,7 @@
 import Token from "./token";
 import localforage from "localforage";
 
-localforage.config({
+const store = localforage.createInstance({
   name: "doc",
 });
 
@@ -17,9 +17,10 @@ class DocCache {
   /**
    * 缓存文档内容
    * @param currentDoc
+   * @returns
    */
   setDoc(currentDoc: CurrentDoc) {
-    localforage.setItem(Token.getName() + this.docCacheKey, JSON.stringify(currentDoc));
+    return store.setItem(Token.getName() + this.docCacheKey, JSON.parse(JSON.stringify(currentDoc)));
   }
 
   /**
@@ -28,27 +29,17 @@ class DocCache {
    */
   async getDoc(): Promise<CurrentDoc | null> {
     return new Promise((resolve, reject) => {
-      localforage
-        .getItem<string>(Token.getName() + this.docCacheKey)
+      store
+        .getItem<CurrentDoc>(Token.getName() + this.docCacheKey)
         .then((res) => {
-          if (res) {
-            resolve(JSON.parse(res));
-          } else {
-            resolve({
-              id: "",
-              content: "",
-              originContent: "",
-              type: "",
-              updateTime: "",
-            });
-          }
+          resolve(res);
         })
         .catch((err) => {
           console.error(err);
           resolve({
             id: "",
             content: "",
-            originContent: "",
+            originMD5: "",
             type: "",
             updateTime: "",
           });
@@ -58,9 +49,10 @@ class DocCache {
 
   /**
    * 清空文档缓存
+   * @returns
    */
   removeDoc() {
-    localforage.removeItem(Token.getName() + this.docCacheKey);
+    return store.removeItem(Token.getName() + this.docCacheKey);
   }
 }
 

@@ -12,6 +12,7 @@ export default defineComponent({
       default: false,
     },
   },
+  emits: ["save"],
   setup(props, { emit }) {
     return () => {
       return (

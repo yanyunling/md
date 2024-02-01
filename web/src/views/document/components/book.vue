@@ -48,7 +48,7 @@ const newBookName = ref("");
 const updateBookId = ref("");
 const updateBookName = ref("");
 
-const emit = defineEmits(["change", "books"]);
+const emit = defineEmits<{ change: [bookId: string]; books: [bookList: Book[]] }>();
 
 defineProps({
   onlyPreview: {

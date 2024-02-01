@@ -82,6 +82,7 @@ import TextTip from "@/components/text-tip";
 import DocumentApi from "@/api/document";
 import { formatTime } from "@/utils";
 import copy from "copy-to-clipboard";
+import crypto from "crypto-js";
 
 const hostUrl = ref(location.origin);
 const docs: Ref<Doc[]> = ref([]);
@@ -106,7 +107,10 @@ const dialog = ref({
 });
 const scrollRef = ref();
 
-const emit = defineEmits(["change", "loading"]);
+const emit = defineEmits<{
+  change: [id: string, content: string, type: string, updateTime: string, noRender?: boolean];
+  loading: [val: boolean];
+}>();
 
 const props = defineProps({
   onlyPreview: {
@@ -126,7 +130,7 @@ const props = defineProps({
     default: {
       id: "",
       content: "",
-      originContent: "",
+      originMD5: "",
       updateTime: "",
     },
   },
@@ -184,7 +188,7 @@ const queryDocs = (bookId: string) => {
  */
 const checkDocChange = () => {
   return new Promise((resolve, reject) => {
-    if (props.currentDoc.content !== props.currentDoc.originContent) {
+    if (props.currentDoc.originMD5 && crypto.MD5(props.currentDoc.content).toString() !== props.currentDoc.originMD5) {
       ElMessageBox.confirm("文档未保存，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

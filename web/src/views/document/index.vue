@@ -58,7 +58,9 @@ import { uploadPicture } from "../picture/util";
 import Book from "./components/book.vue";
 import Doc from "./components/doc.vue";
 import DocCache from "@/store/doc-cache";
+import Token from "@/store/token";
 import { host } from "@/config";
+import crypto from "crypto-js";
 
 defineProps({
   onlyPreview: {
@@ -79,7 +81,7 @@ const currentBookId = ref("");
 const currentDoc: Ref<CurrentDoc> = ref({
   id: "",
   content: "",
-  originContent: "",
+  originMD5: "",
   type: "",
   updateTime: "",
 });
@@ -107,11 +109,15 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  DocCache.setDoc(currentDoc.value);
+  if (Token.getAccessToken()) {
+    DocCache.setDoc(currentDoc.value);
+  }
 });
 
 window.onbeforeunload = () => {
-  DocCache.setDoc(currentDoc.value);
+  if (Token.getAccessToken()) {
+    DocCache.setDoc(currentDoc.value);
+  }
 };
 
 /**
@@ -142,7 +148,7 @@ const docChange = (id: string, content: string, type: string, updateTime: string
   currentDoc.value.id = id;
   currentDoc.value.content = content;
   currentDoc.value.type = type;
-  currentDoc.value.originContent = content;
+  currentDoc.value.originMD5 = crypto.MD5(content).toString();
   currentDoc.value.updateTime = updateTime;
   if (!noRender) {
     nextTick(() => {

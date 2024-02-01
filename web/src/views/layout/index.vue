@@ -52,6 +52,7 @@ import Token from "@/store/token";
 import TokenApi from "@/api/token";
 import UserApi from "@/api/user";
 import router from "@/router";
+import DocCache from "@/store/doc-cache";
 
 const hostUrl = ref(location.origin);
 const name = ref(Token.getName());
@@ -83,6 +84,7 @@ const logout = () => {
     type: "info",
   })
     .then(() => {
+      DocCache.removeDoc();
       TokenApi.signOut();
       Token.removeToken();
     })
