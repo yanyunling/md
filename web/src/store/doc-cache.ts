@@ -27,7 +27,7 @@ class DocCache {
    * 获取文档内容
    * @returns
    */
-  async getDoc(): Promise<CurrentDoc | null> {
+  async getDoc(): Promise<CurrentDoc> {
     return new Promise((resolve, reject) => {
       store
         .getItem<CurrentDoc>(Token.getName() + this.docCacheKey)

@@ -83,6 +83,8 @@ import DocumentApi from "@/api/document";
 import { formatTime } from "@/utils";
 import copy from "copy-to-clipboard";
 import crypto from "crypto-js";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 const hostUrl = ref(location.origin);
 const docs: Ref<Doc[]> = ref([]);
@@ -221,6 +223,7 @@ const docClick = (doc: Doc) => {
     docIdTemp.value = doc.id;
     docDisabled.value = true;
     emit("loading", true);
+    NProgress.start();
     DocumentApi.get(doc.id)
       .then((res) => {
         emitDoc(res.data.id, res.data.content, res.data.type!, String(res.data.updateTime));
@@ -229,6 +232,7 @@ const docClick = (doc: Doc) => {
         docIdTemp.value = "";
         docDisabled.value = false;
         emit("loading", false);
+        NProgress.done();
       });
   });
 };
