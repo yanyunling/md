@@ -1,7 +1,7 @@
 # 云文档
 
 ## 介绍
-一个简单的markdown文档服务器
+一个简单的Markdown、OpenAPI文档服务器
 
 ## 软件架构
 - go1.21
