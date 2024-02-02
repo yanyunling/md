@@ -15,8 +15,11 @@
       <open-api v-if="onlyPreview" :content="currentDoc.content"></open-api>
       <template v-else>
         <div class="codemirror-toolbar">
-          <div class="icon-save" title="保存" @click="saveDoc(currentDoc.content)">
-            <svg-icon name="save" className="icon-save-inner"></svg-icon>
+          <div class="icon-outer" title="保存" @click="saveDoc(currentDoc.content)">
+            <svg-icon name="save" className="icon-save"></svg-icon>
+          </div>
+          <div class="icon-outer" title="导出" @click="exportOpenApi(currentDoc.name, currentDoc.content)">
+            <svg-icon name="download" className="icon-download"></svg-icon>
           </div>
         </div>
         <div class="codemirror-inner">
@@ -39,9 +42,10 @@
         :key="'editor' + mdKey"
         class="editor-view"
         v-model="currentDoc.content"
-        v-loading="mdloading"
+        v-loading="mdLoading"
         @onUploadImg="uploadImage"
         @onSave="saveDoc"
+        @export="exporMarkdown(currentDoc.name, currentDoc.content)"
       />
     </template>
   </div>
@@ -61,6 +65,7 @@ import DocCache from "@/store/doc-cache";
 import Token from "@/store/token";
 import { host } from "@/config";
 import crypto from "crypto-js";
+import { exporMarkdown, exportOpenApi } from "./util";
 
 defineProps({
   onlyPreview: {
@@ -80,12 +85,13 @@ const books: Ref<Book[]> = ref([]);
 const currentBookId = ref("");
 const currentDoc: Ref<CurrentDoc> = ref({
   id: "",
+  name: "",
   content: "",
   originMD5: "",
   type: "",
   updateTime: "",
 });
-const mdloading = ref(false);
+const mdLoading = ref(false);
 const mdKey = ref(0);
 const codemirrorVisibility = ref("hidden");
 
@@ -124,7 +130,7 @@ window.onbeforeunload = () => {
  * 文档loading变化
  */
 const loadingChange = (val: boolean) => {
-  mdloading.value = val;
+  mdLoading.value = val;
 };
 
 /**
@@ -144,8 +150,9 @@ const booksFetch = (bookList: Book[]) => {
 /**
  * 文档选择变化
  */
-const docChange = (id: string, content: string, type: string, updateTime: string, noRender?: boolean) => {
+const docChange = (id: string, name: string, content: string, type: string, updateTime: string, noRender?: boolean) => {
   currentDoc.value.id = id;
+  currentDoc.value.name = name;
   currentDoc.value.content = content;
   currentDoc.value.type = type;
   currentDoc.value.originMD5 = crypto.MD5(content).toString();
@@ -190,7 +197,7 @@ const uploadImage = async (files: File[], callback: (urls: string[]) => void) =>
  * 保存文档
  */
 const saveDoc = (content: string) => {
-  if (mdloading.value) {
+  if (mdLoading.value) {
     return;
   }
   docRef.value?.saveDoc(content);
@@ -223,18 +230,23 @@ const saveDoc = (content: string) => {
     border: #e6e6e6 1px solid;
     border-bottom: none;
     padding-right: 10px;
-    .icon-save {
-      width: 26px;
+    .icon-outer {
+      width: 30px;
       height: 24px;
       color: #3f4a54;
       cursor: pointer;
-      .icon-save-inner {
+      .icon-save {
+        width: 16px;
+        height: 16px;
+        margin: 4px 7px;
+      }
+      .icon-download {
         width: 20px;
         height: 20px;
-        margin: 2px 3px;
+        margin: 2px 5px;
       }
     }
-    .icon-save:hover {
+    .icon-outer:hover {
       background: #f6f6f6;
     }
   }

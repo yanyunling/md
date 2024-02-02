@@ -16,7 +16,7 @@ class DocCache {
    * @returns
    */
   setDoc(currentDoc: CurrentDoc) {
-    return store.setItem(getKey(), JSON.parse(JSON.stringify(currentDoc)));
+    return store.setItem<CurrentDoc>(getKey(), JSON.parse(JSON.stringify(currentDoc)));
   }
 
   /**
@@ -28,12 +28,24 @@ class DocCache {
       store
         .getItem<CurrentDoc>(getKey())
         .then((res) => {
-          resolve(res);
+          if (res) {
+            resolve(res);
+          } else {
+            resolve({
+              id: "",
+              name: "",
+              content: "",
+              originMD5: "",
+              type: "",
+              updateTime: "",
+            });
+          }
         })
         .catch((err) => {
           console.error(err);
           resolve({
             id: "",
+            name: "",
             content: "",
             originMD5: "",
             type: "",

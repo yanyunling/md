@@ -110,7 +110,7 @@ const dialog = ref({
 const scrollRef = ref();
 
 const emit = defineEmits<{
-  change: [id: string, content: string, type: string, updateTime: string, noRender?: boolean];
+  change: [id: string, name: string, content: string, type: string, updateTime: string, noRender?: boolean];
   loading: [val: boolean];
 }>();
 
@@ -169,7 +169,7 @@ const queryDocs = (bookId: string) => {
       for (let item of res.data) {
         if (item.id === props.currentDoc.id) {
           if (String(item.updateTime) !== props.currentDoc.updateTime) {
-            emitDoc("", "", "", "");
+            emitDoc("", "", "", "", "");
           }
           break;
         }
@@ -211,8 +211,8 @@ const checkDocChange = () => {
 /**
  * 回调文档信息
  */
-const emitDoc = (id: string, content: string, type: string, updateTime: string, noRender?: boolean) => {
-  emit("change", id, content, type, updateTime, noRender);
+const emitDoc = (id: string, name: string, content: string, type: string, updateTime: string, noRender?: boolean) => {
+  emit("change", id, name, content, type, updateTime, noRender);
 };
 
 /**
@@ -226,7 +226,7 @@ const docClick = (doc: Doc) => {
     NProgress.start();
     DocumentApi.get(doc.id)
       .then((res) => {
-        emitDoc(res.data.id, res.data.content, res.data.type!, String(res.data.updateTime));
+        emitDoc(res.data.id, res.data.name, res.data.content, res.data.type!, String(res.data.updateTime));
       })
       .finally(() => {
         docIdTemp.value = "";
@@ -251,7 +251,7 @@ const addDocSave = () => {
     DocumentApi.add({ id: "", name: name, content: "", type: newDocType.value, bookId: props.currentBookId })
       .then((res) => {
         ElMessage.success("创建成功");
-        emitDoc(res.data.id, res.data.content, res.data.type!, String(res.data.updateTime));
+        emitDoc(res.data.id, res.data.name, res.data.content, res.data.type!, String(res.data.updateTime));
         queryDocs(props.currentBookId);
       })
       .catch(() => {
@@ -295,7 +295,7 @@ const deleteDocClick = (doc: Doc) => {
     DocumentApi.delete(doc.id).then(() => {
       ElMessage.success("删除成功");
       if (props.currentDoc.id === doc.id) {
-        emitDoc("", "", "", "");
+        emitDoc("", "", "", "", "");
       }
       queryDocs(props.currentBookId);
     });
@@ -343,7 +343,7 @@ const dialogSave = () => {
     DocumentApi.add(dialog.value.condition)
       .then((res) => {
         ElMessage.success("创建成功");
-        emitDoc(res.data.id, res.data.content, res.data.type!, String(res.data.updateTime));
+        emitDoc(res.data.id, res.data.name, res.data.content, res.data.type!, String(res.data.updateTime));
         docLoading.value = false;
         dialogClose();
         queryDocs(props.currentBookId);
@@ -383,7 +383,7 @@ const saveDoc = (content: string) => {
     DocumentApi.updateContent({ id: props.currentDoc.id, name: "", content: content, bookId: "" })
       .then((res) => {
         ElMessage.success("保存成功");
-        emitDoc(res.data.id, res.data.content, res.data.type!, String(res.data.updateTime), true);
+        emitDoc(res.data.id, res.data.name, res.data.content, res.data.type!, String(res.data.updateTime), true);
         // 更新当前文档的更新时间
         for (let item of docs.value) {
           if (item.id === res.data.id) {

@@ -11,6 +11,7 @@ interface Doc {
 
 interface CurrentDoc {
   id: string;
+  name: string;
   content: string;
   originMD5: string;
   type: string;
