@@ -69,7 +69,7 @@ export const exportOpenApi = (name: string, content: string) => {
       child.setAttribute("router", "hash");
       child.setAttribute("hideExport", true);
       child.setAttribute("hideSchemas", true);
-      child.setAttribute("apiDescriptionDocument", ${JSON.stringify(content)});
+      child.setAttribute("apiDescriptionDocument", \`${content}\`);
       document.body.appendChild(child);
     <\/script>
   </body>
