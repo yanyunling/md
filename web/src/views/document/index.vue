@@ -94,6 +94,7 @@ const currentDoc: Ref<CurrentDoc> = ref({
 const mdLoading = ref(false);
 const mdKey = ref(0);
 const codemirrorVisibility = ref("hidden");
+const lastType = ref("");
 
 const docType = computed(() => {
   return currentDoc.value.type;
@@ -159,7 +160,10 @@ const docChange = (id: string, name: string, content: string, type: string, upda
   currentDoc.value.updateTime = updateTime;
   if (!noRender) {
     nextTick(() => {
-      mdKey.value++;
+      if (lastType.value === "md" && currentDoc.value.type === "md") {
+        mdKey.value++;
+      }
+      lastType.value = currentDoc.value.type;
       if (codemirrorRef.value) {
         codemirrorRef.value.$el.getElementsByClassName("cm-scroller")[0].scrollTop = 0;
       }
