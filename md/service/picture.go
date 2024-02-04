@@ -103,11 +103,8 @@ func PictureUpload(pictureFile, thumbnailFile multipart.File, pictureInfo, thumb
 	// 生成sha256校验码
 	sha256Str := util.EncryptSHA256(pictureByte)
 
-	tx := middleware.Db.MustBegin()
-	defer tx.Rollback()
-
 	// 查询相同大小和校验码的文件
-	pictures, err := dao.PictureBySizeHash(tx, pictureInfo.Size, sha256Str)
+	pictures, err := dao.PictureBySizeHash(middleware.Db, pictureInfo.Size, sha256Str)
 	if err != nil {
 		panic(common.NewErr("图片上传失败", err))
 	}
@@ -153,6 +150,8 @@ func PictureUpload(pictureFile, thumbnailFile multipart.File, pictureInfo, thumb
 
 	// 添加记录
 	if needAddRecord {
+		tx := middleware.Db.MustBegin()
+		defer tx.Rollback()
 		picture := entity.Picture{}
 		picture.Id = util.SnowflakeString()
 		picture.CreateTime = time.Now().UnixMilli()
@@ -165,11 +164,11 @@ func PictureUpload(pictureFile, thumbnailFile multipart.File, pictureInfo, thumb
 		if err != nil {
 			panic(common.NewErr("图片上传失败", err))
 		}
+		err = tx.Commit()
+		if err != nil {
+			panic(common.NewErr("图片上传失败", err))
+		}
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		panic(common.NewErr("图片上传失败", err))
-	}
 	return "/" + common.ResourceName + "/" + common.PictureName + "/" + filename, message
 }

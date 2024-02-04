@@ -57,10 +57,10 @@ func PictureCountBySizeHash(tx *sqlx.Tx, size int64, hash string) (common.CountR
 }
 
 // 根据文件大小、hash值查询相同图片
-func PictureBySizeHash(tx *sqlx.Tx, size int64, hash string) ([]entity.Picture, error) {
+func PictureBySizeHash(db *sqlx.DB, size int64, hash string) ([]entity.Picture, error) {
 	sql := `select * from t_picture where size=? and hash=?`
 	result := []entity.Picture{}
-	err := tx.Select(&result, sql, size, hash)
+	err := db.Select(&result, sql, size, hash)
 	return result, err
 }
 
