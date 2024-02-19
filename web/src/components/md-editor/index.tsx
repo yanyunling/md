@@ -41,6 +41,7 @@ export default defineComponent({
             "save",
             0,
             "=",
+            "prettier",
             "pageFullscreen",
             "preview",
             "htmlPreview",
