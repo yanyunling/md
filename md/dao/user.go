@@ -24,7 +24,7 @@ func UserResetPassword(tx *sqlx.Tx, user entity.User) error {
 
 // 根据id查询用户
 func UserGetById(tx interface{}, id string) (entity.User, error) {
-	sql := `select * from t_user where id=?`
+	sql := `select * from t_user where id=$1`
 	result := entity.User{}
 	var err error
 	switch tx := tx.(type) {
@@ -40,7 +40,7 @@ func UserGetById(tx interface{}, id string) (entity.User, error) {
 
 // 根据用户名查询用户
 func UserGetByName(db *sqlx.DB, name string) (entity.User, error) {
-	sql := `select * from t_user where name=?`
+	sql := `select * from t_user where name=$1`
 	result := entity.User{}
 	err := db.Get(&result, sql, name)
 	return result, err
@@ -48,7 +48,7 @@ func UserGetByName(db *sqlx.DB, name string) (entity.User, error) {
 
 // 根据用户名查询用户数量
 func UserCountByName(tx *sqlx.Tx, name string) (common.CountResult, error) {
-	sql := `select count(*) as count from t_user where name=?`
+	sql := `select count(*) as count from t_user where name=$1`
 	result := common.CountResult{}
 	err := tx.Get(&result, sql, name)
 	return result, err

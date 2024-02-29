@@ -32,7 +32,7 @@ func DocumentUpdateContent(tx *sqlx.Tx, document entity.Document) error {
 
 // 根据id删除文档
 func DocumentDeleteById(tx *sqlx.Tx, id, userId string) error {
-	sql := `delete from t_document where id=? and user_id=?`
+	sql := `delete from t_document where id=$1 and user_id=$2`
 	_, err := tx.Exec(sql, id, userId)
 	return err
 }
@@ -56,7 +56,7 @@ func DocumentList(db *sqlx.DB, bookId, userId string) ([]entity.Document, error)
 
 // 根据id查询文档
 func DocumentGetById(db *sqlx.DB, id, userId string) (entity.Document, error) {
-	sql := `select id,name,content,type,published,create_time,update_time,book_id from t_document where id=? and user_id=?`
+	sql := `select id,name,content,type,published,create_time,update_time,book_id from t_document where id=$1 and user_id=$2`
 	result := entity.Document{}
 	err := db.Get(&result, sql, id, userId)
 	return result, err
@@ -64,14 +64,14 @@ func DocumentGetById(db *sqlx.DB, id, userId string) (entity.Document, error) {
 
 // 清空文档的bookId
 func DocumentClearBookId(tx *sqlx.Tx, bookId string) error {
-	sql := `update t_document set book_id='' where book_id=?`
+	sql := `update t_document set book_id='' where book_id=$1`
 	_, err := tx.Exec(sql, bookId)
 	return err
 }
 
 // 根据id查询公开发布文档
 func DocumentGetPublished(db *sqlx.DB, id string) (entity.Document, error) {
-	sql := `select id,name,content,type,published,create_time,update_time,book_id from t_document where id=? and published=true`
+	sql := `select id,name,content,type,published,create_time,update_time,book_id from t_document where id=$1 and published=true`
 	result := entity.Document{}
 	err := db.Get(&result, sql, id)
 	return result, err
@@ -81,7 +81,7 @@ func DocumentGetPublished(db *sqlx.DB, id string) (entity.Document, error) {
 func DocumentPagePulished(db *sqlx.DB, pageCondition common.PageCondition[entity.DocumentPageCondition]) ([]entity.DocumentPageResult, int, error) {
 	sqlCompletion := util.SqlCompletion{}
 	sqlCompletion.InitSql(
-		`select a.id, a.name, a.type, a.create_time, a.update_time, ifnull(b.name, '') as username, ifnull(c.name, '') as book_name 
+		`select a.id, a.name, a.type, a.create_time, a.update_time, COALESCE(b.name, '') as username, COALESCE(c.name, '') as book_name 
 		from t_document a 
 		left join t_user b on a.user_id = b.id 
 		left join t_book c on a.book_id = c.id`,

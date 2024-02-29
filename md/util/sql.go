@@ -1,7 +1,10 @@
 // sql语句拼接工具类
 package util
 
-import "strings"
+import (
+	"strconv"
+	"strings"
+)
 
 type SqlCompletion struct {
 	initSql      string
@@ -11,6 +14,7 @@ type SqlCompletion struct {
 	havingSql    string
 	orderSql     strings.Builder
 	limitSql     string
+	paramIndex   int
 	whereParams  []interface{}
 	limitParams  []interface{}
 }
@@ -145,7 +149,11 @@ func (s *SqlCompletion) Order(field string, isAsc bool) *SqlCompletion {
 func (s *SqlCompletion) Limit(page, size int) *SqlCompletion {
 	if page > 0 && size > 0 {
 		offset := size * (page - 1)
-		s.limitSql = " limit ? offset ?"
+		s.paramIndex = s.paramIndex + 1
+		paramPlaceholder1 := "$" + strconv.Itoa(s.paramIndex)
+		s.paramIndex = s.paramIndex + 1
+		paramPlaceholder2 := "$" + strconv.Itoa(s.paramIndex)
+		s.limitSql = " limit " + paramPlaceholder1 + " offset " + paramPlaceholder2
 		s.limitParams = []interface{}{size, offset}
 	}
 	return s
@@ -153,14 +161,16 @@ func (s *SqlCompletion) Limit(page, size int) *SqlCompletion {
 
 // 添加where条件
 func (s *SqlCompletion) where(field string, param interface{}, symbol string, isLike bool, isAnd bool) {
+	s.paramIndex = s.paramIndex + 1
+	paramPlaceholder := "$" + strconv.Itoa(s.paramIndex)
 	s.whereHyphen(isAnd)
 	s.whereSql.WriteString(field)
 	s.whereSql.WriteString(" ")
 	s.whereSql.WriteString(symbol)
 	if isLike {
-		s.whereSql.WriteString(" '%'||?||'%'")
+		s.whereSql.WriteString(" '%'||" + paramPlaceholder + "||'%'")
 	} else {
-		s.whereSql.WriteString(" ?")
+		s.whereSql.WriteString(" " + paramPlaceholder)
 	}
 	s.whereParams = append(s.whereParams, param)
 }
@@ -179,7 +189,9 @@ func (s *SqlCompletion) whereIn(field string, params []interface{}, symbol strin
 		if i != 0 {
 			s.whereSql.WriteString(",")
 		}
-		s.whereSql.WriteString("?")
+		s.paramIndex = s.paramIndex + 1
+		paramPlaceholder := "$" + strconv.Itoa(s.paramIndex)
+		s.whereSql.WriteString(paramPlaceholder)
 		s.whereParams = append(s.whereParams, v)
 	}
 	s.whereSql.WriteString(")")

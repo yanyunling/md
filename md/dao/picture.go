@@ -35,14 +35,14 @@ func PicturePage(db *sqlx.DB, page common.Page, userId string) ([]entity.Picture
 
 // 根据id删除图片
 func PictureDeleteById(tx *sqlx.Tx, id, userId string) error {
-	sql := `delete from t_picture where id=? and user_id=?`
+	sql := `delete from t_picture where id=$1 and user_id=$2`
 	_, err := tx.Exec(sql, id, userId)
 	return err
 }
 
 // 根据id查询图片
 func PictureGetById(tx *sqlx.Tx, id, userId string) (entity.Picture, error) {
-	sql := `select * from t_picture where id=? and user_id=?`
+	sql := `select * from t_picture where id=$1 and user_id=$2`
 	result := entity.Picture{}
 	err := tx.Get(&result, sql, id, userId)
 	return result, err
@@ -50,7 +50,7 @@ func PictureGetById(tx *sqlx.Tx, id, userId string) (entity.Picture, error) {
 
 // 根据文件大小、hash值查询相同图片的数量
 func PictureCountBySizeHash(tx *sqlx.Tx, size int64, hash string) (common.CountResult, error) {
-	sql := `select count(*) as count from t_picture where size=? and hash=?`
+	sql := `select count(*) as count from t_picture where size=$1 and hash=$2`
 	result := common.CountResult{}
 	err := tx.Get(&result, sql, size, hash)
 	return result, err
@@ -58,7 +58,7 @@ func PictureCountBySizeHash(tx *sqlx.Tx, size int64, hash string) (common.CountR
 
 // 根据文件大小、hash值查询相同图片
 func PictureBySizeHash(db *sqlx.DB, size int64, hash string) ([]entity.Picture, error) {
-	sql := `select * from t_picture where size=? and hash=?`
+	sql := `select * from t_picture where size=$1 and hash=$2`
 	result := []entity.Picture{}
 	err := db.Select(&result, sql, size, hash)
 	return result, err
