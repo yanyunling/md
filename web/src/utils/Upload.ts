@@ -12,6 +12,7 @@ export class Upload {
   static InputAccept = {
     xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     image: "image/*",
+    uploadImage: ".jpg,.jpeg,.jfif,.png,.gif,.bmp,.webp,.ico",
   };
 
   /**

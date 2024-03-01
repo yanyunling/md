@@ -11,7 +11,7 @@ import (
 // 分页查询图片记录
 func PicturePage(db *sqlx.DB, page common.Page, userId string) ([]entity.Picture, int, error) {
 	sqlCompletion := util.SqlCompletion{}
-	sqlCompletion.InitSql(`select id,name,path,size,create_time from t_picture`, `select count(*) as count from t_picture`)
+	sqlCompletion.InitSql(`select id,name,path,size,create_time from t_picture`)
 	sqlCompletion.Eq("user_id", userId, true)
 	sqlCompletion.Order("create_time", false)
 	sqlCompletion.Limit(page.Current, page.Size)

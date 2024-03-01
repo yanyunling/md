@@ -65,7 +65,7 @@ watch(
  * 上传图片
  */
 const upload = () => {
-  Upload.openFiles(false, ".jpg,.jpeg,.jfif,.png,.gif,.bmp").then((fileList) => {
+  Upload.openFiles(false, Upload.InputAccept.uploadImage).then((fileList) => {
     file.value = fileList[0];
     originalSize.value = Upload.formatFileSize(file.value.size);
     compress();

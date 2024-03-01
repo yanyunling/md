@@ -2,6 +2,7 @@
 package util
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -20,7 +21,15 @@ type SqlCompletion struct {
 }
 
 // 设置初始sql语句
-func (s *SqlCompletion) InitSql(sql, countSql string) *SqlCompletion {
+func (s *SqlCompletion) InitSql(sql string) *SqlCompletion {
+	s.initSql = sql
+	r, _ := regexp.Compile("(?i)(?s)select(.*?)from")
+	s.initCountSql = r.ReplaceAllString(sql, "select count(*) as count from")
+	return s
+}
+
+// 设置初始sql语句和总行数语句
+func (s *SqlCompletion) InitSqlAndCount(sql, countSql string) *SqlCompletion {
 	s.initSql = sql
 	s.initCountSql = countSql
 	return s

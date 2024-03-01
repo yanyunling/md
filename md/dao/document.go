@@ -40,7 +40,7 @@ func DocumentDeleteById(tx *sqlx.Tx, id, userId string) error {
 // 查询文档列表
 func DocumentList(db *sqlx.DB, bookId, userId string) ([]entity.Document, error) {
 	sqlCompletion := util.SqlCompletion{}
-	sqlCompletion.InitSql(`select id,name,type,published,create_time,update_time,book_id from t_document`, ``)
+	sqlCompletion.InitSql(`select id,name,type,published,create_time,update_time,book_id from t_document`)
 	sqlCompletion.Eq("user_id", userId, true)
 	if bookId != "" {
 		sqlCompletion.Eq("book_id", bookId, true)
@@ -82,10 +82,6 @@ func DocumentPagePulished(db *sqlx.DB, pageCondition common.PageCondition[entity
 	sqlCompletion := util.SqlCompletion{}
 	sqlCompletion.InitSql(
 		`select a.id, a.name, a.type, a.create_time, a.update_time, COALESCE(b.name, '') as username, COALESCE(c.name, '') as book_name 
-		from t_document a 
-		left join t_user b on a.user_id = b.id 
-		left join t_book c on a.book_id = c.id`,
-		`select count(*) as count 
 		from t_document a 
 		left join t_user b on a.user_id = b.id 
 		left join t_book c on a.book_id = c.id`,

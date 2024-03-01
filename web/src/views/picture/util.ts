@@ -11,8 +11,9 @@ import { ElMessage } from "element-plus";
 export const uploadPicture = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const fileName = Upload.getFileName(file);
-    if (fileName.ext !== "jpg" && fileName.ext !== "jpeg" && fileName.ext !== "png" && fileName.ext !== "gif") {
-      ElMessage.warning("请上传以下格式的图片：jpg、jpeg、png、gif");
+    const extArr = ["jpg", "jpeg", "jfif", "png", "gif", "bmp", "webp", "ico"];
+    if (extArr.indexOf(fileName.ext) < 0) {
+      ElMessage.warning("仅支持以下格式的图片：jpeg、png、gif、bmp、webp、ico");
       reject();
       return;
     }

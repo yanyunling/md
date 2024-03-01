@@ -121,7 +121,7 @@ const deleteClick = (row: PicturePageResult) => {
  * 上传图片
  */
 const uploadClick = () => {
-  Upload.openFiles(false, ".jpg,.jpeg,.png,.gif").then((fileList) => {
+  Upload.openFiles(false, Upload.InputAccept.uploadImage).then((fileList) => {
     tableLoading.value = true;
     uploadPicture(fileList[0])
       .then(() => {
