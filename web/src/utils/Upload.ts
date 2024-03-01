@@ -12,7 +12,7 @@ export class Upload {
   static InputAccept = {
     xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     image: "image/*",
-    uploadImage: ".jpg,.jpeg,.jfif,.png,.gif,.bmp,.webp,.ico",
+    uploadImage: ".apng,.bmp,.gif,.ico,.jfif,.jpeg,.jpg,.png,.webp",
   };
 
   /**
@@ -50,7 +50,7 @@ export class Upload {
     let name = splits.slice(0, splits.length - 1).join(".");
     let ext = "";
     if (splits.length > 1) {
-      ext = splits[splits.length - 1];
+      ext = splits[splits.length - 1].toLowerCase();
     }
     return { name, ext };
   }

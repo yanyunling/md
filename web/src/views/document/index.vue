@@ -158,8 +158,8 @@ const docChange = (id: string, name: string, content: string, type: string, upda
   currentDoc.value.originMD5 = crypto.MD5(content).toString();
   currentDoc.value.updateTime = updateTime;
   if (!noRender) {
+    mdKey.value++;
     nextTick(() => {
-      mdKey.value++;
       if (codemirrorRef.value) {
         codemirrorRef.value.$el.getElementsByClassName("cm-scroller")[0].scrollTop = 0;
       }

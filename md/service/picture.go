@@ -81,12 +81,13 @@ func PictureUpload(pictureFile, thumbnailFile multipart.File, pictureInfo, thumb
 	// 获取文件后缀
 	pictureExt := util.FileExt(pictureInfo.Filename)
 	thumbnailExt := util.FileExt(thumbnailInfo.Filename)
-	extArr := []string{".jpg", ".jpeg", ".jfif", ".png", ".gif", ".bmp", ".webp", ".ico"}
+	extArr := []string{".apng", ".bmp", ".gif", ".ico", ".jfif", ".jpeg", ".jpg", ".png", ".webp"}
+	extNames := "APNG、BMP、GIF、ICO、JPEG、PNG、WebP"
 	if !slices.Contains(extArr, pictureExt) {
-		panic(common.NewError("仅支持以下格式的图片：jpeg、png、gif、bmp、webp、ico"))
+		panic(common.NewError("仅支持以下格式的图片：" + extNames))
 	}
 	if !slices.Contains(extArr, thumbnailExt) {
-		panic(common.NewError("仅支持以下格式的缩略图：jpeg、png、gif、bmp、webp、ico"))
+		panic(common.NewError("仅支持以下格式的缩略图：" + extNames))
 	}
 	if util.StringLength(pictureInfo.Filename) > 1000 || util.StringLength(thumbnailInfo.Filename) > 1000 {
 		panic(common.NewError("图片文件名称过长"))
