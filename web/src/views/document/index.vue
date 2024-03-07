@@ -1,6 +1,6 @@
 <template>
   <div class="page-document">
-    <book @change="bookChange" @books="booksFetch" :onlyPreview="onlyPreview" :isStretch="isStretch"></book>
+    <book @change="bookChange" @books="booksFetch" :onlyPreview="onlyPreview" :isStretch="isStretch" :loading="mdLoading"></book>
     <doc
       :onlyPreview="onlyPreview"
       :isStretch="isStretch"

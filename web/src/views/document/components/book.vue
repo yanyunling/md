@@ -1,5 +1,5 @@
 <template>
-  <div class="page-book" v-loading="bookLoading" :class="{ 'page-book-shrink': !isStretch }">
+  <div class="page-book" v-loading="bookLoading || loading" :class="{ 'page-book-shrink': !isStretch }">
     <el-popover v-if="!onlyPreview" :visible="addBookVisible" placement="bottom" trigger="click" width="200px">
       <el-input v-model="newBookName" placeholder="请输入文集名称" style="margin-right: 10px"></el-input>
       <div style="display: flex; margin-top: 8px; justify-content: flex-end">
@@ -58,6 +58,10 @@ defineProps({
   isStretch: {
     type: Boolean,
     default: true,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
   },
 });
 

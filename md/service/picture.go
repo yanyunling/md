@@ -29,7 +29,7 @@ func PicturePage(pageCondition common.PageCondition[interface{}], userId string)
 
 // 删除图片
 func PictureDelete(id, userId string) {
-	tx := middleware.Db.MustBegin()
+	tx := middleware.DbW.MustBegin()
 	defer tx.Rollback()
 
 	// 查询图片
@@ -153,7 +153,7 @@ func PictureUpload(pictureFile, thumbnailFile multipart.File, pictureInfo, thumb
 
 	// 添加记录
 	if needAddRecord {
-		tx := middleware.Db.MustBegin()
+		tx := middleware.DbW.MustBegin()
 		defer tx.Rollback()
 		picture := entity.Picture{}
 		picture.Id = util.SnowflakeString()

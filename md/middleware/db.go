@@ -9,8 +9,11 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-// 数据库连接
+// 数据库读写连接
 var Db *sqlx.DB
+
+// 数据库写连接
+var DbW *sqlx.DB
 
 // 建表语句
 var createTableSql = `
@@ -110,6 +113,13 @@ func initSqlite() error {
 		return err
 	}
 
+	DbW, err = sqlx.Connect("sqlite", common.DataPath+"md.db")
+	if err != nil {
+		Log.Error("开启sqlite数据库文件失败：", err)
+		return err
+	}
+	DbW.SetMaxOpenConns(1)
+
 	Log.Info("已连接sqlite")
 	return nil
 }
@@ -117,17 +127,13 @@ func initSqlite() error {
 // 初始化postgres
 func initPostgres() error {
 	var err error
-	Db, err = sqlx.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", common.PostgresHost, common.PostgresPort, common.PostgresUser, common.PostgresPassword, common.PostgresDB))
+	Db, err = sqlx.Connect("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", common.PostgresHost, common.PostgresPort, common.PostgresUser, common.PostgresPassword, common.PostgresDB))
 	if err != nil {
 		Log.Error("postgres连接失败：", err)
 		return err
 	}
 
-	err = Db.Ping()
-	if err != nil {
-		Log.Error("postgres连接失败：", err)
-		return err
-	}
+	DbW = Db
 
 	Log.Info("已连接postgres")
 	return nil

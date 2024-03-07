@@ -12,7 +12,7 @@ import (
 
 // 添加文集
 func BookAdd(book entity.Book) {
-	tx := middleware.Db.MustBegin()
+	tx := middleware.DbW.MustBegin()
 	defer tx.Rollback()
 
 	book.Name = strings.TrimSpace(book.Name)
@@ -51,7 +51,7 @@ func BookAdd(book entity.Book) {
 
 // 修改文集
 func BookUpdate(book entity.Book) {
-	tx := middleware.Db.MustBegin()
+	tx := middleware.DbW.MustBegin()
 	defer tx.Rollback()
 
 	book.Name = strings.TrimSpace(book.Name)
@@ -90,7 +90,7 @@ func BookUpdate(book entity.Book) {
 
 // 删除文集
 func BookDelete(id, userId string) {
-	tx := middleware.Db.MustBegin()
+	tx := middleware.DbW.MustBegin()
 	defer tx.Rollback()
 
 	// 删除
