@@ -27,7 +27,7 @@
             :style="{ visibility: codemirrorVisibility }"
             ref="codemirrorRef"
             v-model="currentDoc.content"
-            :disabled="onlyPreview"
+            :disabled="onlyPreview || mdLoading"
             noRadius
             @save="saveDoc(currentDoc.content)"
             @ready="codemirrorReday"

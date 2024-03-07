@@ -1,5 +1,6 @@
 <template>
-  <div class="page-book" v-loading="bookLoading || loading" :class="{ 'page-book-shrink': !isStretch }">
+  <div class="page-book" v-loading="bookLoading" :class="{ 'page-book-shrink': !isStretch }">
+    <div class="mask-view" v-if="loading"></div>
     <el-popover v-if="!onlyPreview" :visible="addBookVisible" placement="bottom" trigger="click" width="200px">
       <el-input v-model="newBookName" placeholder="请输入文集名称" style="margin-right: 10px"></el-input>
       <div style="display: flex; margin-top: 8px; justify-content: flex-end">
@@ -194,6 +195,12 @@ const deleteBookClick = (book: Book) => {
   flex-direction: column;
   overflow-x: hidden;
   transition: margin-left 0.3s;
+  .mask-view {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+  }
   .create-button {
     height: 60px;
     border-bottom: 1px solid #555 !important;
