@@ -33,7 +33,6 @@ export default defineComponent({
             "link",
             "image",
             "table",
-            "mermaid",
             "katex",
             "-",
             "revoke",
@@ -51,6 +50,7 @@ export default defineComponent({
           codeTheme="github"
           showCodeRowNumber
           mdHeadingId={generateId}
+          noMermaid
           defToolbars={
             <>
               <NormalToolbar

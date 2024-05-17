@@ -22,6 +22,10 @@ func InitLog(prefixPath string, logger *golog.Logger) {
 	Log.SetLevel("info")
 	Log.SetTimeFormat("2006-01-02 15:04:05")
 
+	if prefixPath == "" {
+		return
+	}
+
 	// 首次执行
 	if lastTime == "" {
 		// 创建目录

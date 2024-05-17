@@ -22,6 +22,7 @@ export default defineComponent({
             previewTheme="cyanosis"
             codeTheme="github"
             mdHeadingId={generateId}
+            noMermaid
           />
           <el-scrollbar class="catalog-view">
             <MdCatalog editorId="MdPreview" mdHeadingId={generateId} />

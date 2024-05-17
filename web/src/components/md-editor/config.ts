@@ -6,7 +6,6 @@ import parserMarkdown from "prettier/parser-markdown";
 import cropper from "cropperjs";
 import "cropperjs/dist/cropper.css";
 import screenfull from "screenfull";
-import mermaid from "mermaid";
 import katex from "katex";
 import "katex/dist/katex.css";
 import "./index.scss";
@@ -51,9 +50,6 @@ config({
     },
     screenfull: {
       instance: screenfull,
-    },
-    mermaid: {
-      instance: mermaid,
     },
     katex: {
       instance: katex,
