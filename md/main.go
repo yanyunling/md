@@ -31,7 +31,6 @@ func init() {
 	flag.Parse()
 
 	// 固定配置
-	common.LogPath = util.PathCompletion(common.LogPath)
 	common.DataPath = util.PathCompletion(common.DataPath)
 	common.BasicTokenKey = "md"
 	common.ResourceName = "resource"
@@ -44,7 +43,7 @@ func main() {
 	app := iris.New()
 
 	// 初始化日志
-	middleware.InitLog(common.LogPath, app.Logger())
+	middleware.InitLog(app.Logger())
 
 	// 全局异常恢复
 	app.Use(middleware.GlobalRecover)

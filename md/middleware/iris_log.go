@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"io"
+	"md/model/common"
 	"md/util"
 	"os"
 	"path"
@@ -17,14 +18,16 @@ var (
 )
 
 // 初始化日志
-func InitLog(prefixPath string, logger *golog.Logger) {
+func InitLog(logger *golog.Logger) {
 	Log = logger
 	Log.SetLevel("info")
 	Log.SetTimeFormat("2006-01-02 15:04:05")
 
-	if prefixPath == "" {
+	if common.LogPath == "" {
 		return
 	}
+
+	prefixPath := util.PathCompletion(common.LogPath)
 
 	// 首次执行
 	if lastTime == "" {
@@ -42,6 +45,8 @@ func InitLog(prefixPath string, logger *golog.Logger) {
 		}
 		lastFile = currentFile
 		Log.SetOutput(io.MultiWriter(lastFile, os.Stdout))
+		// 删除超过30天的日志文件
+		removeOvertimeFile(prefixPath, 30)
 	}
 
 	// 定时扫描日志文件是否需要生成
