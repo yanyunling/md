@@ -61,7 +61,6 @@ const rain = () => {
     color: #ffffff;
     height: 100%;
     position: absolute;
-    right: 0;
     text-shadow: 0 0 5px #ffffff, 0 0 15px #ffffff, 0 0 30px #ffffff;
     transform-origin: bottom;
     animation: animate 2s linear forwards;

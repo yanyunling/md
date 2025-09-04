@@ -1,3 +1,4 @@
+rmdir /s/q .\web\dist\
 cd .\web
 call npm install
 call npm run build

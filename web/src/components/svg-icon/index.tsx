@@ -29,18 +29,16 @@ export default defineComponent({
     });
     return () => {
       return (
-        <>
-          <svg
-            class={svgClass.value}
-            aria-hidden={true}
-            style={props.customStyle}
-            onClick={(ev: MouseEvent) => {
-              emit("click", ev);
-            }}
-          >
-            <use xlinkHref={svgName.value}></use>
-          </svg>
-        </>
+        <svg
+          class={svgClass.value}
+          aria-hidden={true}
+          style={props.customStyle}
+          onClick={(ev: MouseEvent) => {
+            emit("click", ev);
+          }}
+        >
+          <use xlinkHref={svgName.value}></use>
+        </svg>
       );
     };
   },

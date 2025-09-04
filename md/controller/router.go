@@ -72,7 +72,7 @@ func InitRouter(app *iris.Application) {
 }
 
 // 解析参数
-func resolveParam(ctx iris.Context, con interface{}) {
+func resolveParam(ctx iris.Context, con any) {
 	err := ctx.ReadJSON(&con)
 	if err != nil {
 		panic(common.NewErr("参数解析失败", err))

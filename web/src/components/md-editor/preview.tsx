@@ -18,11 +18,12 @@ export default defineComponent({
           <MdPreview
             class="preview-view"
             modelValue={props.content}
-            editorId="MdPreview"
+            id="MdPreview"
             previewTheme="cyanosis"
             codeTheme="github"
             mdHeadingId={generateId}
             noMermaid
+            autoFoldThreshold={100}
           />
           <el-scrollbar class="catalog-view">
             <MdCatalog editorId="MdPreview" mdHeadingId={generateId} />

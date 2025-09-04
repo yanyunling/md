@@ -1,4 +1,5 @@
 #!/bin/sh
+rm -rf ./web/dist
 cd ./web
 npm install
 npm run build

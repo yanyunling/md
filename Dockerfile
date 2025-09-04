@@ -1,11 +1,11 @@
-FROM node:20-alpine as nodejs
+FROM node:24-alpine as nodejs
 COPY ./web /build/web
 WORKDIR /build/web
 RUN npm config set registry https://registry.npmmirror.com
 RUN npm install
 RUN npm run build
 
-FROM golang:1.22-alpine as go
+FROM golang:1.25-alpine as go
 ENV GOPROXY=https://goproxy.cn,direct
 COPY ./md /build/md
 COPY --from=nodejs /build/web/dist /build/md/web

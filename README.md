@@ -6,7 +6,7 @@
 
 ## 软件架构
 
-- go1.22
+- go1.25
 - vue3
 - sqlite/postgres
 

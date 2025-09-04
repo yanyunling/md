@@ -3,6 +3,7 @@ import { MdEditor, NormalToolbar } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import { generateId } from "./config";
 import SvgIcon from "@/components/svg-icon";
+import { Fragment } from "vue";
 
 export default defineComponent({
   name: "MdEditor",
@@ -51,6 +52,7 @@ export default defineComponent({
           showCodeRowNumber
           mdHeadingId={generateId}
           noMermaid
+          autoFoldThreshold={100}
           defToolbars={
             <>
               <NormalToolbar

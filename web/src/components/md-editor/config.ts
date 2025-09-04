@@ -1,8 +1,8 @@
-import { config } from "md-editor-v3";
+import { config, XSSPlugin } from "md-editor-v3";
 import highlight from "highlight.js";
 import "highlight.js/styles/github.css";
 import prettier from "prettier";
-import parserMarkdown from "prettier/parser-markdown";
+import parserMarkdown from "prettier/plugins/markdown";
 import cropper from "cropperjs";
 import "cropperjs/dist/cropper.css";
 import screenfull from "screenfull";
@@ -37,7 +37,6 @@ config({
     renderDelay: 500,
   },
   editorExtensions: {
-    iconfont: "/static/md-editor/iconfont.js",
     highlight: {
       instance: highlight,
     },
@@ -60,6 +59,16 @@ config({
   },
   markdownItConfig(md) {
     md.use(targetBlankExtension);
+  },
+  markdownItPlugins(plugins) {
+    return [
+      ...plugins,
+      {
+        type: 'xss',
+        plugin: XSSPlugin,
+        options: {},
+      },
+    ];
   },
 });
 

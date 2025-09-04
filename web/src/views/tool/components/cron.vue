@@ -28,7 +28,7 @@ const cronConvert = () => {
     return;
   }
   try {
-    const interval = cronParser.parseExpression(cronText.value);
+    const interval = cronParser.parse(cronText.value);
     const nextArr = [];
     for (let i = 0; i < 5; i++) {
       let nextDate = interval.next().toDate();

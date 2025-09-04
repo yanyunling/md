@@ -1,6 +1,6 @@
 module md
 
-go 1.22
+go 1.25.1
 
 require (
 	github.com/bwmarrin/snowflake v0.3.0
@@ -11,14 +11,10 @@ require (
 	github.com/kataras/iris/v12 v12.2.11
 	github.com/muesli/cache2go v0.0.0-20221011235721-518229cd8021
 	golang.org/x/text v0.15.0
-	modernc.org/sqlite v1.29.9
+	modernc.org/sqlite v1.38.2
 )
 
-require (
-	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
-	github.com/ncruces/go-strftime v0.1.9 // indirect
-	modernc.org/gc/v3 v3.0.0-20240304020402-f0dba7c97c2b // indirect
-)
+require github.com/ncruces/go-strftime v0.1.9 // indirect
 
 require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
@@ -58,16 +54,14 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/yosssi/ace v0.0.5 // indirect
 	golang.org/x/crypto v0.23.0 // indirect
-	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 // indirect
+	golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b // indirect
 	golang.org/x/net v0.25.0 // indirect
-	golang.org/x/sys v0.20.0 // indirect
+	golang.org/x/sys v0.34.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	modernc.org/libc v1.50.6 // indirect
-	modernc.org/mathutil v1.6.0 // indirect
-	modernc.org/memory v1.8.0 // indirect
-	modernc.org/strutil v1.2.0 // indirect
-	modernc.org/token v1.1.0 // indirect
+	modernc.org/libc v1.66.3 // indirect
+	modernc.org/mathutil v1.7.1 // indirect
+	modernc.org/memory v1.11.0 // indirect
 )
