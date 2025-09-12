@@ -1,11 +1,11 @@
 package common
 
-type PageCondition[T interface{}] struct {
+type PageCondition[T any] struct {
 	Page      Page `json:"page"`
 	Condition T    `json:"condition"`
 }
 
-type PageResult[T interface{}] struct {
+type PageResult[T any] struct {
 	Records []T `json:"records"`
 	Total   int `json:"total"`
 }

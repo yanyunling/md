@@ -11,7 +11,7 @@ import (
 
 // 分页查询图片记录
 func PicturePage(ctx iris.Context) {
-	pageCondition := common.PageCondition[interface{}]{}
+	pageCondition := common.PageCondition[any]{}
 	resolveParam(ctx, &pageCondition)
 	userId := middleware.CurrentUserId(ctx)
 	ctx.JSON(common.NewSuccessData("查询成功", service.PicturePage(pageCondition, userId)))

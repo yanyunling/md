@@ -23,7 +23,7 @@ func UserResetPassword(tx *sqlx.Tx, user entity.User) error {
 }
 
 // 根据id查询用户
-func UserGetById(tx interface{}, id string) (entity.User, error) {
+func UserGetById(tx any, id string) (entity.User, error) {
 	sql := `select * from t_user where id=$1`
 	result := entity.User{}
 	var err error

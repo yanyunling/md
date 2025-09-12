@@ -127,7 +127,7 @@ func DecryptRSA(message, privateKey string, isPKCS8 bool) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	var priKey interface{}
+	var priKey any
 	if isPKCS8 {
 		priKey, err = x509.ParsePKCS8PrivateKey(key)
 	} else {
@@ -149,7 +149,7 @@ func SignRSA(message, privateKey string, signType SignType, isPKCS8 bool) (strin
 	if err != nil {
 		return "", err
 	}
-	var priKey interface{}
+	var priKey any
 	if isPKCS8 {
 		priKey, err = x509.ParsePKCS8PrivateKey(key)
 	} else {

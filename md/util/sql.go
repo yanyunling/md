@@ -16,8 +16,8 @@ type SqlCompletion struct {
 	orderSql     strings.Builder
 	limitSql     string
 	paramIndex   int
-	whereParams  []interface{}
-	limitParams  []interface{}
+	whereParams  []any
+	limitParams  []any
 }
 
 // 设置初始sql语句
@@ -46,65 +46,65 @@ func (s *SqlCompletion) GetCountSql() string {
 }
 
 // 获取条件列表
-func (s *SqlCompletion) GetParams() []interface{} {
+func (s *SqlCompletion) GetParams() []any {
 	return append(s.whereParams, s.limitParams...)
 }
 
 // 获取行数条件列表
-func (s *SqlCompletion) GetCountParams() []interface{} {
+func (s *SqlCompletion) GetCountParams() []any {
 	return s.whereParams
 }
 
 // =
-func (s *SqlCompletion) Eq(field string, param interface{}, isAnd bool) *SqlCompletion {
+func (s *SqlCompletion) Eq(field string, param any, isAnd bool) *SqlCompletion {
 	s.where(field, param, "=", false, isAnd)
 	return s
 }
 
 // !=
-func (s *SqlCompletion) Ne(field string, param interface{}, isAnd bool) *SqlCompletion {
+func (s *SqlCompletion) Ne(field string, param any, isAnd bool) *SqlCompletion {
 	s.where(field, param, "!=", false, isAnd)
 	return s
 }
 
 // >
-func (s *SqlCompletion) Gt(field string, param interface{}, isAnd bool) *SqlCompletion {
+func (s *SqlCompletion) Gt(field string, param any, isAnd bool) *SqlCompletion {
 	s.where(field, param, ">", false, isAnd)
 	return s
 }
 
 // <
-func (s *SqlCompletion) Lt(field string, param interface{}, isAnd bool) *SqlCompletion {
+func (s *SqlCompletion) Lt(field string, param any, isAnd bool) *SqlCompletion {
 	s.where(field, param, "<", false, isAnd)
 	return s
 }
 
 // >=
-func (s *SqlCompletion) Ge(field string, param interface{}, isAnd bool) *SqlCompletion {
+func (s *SqlCompletion) Ge(field string, param any, isAnd bool) *SqlCompletion {
 	s.where(field, param, ">=", false, isAnd)
 	return s
 }
 
 // <=
-func (s *SqlCompletion) Le(field string, param interface{}, isAnd bool) *SqlCompletion {
+func (s *SqlCompletion) Le(field string, param any, isAnd bool) *SqlCompletion {
 	s.where(field, param, "<=", false, isAnd)
 	return s
 }
 
 // like
-func (s *SqlCompletion) Like(field string, param interface{}, isAnd bool) *SqlCompletion {
+func (s *SqlCompletion) Like(field string, param any, isAnd bool) *SqlCompletion {
 	s.where(field, param, "like", true, isAnd)
 	return s
 }
 
 // in
-func (s *SqlCompletion) In(field string, params []interface{}, isAnd bool) *SqlCompletion {
+func (s *SqlCompletion) In(field string, params []any, isAnd bool) *SqlCompletion {
 	s.whereIn(field, params, "in", isAnd)
 	return s
 }
 
 // not in
-func (s *SqlCompletion) NotIn(field string, params []interface{}, isAnd bool) *SqlCompletion {
+func (s *SqlCompletion) NotIn(field string, params []any, isAnd bool) *SqlCompletion {
 	s.whereIn(field, params, "not in", isAnd)
 	return s
 }
@@ -163,13 +163,13 @@ func (s *SqlCompletion) Limit(page, size int) *SqlCompletion {
 		s.paramIndex = s.paramIndex + 1
 		paramPlaceholder2 := "$" + strconv.Itoa(s.paramIndex)
 		s.limitSql = " limit " + paramPlaceholder1 + " offset " + paramPlaceholder2
-		s.limitParams = []interface{}{size, offset}
+		s.limitParams = []any{size, offset}
 	}
 	return s
 }
 
 // 添加where条件
-func (s *SqlCompletion) where(field string, param interface{}, symbol string, isLike bool, isAnd bool) {
+func (s *SqlCompletion) where(field string, param any, symbol string, isLike bool, isAnd bool) {
 	s.paramIndex = s.paramIndex + 1
 	paramPlaceholder := "$" + strconv.Itoa(s.paramIndex)
 	s.whereHyphen(isAnd)
@@ -185,7 +185,7 @@ func (s *SqlCompletion) where(field string, param interface{}, symbol string, is
 }
 
 // 添加where条件（in / not in）
-func (s *SqlCompletion) whereIn(field string, params []interface{}, symbol string, isAnd bool) {
+func (s *SqlCompletion) whereIn(field string, params []any, symbol string, isAnd bool) {
 	if len(params) == 0 {
 		return
 	}

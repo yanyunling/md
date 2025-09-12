@@ -14,7 +14,7 @@ import (
 )
 
 // 分页查询图片记录
-func PicturePage(pageCondition common.PageCondition[interface{}], userId string) common.PageResult[entity.PicturePageResult] {
+func PicturePage(pageCondition common.PageCondition[any], userId string) common.PageResult[entity.PicturePageResult] {
 	pictures, total, err := dao.PicturePage(middleware.Db, pageCondition.Page, userId)
 	if err != nil {
 		panic(common.NewErr("查询失败", err))

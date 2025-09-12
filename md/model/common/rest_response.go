@@ -8,9 +8,9 @@ const (
 
 // 通用返回json数据结构体
 type RestResponse struct {
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Data    any    `json:"data"`
 }
 
 // 主动抛出异常结构体
@@ -29,7 +29,7 @@ func NewSuccess(message string) RestResponse {
 }
 
 // 填写成功信息、数据
-func NewSuccessData(message string, data interface{}) RestResponse {
+func NewSuccessData(message string, data any) RestResponse {
 	return RestResponse{
 		Code:    HttpSuccess,
 		Message: message,
