@@ -27,7 +27,7 @@ const (
 	SHA512 SignType = "SHA512"
 )
 
-// MD5加密
+// MD5编码
 func EncryptMD5(message []byte) string {
 	hash := md5.New()
 	hash.Write(message)
@@ -36,7 +36,7 @@ func EncryptMD5(message []byte) string {
 	return hashCode
 }
 
-// SHA1加密
+// SHA1编码
 func EncryptSHA1(message []byte) string {
 	hash := sha1.New()
 	hash.Write(message)
@@ -45,7 +45,7 @@ func EncryptSHA1(message []byte) string {
 	return hashCode
 }
 
-// SHA256加密
+// SHA256编码
 func EncryptSHA256(message []byte) string {
 	hash := sha256.New()
 	hash.Write(message)
@@ -54,7 +54,7 @@ func EncryptSHA256(message []byte) string {
 	return hashCode
 }
 
-// SHA512加密
+// SHA512编码
 func EncryptSHA512(message []byte) string {
 	hash := sha512.New()
 	hash.Write(message)

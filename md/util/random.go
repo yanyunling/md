@@ -5,30 +5,27 @@ import (
 	"math/rand"
 	"strings"
 
-	uuid "github.com/iris-contrib/go.uuid"
+	"github.com/google/uuid"
 )
 
 var (
-	letters = []rune("abcdefghijklmnopqrstuvwxyz0123456789")
-	numbers = []rune("0123456789")
+	letters    = []rune("abcdefghijklmnopqrstuvwxyz0123456789")
+	numbers    = []rune("0123456789")
+	hexLetters = []rune("0123456789abcdef")
 )
 
-// 生成uuid
+// 生成uuid-v7
 func Uuid() string {
-	result, err := uuid.NewV4()
+	result, err := uuid.NewV7()
 	if err != nil {
-		return RandomString(32)
+		return random(8, hexLetters) + "-" + random(4, hexLetters) + "-" + random(4, hexLetters) + "-" + random(4, hexLetters) + "-" + random(12, hexLetters)
 	}
 	return result.String()
 }
 
-// 生成没有连字符的uuid
+// 生成没有连字符的uuid-v7
 func UuidNoHyphen() string {
-	result, err := uuid.NewV4()
-	if err != nil {
-		return RandomString(32)
-	}
-	return strings.ReplaceAll(result.String(), "-", "")
+	return strings.ReplaceAll(Uuid(), "-", "")
 }
 
 // 随机生成字符串
