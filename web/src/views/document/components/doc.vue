@@ -172,7 +172,7 @@ const docFilter = (val: string) => {
   if (isEmpty(val)) {
     docs.value = allDocs.value;
   } else {
-    docs.value = allDocs.value.filter((item) => item.name.includes(val));
+    docs.value = allDocs.value.filter((item) => item.name.toLowerCase().includes(val.toLowerCase()));
   }
 };
 

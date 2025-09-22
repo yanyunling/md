@@ -90,7 +90,7 @@ const bookFilter = (val: string) => {
   if (isEmpty(val)) {
     books.value = allBooks.value;
   } else {
-    books.value = allBooks.value.filter((item) => item.name === "全部" || item.name.includes(val));
+    books.value = allBooks.value.filter((item) => item.name === "全部" || item.name.toLowerCase().includes(val.toLowerCase()));
   }
 };
 
