@@ -11,7 +11,9 @@
         <el-button class="create-button" type="warning" size="large" link :icon="Plus" @click="addBookVisible = true">创建文集</el-button>
       </template>
     </el-popover>
-    <el-button v-else class="create-button" type="warning" size="large" link>文集选择</el-button>
+    <div v-else class="filter-input">
+      <el-input v-model="bookFilterValue" placeholder="文集筛选"></el-input>
+    </div>
     <el-scrollbar class="scroll-view">
       <div class="item-view" :class="currentBookId === item.id ? 'selected' : ''" v-for="item in books" :key="item.id" @click="bookClick(item)">
         <div class="update-view" v-if="updateBookId && updateBookId === item.id">
@@ -40,14 +42,17 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus, Tools, CircleCheckFilled, CircleCloseFilled } from "@element-plus/icons-vue";
 import TextTip from "@/components/text-tip";
 import BookApi from "@/api/book";
+import { isEmpty } from "@/utils";
 
 const books: Ref<Book[]> = ref([]);
+const allBooks: Ref<Book[]> = ref([]);
 const bookLoading = ref(false);
 const currentBookId = ref("");
 const addBookVisible = ref(false);
 const newBookName = ref("");
 const updateBookId = ref("");
 const updateBookName = ref("");
+const bookFilterValue = ref("");
 
 const emit = defineEmits<{ change: [bookId: string]; books: [bookList: Book[]] }>();
 
@@ -70,20 +75,37 @@ watch(currentBookId, (val) => {
   emit("change", val);
 });
 
+watch(bookFilterValue, (val) => {
+  bookFilter(val);
+});
+
 onMounted(() => {
   queryBooks();
 });
 
 /**
+ * 文集筛选
+ */
+const bookFilter = (val: string) => {
+  if (isEmpty(val)) {
+    books.value = allBooks.value;
+  } else {
+    books.value = allBooks.value.filter((item) => item.name === "全部" || item.name.includes(val));
+  }
+};
+
+/**
  * 查询文集列表
  */
 const queryBooks = () => {
+  bookFilterValue.value = "";
   addBookCancel();
   updateBookCancel();
   bookLoading.value = true;
   BookApi.list()
     .then((res) => {
       books.value = res.data;
+      allBooks.value = res.data;
       emit("books", res.data);
     })
     .finally(() => {
@@ -195,22 +217,50 @@ const deleteBookClick = (book: Book) => {
   flex-direction: column;
   overflow-x: hidden;
   transition: margin-left 0.3s;
+
   .mask-view {
     position: absolute;
     width: 100%;
     height: 100%;
     z-index: 1000;
   }
+
   .create-button {
     height: 60px;
     border-bottom: 1px solid #555 !important;
   }
+
   .el-button--large [class*="el-icon"] + span {
     margin-left: 3px;
   }
+
+  .filter-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    border-bottom: 1px solid #555 !important;
+
+    .el-input {
+      height: 100%;
+
+      .el-input__wrapper {
+        background-color: #555;
+        box-shadow: none;
+        border-radius: 0;
+
+        .el-input__inner {
+          text-align: center;
+          color: #eee;
+        }
+      }
+    }
+  }
+
   .scroll-view {
     color: #f2f2f2;
     font-size: 13px;
+
     .item-view {
       display: flex;
       align-items: center;
@@ -220,39 +270,48 @@ const deleteBookClick = (book: Book) => {
       border-left: 3px #404040 solid;
       transition: 0.05s;
       border-bottom: 1px solid #555;
+
       .update-view {
         display: flex;
         align-items: center;
       }
     }
+
     .item-view:hover {
       background: #666;
       border-left-color: #666;
     }
+
     .item-view.selected {
       background: #666;
       border-left-color: #e6a23c;
     }
+
     .setting-button {
       margin-left: 10px;
       color: #f2f2f2;
     }
+
     .setting-button:hover {
       color: #ccc;
     }
   }
+
   .el-loading-mask {
     background: #404040;
   }
 }
+
 .page-book-shrink {
   margin-left: -220px;
 }
+
 @media (max-width: 480px) {
   .page-book {
     min-width: 45%;
     width: 45%;
   }
+
   .page-book-shrink {
     margin-left: -45%;
   }

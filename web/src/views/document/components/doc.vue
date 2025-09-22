@@ -15,7 +15,9 @@
         <el-button class="create-button" type="primary" size="large" link :icon="Plus" @click="addDocVisible = true">创建文档</el-button>
       </template>
     </el-popover>
-    <el-button v-else class="create-button" type="primary" size="large" link>文档选择</el-button>
+    <div v-else class="filter-input">
+      <el-input v-model="docFilterValue" placeholder="文档筛选"></el-input>
+    </div>
     <el-scrollbar class="scroll-view" ref="scrollRef">
       <div
         class="item-view"
@@ -80,7 +82,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus, Tools } from "@element-plus/icons-vue";
 import TextTip from "@/components/text-tip";
 import DocumentApi from "@/api/document";
-import { formatTime } from "@/utils";
+import { formatTime, isEmpty } from "@/utils";
 import copy from "copy-to-clipboard";
 import crypto from "crypto-js";
 import NProgress from "nprogress";
@@ -88,6 +90,7 @@ import "nprogress/nprogress.css";
 
 const hostUrl = ref(location.origin);
 const docs: Ref<Doc[]> = ref([]);
+const allDocs: Ref<Doc[]> = ref([]);
 const docLoading = ref(false);
 const docDisabled = ref(false);
 const addDocVisible = ref(false);
@@ -108,6 +111,7 @@ const dialog = ref({
   },
 });
 const scrollRef = ref();
+const docFilterValue = ref("");
 
 const emit = defineEmits<{
   change: [id: string, name: string, content: string, type: string, updateTime: string, noRender?: boolean];
@@ -146,11 +150,15 @@ watch(
   () => props.currentBookId,
   (val) => {
     queryDocs(val);
-  }
+  },
 );
 
 watch(docLoading, (val) => {
   emit("loading", val);
+});
+
+watch(docFilterValue, (val) => {
+  docFilter(val);
 });
 
 onMounted(() => {
@@ -158,9 +166,21 @@ onMounted(() => {
 });
 
 /**
+ * 文档筛选
+ */
+const docFilter = (val: string) => {
+  if (isEmpty(val)) {
+    docs.value = allDocs.value;
+  } else {
+    docs.value = allDocs.value.filter((item) => item.name.includes(val));
+  }
+};
+
+/**
  * 查询文档列表
  */
 const queryDocs = (bookId: string) => {
+  docFilterValue.value = "";
   addDocCancel();
   docLoading.value = true;
   DocumentApi.list(bookId)
@@ -175,6 +195,7 @@ const queryDocs = (bookId: string) => {
         }
       }
       docs.value = res.data;
+      allDocs.value = res.data;
       // 滚动到当前文档位置
       nextTick(() => {
         scrollRef.value.$el.getElementsByClassName("item-view selected")[0]?.scrollIntoView();
@@ -391,6 +412,12 @@ const saveDoc = (content: string) => {
             break;
           }
         }
+        for (let item of allDocs.value) {
+          if (item.id === res.data.id) {
+            item.updateTime = res.data.updateTime;
+            break;
+          }
+        }
       })
       .finally(() => {
         docLoading.value = false;
@@ -422,22 +449,50 @@ defineExpose({ saveDoc });
   overflow-x: hidden;
   position: relative;
   transition: margin-left 0.3s;
+
   .mask-view {
     position: absolute;
     width: 100%;
     height: 100%;
     z-index: 1000;
   }
+
   .create-button {
     height: 60px;
     border-bottom: 1px solid #e6e6e6 !important;
   }
+
   .el-button--large [class*="el-icon"] + span {
     margin-left: 3px;
   }
+
+  .filter-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    border-bottom: 1px solid #e6e6e6 !important;
+
+    .el-input {
+      height: 100%;
+
+      .el-input__wrapper {
+        background-color: #f2f2f2;
+        box-shadow: none;
+        border-radius: 0;
+
+        .el-input__inner {
+          text-align: center;
+          color: #595959;
+        }
+      }
+    }
+  }
+
   .scroll-view {
     color: #595959;
     font-size: 13px;
+
     .item-view {
       display: flex;
       align-items: center;
@@ -448,10 +503,12 @@ defineExpose({ saveDoc });
       transition: 0.05s;
       border-bottom: 1px solid #eaeaea;
       position: relative;
+
       .update-view {
         display: flex;
         align-items: center;
       }
+
       .sub-text {
         position: absolute;
         font-size: 12px;
@@ -459,6 +516,7 @@ defineExpose({ saveDoc });
         right: 20px;
         color: #ccc;
       }
+
       .published-view {
         position: absolute;
         top: 0;
@@ -469,34 +527,42 @@ defineExpose({ saveDoc });
         border-left: 20px solid transparent;
       }
     }
+
     .item-view:hover {
       background: #e6e6e6;
       border-left-color: #e6e6e6;
     }
+
     .item-view.selected {
       background: #e6e6e6;
       border-left-color: #0094c1;
     }
+
     .setting-button {
       margin-left: 10px;
       color: #595959;
     }
+
     .setting-button:hover {
       color: #777;
     }
   }
+
   .el-loading-mask {
     background: #fafafa;
   }
 }
+
 .page-doc-shrink {
   margin-left: -260px;
 }
+
 @media (max-width: 480px) {
   .page-doc {
     min-width: 55%;
     width: 55%;
   }
+
   .page-doc-shrink {
     margin-left: -55%;
   }
