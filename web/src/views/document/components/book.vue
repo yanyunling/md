@@ -196,13 +196,18 @@ const deleteBookClick = (book: Book) => {
     cancelButtonText: "取消",
     type: "warning",
   }).then(() => {
-    BookApi.delete(book.id).then(() => {
-      ElMessage.success("删除成功");
-      if (currentBookId.value === book.id) {
-        currentBookId.value = "";
-      }
-      queryBooks();
-    });
+    bookLoading.value = true;
+    BookApi.delete(book.id)
+      .then(() => {
+        ElMessage.success("删除成功");
+        if (currentBookId.value === book.id) {
+          currentBookId.value = "";
+        }
+        queryBooks();
+      })
+      .catch(() => {
+        bookLoading.value = false;
+      });
   });
 };
 </script>
@@ -252,6 +257,7 @@ const deleteBookClick = (book: Book) => {
         .el-input__inner {
           text-align: center;
           color: #eee;
+          user-select: none;
         }
       }
     }

@@ -113,6 +113,7 @@ func initSqlite() error {
 		return err
 	}
 
+	// 写与读分开，写连接数为1，防止同时写入时报错，且写入时不影响读连接
 	DbW, err = sqlx.Connect("sqlite", common.DataPath+"md.db")
 	if err != nil {
 		Log.Error("开启sqlite数据库文件失败：", err)

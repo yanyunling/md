@@ -19,6 +19,7 @@
       <el-input v-model="docFilterValue" placeholder="文档筛选"></el-input>
     </div>
     <el-scrollbar class="scroll-view" ref="scrollRef">
+      <div class="empty-view" v-if="docs.length === 0">暂无文档</div>
       <div
         class="item-view"
         :class="docIdTemp === item.id || (!docIdTemp && currentDoc.id === item.id) ? 'selected' : ''"
@@ -313,13 +314,18 @@ const deleteDocClick = (doc: Doc) => {
     cancelButtonText: "取消",
     type: "warning",
   }).then(() => {
-    DocumentApi.delete(doc.id).then(() => {
-      ElMessage.success("删除成功");
-      if (props.currentDoc.id === doc.id) {
-        emitDoc("", "", "", "", "");
-      }
-      queryDocs(props.currentBookId);
-    });
+    docLoading.value = true;
+    DocumentApi.delete(doc.id)
+      .then(() => {
+        ElMessage.success("删除成功");
+        if (props.currentDoc.id === doc.id) {
+          emitDoc("", "", "", "", "");
+        }
+        queryDocs(props.currentBookId);
+      })
+      .catch(() => {
+        docLoading.value = false;
+      });
   });
 };
 
@@ -484,6 +490,7 @@ defineExpose({ saveDoc });
         .el-input__inner {
           text-align: center;
           color: #595959;
+          user-select: none;
         }
       }
     }
@@ -492,6 +499,15 @@ defineExpose({ saveDoc });
   .scroll-view {
     color: #595959;
     font-size: 13px;
+
+    .empty-view {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      color: #909399;
+      user-select: none;
+    }
 
     .item-view {
       display: flex;
@@ -515,6 +531,7 @@ defineExpose({ saveDoc });
         bottom: 3px;
         right: 20px;
         color: #ccc;
+        user-select: none;
       }
 
       .published-view {

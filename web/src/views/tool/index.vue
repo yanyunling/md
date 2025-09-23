@@ -24,9 +24,6 @@
     <el-tab-pane label="二维码" name="QrCode">
       <qr-code class="tool-card" />
     </el-tab-pane>
-    <el-tab-pane label="图片编辑" name="ImageEditor">
-      <image-editor />
-    </el-tab-pane>
     <el-tab-pane label="图片压缩" name="ImageCompression">
       <image-compression class="tool-card" />
     </el-tab-pane>
@@ -44,7 +41,6 @@ import ImageCompression from "./components/image-compression.vue";
 import QrCode from "./components/qr-code.vue";
 import DockerConvert from "./components/docker-convert.vue";
 import Cron from "./components/cron.vue";
-import ImageEditor from "./components/image-editor.vue";
 
 const activeName = ref("JsonFormat");
 </script>
