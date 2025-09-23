@@ -13,7 +13,7 @@ import (
 )
 
 const AccessTokenExpire = time.Hour
-const RefreshTokenExpire = time.Hour * 24 * 180
+const RefreshTokenExpire = time.Hour * 24 * 30
 
 // 注册
 func SignUp(user entity.User) {
