@@ -1,4 +1,4 @@
-.md-editor-catalog-active>span,
+.md-editor-catalog-active > span,
 .md-editor-catalog-link span:hover {
   color: #2196f3 !important;
 }
@@ -27,6 +27,10 @@
   .catalog-view {
     width: 200px;
     background-color: #fcfcfc;
+
+    .md-editor-catalog-link > span {
+      line-height: normal;
+    }
   }
 }
 
@@ -36,4 +40,8 @@
     height: 20px;
     margin: 2px;
   }
+}
+
+.md-editor-code-head {
+  z-index: 900 !important;
 }
