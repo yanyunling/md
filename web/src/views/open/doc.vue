@@ -48,13 +48,4 @@ onMounted(() => {
     user-select: none;
   }
 }
-@media (max-width: 720px) {
-  .page-open-document {
-    .md-view {
-      .catalog-view {
-        display: none;
-      }
-    }
-  }
-}
 </style>

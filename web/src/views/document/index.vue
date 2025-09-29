@@ -255,17 +255,4 @@ const saveDoc = (content: string) => {
     overflow: hidden;
   }
 }
-@media (max-width: 720px) {
-  .page-document {
-    .editor-view {
-      min-width: 100%;
-      .catalog-view {
-        display: none;
-      }
-    }
-    .codemirror-view {
-      min-width: 100%;
-    }
-  }
-}
 </style>
