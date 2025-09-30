@@ -75,8 +75,8 @@ func DecryptBASE64(message string) ([]byte, error) {
 
 // 生成RSA密钥对
 func GenerateRSAKey(bits int, isPKCS8 bool) (string, string, error) {
-	if bits < 512 || bits > 4096 {
-		return "", "", errors.New("密钥位数需在512-4096之间")
+	if bits < 1024 || bits > 4096 {
+		return "", "", errors.New("密钥位数需在1024-4096之间")
 	}
 	// 生成私钥
 	privateKey, err := rsa.GenerateKey(rand.Reader, bits)

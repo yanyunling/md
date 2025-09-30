@@ -49,7 +49,7 @@ import { ref } from "vue";
 import RsaApi from "@/api/rsa";
 
 const bits = ref(2048);
-const bitsList = ref([512, 1024, 2048, 4096]);
+const bitsList = ref([1024, 2048, 4096]);
 const rsaType = ref("PKCS1");
 const rsaTypeList = ref(["PKCS1", "PKCS8"]);
 const signType = ref("SHA256");
