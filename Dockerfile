@@ -19,4 +19,4 @@ COPY --from=go /build/md/md /md/
 ENV reg=true
 EXPOSE 9900
 RUN chmod +x /md/md
-CMD ["/md/md", "-p", "9900", "-log", "/md/logs", "-data", "/md/data", "-reg=${reg}", "-pg_host=${pg_host}", "-pg_port=${pg_port}", "-pg_user=${pg_user}", "-pg_password=${pg_password}", "-pg_db=${pg_db}"]
+CMD /md/md -p 9900 -log /md/logs -data /md/data -reg=${reg} -pg_host=${pg_host} -pg_port=${pg_port} -pg_user=${pg_user} -pg_password=${pg_password} -pg_db=${pg_db}
