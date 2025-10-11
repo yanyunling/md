@@ -12,7 +12,7 @@ import (
 
 // 添加文档
 func DocumentAdd(document entity.Document) entity.Document {
-	tx := middleware.DbW.MustBegin()
+	tx := middleware.Db.MustBegin()
 	defer tx.Rollback()
 
 	document.Name = strings.TrimSpace(document.Name)
@@ -46,7 +46,7 @@ func DocumentAdd(document entity.Document) entity.Document {
 
 // 修改文档基础信息
 func DocumentUpdate(document entity.Document) {
-	tx := middleware.DbW.MustBegin()
+	tx := middleware.Db.MustBegin()
 	defer tx.Rollback()
 
 	document.Name = strings.TrimSpace(document.Name)
@@ -69,7 +69,7 @@ func DocumentUpdate(document entity.Document) {
 
 // 修改文档内容
 func DocumentUpdateContent(document entity.Document) entity.Document {
-	tx := middleware.DbW.MustBegin()
+	tx := middleware.Db.MustBegin()
 	defer tx.Rollback()
 
 	if util.StringLength(document.Content) > 10000000 {
@@ -91,7 +91,7 @@ func DocumentUpdateContent(document entity.Document) entity.Document {
 
 // 删除文档
 func DocumentDelete(id, userId string) {
-	tx := middleware.DbW.MustBegin()
+	tx := middleware.Db.MustBegin()
 	defer tx.Rollback()
 
 	err := dao.DocumentDeleteById(tx, id, userId)

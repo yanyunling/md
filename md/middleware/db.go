@@ -9,11 +9,8 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-// 数据库读写连接
+// 数据库连接
 var Db *sqlx.DB
-
-// 数据库写连接
-var DbW *sqlx.DB
 
 // 建表语句
 var createTableSql = `
@@ -113,13 +110,12 @@ func initSqlite() error {
 		return err
 	}
 
-	// 写与读分开，写连接数为1，防止同时写入时报错，且写入时不影响读连接
-	DbW, err = sqlx.Connect("sqlite", common.DataPath+"md.db")
+	// 开启WAL模式
+	_, err = Db.Exec("PRAGMA journal_mode=WAL;")
 	if err != nil {
-		Log.Error("开启sqlite数据库文件失败：", err)
+		Log.Error("开启sqlite WAL模式失败：", err)
 		return err
 	}
-	DbW.SetMaxOpenConns(1)
 
 	Log.Info("已连接sqlite")
 	return nil
@@ -133,8 +129,6 @@ func initPostgres() error {
 		Log.Error("postgres连接失败：", err)
 		return err
 	}
-
-	DbW = Db
 
 	Log.Info("已连接postgres")
 	return nil

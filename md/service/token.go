@@ -17,7 +17,7 @@ const RefreshTokenExpire = time.Hour * 24 * 30
 
 // 注册
 func SignUp(user entity.User) {
-	tx := middleware.DbW.MustBegin()
+	tx := middleware.Db.MustBegin()
 	defer tx.Rollback()
 
 	// 如不允许注册，查询是否没有任何用户

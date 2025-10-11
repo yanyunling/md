@@ -10,7 +10,7 @@ import (
 
 // 更新用户密码
 func UserUpdatePassword(userCondition entity.UserCondition) {
-	tx := middleware.DbW.MustBegin()
+	tx := middleware.Db.MustBegin()
 	defer tx.Rollback()
 
 	// 查询用户
