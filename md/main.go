@@ -69,6 +69,7 @@ func main() {
 	if err != nil {
 		return
 	}
+	defer middleware.Db.Close()
 
 	// 初始化API路由
 	controller.InitRouter(app)
