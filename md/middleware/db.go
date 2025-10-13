@@ -110,6 +110,17 @@ func initSqlite() error {
 		return err
 	}
 
+	// 执行VACUUM优化数据库碎片
+	_, err = Db.Exec("PRAGMA journal_mode=DELETE;")
+	if err != nil {
+		Log.Error("关闭sqlite WAL模式失败：", err)
+	} else {
+		_, err = Db.Exec("VACUUM;")
+		if err != nil {
+			Log.Error("VACUUM执行失败：", err)
+		}
+	}
+
 	// 开启WAL模式
 	_, err = Db.Exec("PRAGMA journal_mode=WAL;")
 	if err != nil {
