@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import Token from "@/store/token";
 
 const routes = [
-  { path: "/login", name: "login", component: () => import("@/views/login/index.vue") },
+  { path: "/login", name: "login", component: () => import("@/views/login/index.vue"), children: null },
   {
     path: "/",
     name: "layout",
@@ -14,13 +14,12 @@ const routes = [
       { path: "/tool", name: "tool", component: () => import("@/views/tool/index.vue") },
     ],
   },
-  { path: "/open/document", name: "openDocument", component: () => import("@/views/open/doc.vue") },
-  { path: "/open/publish", name: "openPublish", component: () => import("@/views/open/publish.vue") },
+  { path: "/open/document", name: "openDocument", component: () => import("@/views/open/doc.vue"), children: null },
+  { path: "/open/publish", name: "openPublish", component: () => import("@/views/open/publish.vue"), children: null },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  //@ts-ignore
   routes,
 });
 
