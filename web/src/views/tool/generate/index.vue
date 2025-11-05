@@ -79,6 +79,8 @@ const generate = (type: string) => {
 
 <style lang="scss">
 .page-generate {
+  width: calc(100% - 40px);
+  margin: 0 20px;
   display: flex;
   flex-direction: column;
   align-items: center;

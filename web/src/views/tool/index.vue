@@ -10,6 +10,11 @@
 import { ref, Ref } from "vue";
 import { useRouter } from "vue-router";
 
+interface ToolComponent {
+  code: string;
+  name: string;
+}
+
 const router = useRouter();
 
 const componentList: Ref<ToolComponent[]> = ref([
