@@ -1,28 +1,31 @@
 <template>
-  <div class="page-encryption">
-    <div class="button-group">
-      <el-button type="warning" @click="encrypt('count')">字符数</el-button>
-      <el-button type="warning" @click="encrypt('countNotBlank')">字符数(无空白)</el-button>
-      <el-button type="warning" @click="encrypt('removeBlank')">去除空白</el-button>
-      <el-button type="warning" @click="encrypt('removeWrap')">去除换行</el-button>
-      <el-button type="success" @click="encrypt('timestampToDate')">时间戳转日期</el-button>
-      <el-button type="success" @click="encrypt('dateToTimestamp')">日期转时间戳</el-button>
-      <el-button type="success" @click="encrypt('lowerToUpper')">小写转大写</el-button>
-      <el-button type="success" @click="encrypt('upperToLower')">大写转小写</el-button>
-      <el-button type="danger" @click="encrypt('URLEncode')">URL编码</el-button>
-      <el-button type="danger" @click="encrypt('URLDecode')">URL解码</el-button>
-      <el-button type="danger" @click="encrypt('Base64Encode')">Base64编码</el-button>
-      <el-button type="danger" @click="encrypt('Base64Decode')">Base64解码</el-button>
-      <el-button type="danger" @click="encrypt('Base64ToHex')">Base64解码(16进制)</el-button>
-      <el-button type="primary" @click="encrypt('MD5')">MD5</el-button>
-      <el-button type="primary" @click="encrypt('SHA1')">SHA1</el-button>
-      <el-button type="primary" @click="encrypt('SHA256')">SHA256</el-button>
-      <el-button type="primary" @click="encrypt('SHA512')">SHA512</el-button>
-      <el-button type="primary" @click="encrypt('SHA3-256')">SHA3-256</el-button>
-      <el-button type="primary" @click="encrypt('SHA3-512')">SHA3-512</el-button>
+  <div>
+    <div class="page-encryption">
+      <el-divider content-position="center">文本转换</el-divider>
+      <div class="button-group">
+        <el-button type="warning" @click="encrypt('count')">字符数</el-button>
+        <el-button type="warning" @click="encrypt('countNotBlank')">字符数(无空白)</el-button>
+        <el-button type="warning" @click="encrypt('removeBlank')">去除空白</el-button>
+        <el-button type="warning" @click="encrypt('removeWrap')">去除换行</el-button>
+        <el-button type="success" @click="encrypt('timestampToDate')">时间戳转日期</el-button>
+        <el-button type="success" @click="encrypt('dateToTimestamp')">日期转时间戳</el-button>
+        <el-button type="success" @click="encrypt('lowerToUpper')">小写转大写</el-button>
+        <el-button type="success" @click="encrypt('upperToLower')">大写转小写</el-button>
+        <el-button type="danger" @click="encrypt('URLEncode')">URL编码</el-button>
+        <el-button type="danger" @click="encrypt('URLDecode')">URL解码</el-button>
+        <el-button type="danger" @click="encrypt('Base64Encode')">Base64编码</el-button>
+        <el-button type="danger" @click="encrypt('Base64Decode')">Base64解码</el-button>
+        <el-button type="danger" @click="encrypt('Base64ToHex')">Base64解码(16进制)</el-button>
+        <el-button type="primary" @click="encrypt('MD5')">MD5</el-button>
+        <el-button type="primary" @click="encrypt('SHA1')">SHA1</el-button>
+        <el-button type="primary" @click="encrypt('SHA256')">SHA256</el-button>
+        <el-button type="primary" @click="encrypt('SHA512')">SHA512</el-button>
+        <el-button type="primary" @click="encrypt('SHA3-256')">SHA3-256</el-button>
+        <el-button type="primary" @click="encrypt('SHA3-512')">SHA3-512</el-button>
+      </div>
+      <el-input v-model="inputText" type="textarea" :rows="10" resize="none" placeholder="请输入文本"></el-input>
+      <el-input v-model="outputText" type="textarea" :rows="10" resize="none" placeholder="结果文本" readonly></el-input>
     </div>
-    <el-input v-model="inputText" type="textarea" :rows="10" resize="none" placeholder="请输入文本"></el-input>
-    <el-input v-model="outputText" type="textarea" :rows="10" resize="none" placeholder="结果文本" readonly></el-input>
   </div>
 </template>
 
@@ -111,6 +114,8 @@ const encrypt = (type: string) => {
 
 <style lang="scss">
 .page-encryption {
+  width: calc(100% - 40px);
+  margin: 0 20px;
   display: flex;
   flex-direction: column;
   align-items: center;

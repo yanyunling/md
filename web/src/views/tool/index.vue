@@ -1,69 +1,57 @@
 <template>
-  <el-tabs v-model="activeName" class="page-tool" stretch>
-    <el-tab-pane label="JSON格式化" name="JsonFormat">
-      <json-format class="tool-card" />
-    </el-tab-pane>
-    <el-tab-pane label="文本转换" name="Encryption">
-      <encryption class="tool-card" />
-    </el-tab-pane>
-    <el-tab-pane label="RSA加密" name="Rsa">
-      <rsa class="tool-card" />
-    </el-tab-pane>
-    <el-tab-pane label="随机数" name="Generate">
-      <generate class="tool-card" />
-    </el-tab-pane>
-    <el-tab-pane label="正则表达式" name="Regular">
-      <regular class="tool-card" />
-    </el-tab-pane>
-    <el-tab-pane label="Cron表达式" name="Cron">
-      <cron class="tool-card" />
-    </el-tab-pane>
-    <el-tab-pane label="docker-compose转换" name="DockerConvert">
-      <docker-convert class="tool-card" />
-    </el-tab-pane>
-    <el-tab-pane label="二维码" name="QrCode">
-      <qr-code class="tool-card" />
-    </el-tab-pane>
-    <el-tab-pane label="图片压缩" name="ImageCompression">
-      <image-compression class="tool-card" />
-    </el-tab-pane>
-  </el-tabs>
+  <div>
+    <div class="page-tool">
+      <el-card shadow="hover" v-for="item in componentList" :key="item.code" @click="cardClick(item)">{{ item.name }}</el-card>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import JsonFormat from "./components/json-format.vue";
-import Encryption from "./components/encryption.vue";
-import Rsa from "./components/rsa.vue";
-import Generate from "./components/generate.vue";
-import Regular from "./components/regular.vue";
-import ImageCompression from "./components/image-compression.vue";
-import QrCode from "./components/qr-code.vue";
-import DockerConvert from "./components/docker-convert.vue";
-import Cron from "./components/cron.vue";
+import { ref, Ref } from "vue";
+import { useRouter } from "vue-router";
 
-const activeName = ref("JsonFormat");
+const router = useRouter();
+
+const componentList: Ref<ToolComponent[]> = ref([
+  { code: "json-format", name: "JSON格式化" },
+  { code: "encryption", name: "文本转换" },
+  { code: "rsa", name: "RSA加密" },
+  { code: "generate", name: "随机数生成" },
+  { code: "regular", name: "正则表达式" },
+  { code: "cron", name: "Cron表达式解析" },
+  { code: "docker-convert", name: "docker-compose转换" },
+  { code: "qr-code", name: "二维码生成" },
+  { code: "image-compression", name: "图片压缩" },
+]);
+
+const cardClick = (item: ToolComponent) => {
+  router.push({ name: item.code });
+};
 </script>
 
 <style lang="scss">
 .page-tool {
-  overflow: hidden !important;
-  display: flex;
-  flex-direction: column;
-  .el-tabs__item {
+  width: calc(100% - 40px);
+  padding: 20px;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fill, 300px);
+  gap: 40px;
+  height: auto !important;
+  overflow: auto;
+  .el-card {
     user-select: none;
-  }
-  .el-tabs__content {
-    overflow: auto;
-    flex: 1;
-    .el-tab-pane {
-      height: 100%;
+    cursor: pointer;
+    width: 100%;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .el-card__body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-  }
-  .tool-card {
-    height: 100%;
-    width: 96%;
-    margin: 0 2%;
   }
 }
 </style>

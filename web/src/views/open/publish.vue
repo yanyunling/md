@@ -186,9 +186,9 @@ const copyClick = (id: string) => {
   let url = hostUrl.value + "/#/open/document?id=" + id;
   const result = copy(url);
   if (result) {
-    ElMessage.success("发布地址已复制到剪切板");
+    ElMessage.success("发布地址已复制到剪贴板");
   } else {
-    ElMessage.error("复制到剪切板失败，地址：" + url);
+    ElMessage.error("复制到剪贴板失败，地址：" + url);
   }
 };
 

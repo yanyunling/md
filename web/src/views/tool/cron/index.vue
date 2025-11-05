@@ -1,9 +1,12 @@
 <template>
-  <div class="page-cron">
-    <el-button type="primary" @click="cronConvert">解析</el-button>
-    <el-input class="input-view" v-model="cronText" placeholder="请输入Cron表达式" clearable @clear="clear"></el-input>
-    <el-input class="input-view" v-model="translateText" type="textarea" :rows="3" resize="none" placeholder="Cron解析结果" readonly></el-input>
-    <el-input class="input-view" v-model="nextText" type="textarea" :rows="5" resize="none" placeholder="近5次执行时间" readonly></el-input>
+  <div>
+    <div class="page-cron">
+      <el-divider content-position="center">Cron表达式解析</el-divider>
+      <el-button type="primary" @click="cronConvert">解析</el-button>
+      <el-input class="input-view" v-model="cronText" placeholder="请输入Cron表达式" clearable @clear="clear"></el-input>
+      <el-input class="input-view" v-model="translateText" type="textarea" :rows="3" resize="none" placeholder="Cron解析结果" readonly></el-input>
+      <el-input class="input-view" v-model="nextText" type="textarea" :rows="5" resize="none" placeholder="近5次执行时间" readonly></el-input>
+    </div>
   </div>
 </template>
 
@@ -49,6 +52,8 @@ const clear = () => {
 
 <style lang="scss" scoped>
 .page-cron {
+  width: calc(100% - 40px);
+  margin: 0 20px;
   display: flex;
   flex-direction: column;
   align-items: center;

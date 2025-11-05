@@ -1,27 +1,31 @@
 <template>
-  <div class="page-image-compression">
-    <el-form label-width="100px">
-      <el-form-item label="上传图片">
-        <el-button type="primary" @click="upload">上传</el-button>
-      </el-form-item>
-      <el-form-item label="最大宽度">
-        <el-input v-model="maxWidth" placeholder="请输入最大宽度，不填写则保持原图宽度"></el-input>
-      </el-form-item>
-      <el-form-item label="最大高度">
-        <el-input v-model="maxHeight" placeholder="请输入最大高度，不填写则保持原图高度"></el-input>
-      </el-form-item>
-      <el-form-item label="图片质量">
-        <el-slider v-model="quality" :min="0.1" :max="1" :step="0.1" show-stops show-input />
-      </el-form-item>
-      <el-form-item label="原图大小">
-        {{ originalSize }}
-      </el-form-item>
-      <el-form-item label="压缩后大小">
-        {{ compressSize }}
-      </el-form-item>
-    </el-form>
-    <div class="image-view">
-      <img :src="compressBase64" />
+  <div>
+    <div class="page-image-compression">
+      <el-divider content-position="center">图片压缩</el-divider>
+      <el-form label-width="100px">
+        <el-form-item label="上传图片">
+          <el-button type="primary" @click="upload">上传</el-button>
+        </el-form-item>
+        <el-form-item label="最大宽度">
+          <el-input v-model="maxWidth" placeholder="请输入最大宽度，不填写则保持原图宽度"></el-input>
+        </el-form-item>
+        <el-form-item label="最大高度">
+          <el-input v-model="maxHeight" placeholder="请输入最大高度，不填写则保持原图高度"></el-input>
+        </el-form-item>
+        <el-form-item label="图片质量">
+          <el-slider v-model="quality" :min="0.1" :max="1" :step="0.1" show-stops show-input />
+        </el-form-item>
+        <el-form-item label="原图大小">
+          {{ originalSize }}
+        </el-form-item>
+        <el-form-item label="压缩后大小">
+          {{ compressSize }}
+        </el-form-item>
+      </el-form>
+      <div class="image-view">
+        <img :src="compressBase64" />
+      </div>
+      <div class="seat-view"></div>
     </div>
   </div>
 </template>
@@ -44,21 +48,21 @@ watch(
   () => maxWidth.value,
   () => {
     compress();
-  }
+  },
 );
 
 watch(
   () => maxHeight.value,
   () => {
     compress();
-  }
+  },
 );
 
 watch(
   () => quality.value,
   () => {
     compress();
-  }
+  },
 );
 
 /**
@@ -116,6 +120,9 @@ const clear = () => {
 
 <style lang="scss">
 .page-image-compression {
+  width: calc(100% - 40px);
+  margin: 0 20px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -125,10 +132,10 @@ const clear = () => {
   }
   .image-view {
     width: calc(100% - 40px);
+    flex-grow: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 50vh;
     min-height: 200px;
     background: #eee;
     padding: 20px;
@@ -137,6 +144,9 @@ const clear = () => {
       max-width: 100%;
       max-height: 100%;
     }
+  }
+  .seat-view {
+    height: 10px;
   }
 }
 </style>

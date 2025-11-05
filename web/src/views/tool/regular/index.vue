@@ -1,36 +1,39 @@
 <template>
-  <el-form class="page-regular" label-width="100px">
-    <el-form-item label="常用正则">
-      <el-button style="margin-bottom: 3px" v-for="(item, index) in regList" :key="index" @click="regClick(item.value)">{{ item.label }}</el-button>
-    </el-form-item>
-    <el-form-item label="正则表达式">
-      <el-input v-model="regText" type="textarea" :rows="3" resize="none" placeholder="请输入正则表达式"></el-input>
-      <el-checkbox-group v-model="modifierList">
-        <el-checkbox label="g">全局匹配(g)</el-checkbox>
-        <el-checkbox label="m">多行匹配(m)</el-checkbox>
-        <el-checkbox label="i">不区分大小写(i)</el-checkbox>
-        <el-checkbox label="group">分组</el-checkbox>
-      </el-checkbox-group>
-    </el-form-item>
-    <el-form-item label="匹配内容">
-      <div class="codemirror-view">
-        <codemirror-editor v-model="inText" placeholder="请输入待匹配内容" />
-      </div>
-    </el-form-item>
-    <el-form-item label="替换内容">
-      <el-input v-model="replaceText" type="textarea" :rows="3" resize="none" placeholder="请输入替换内容"></el-input>
-      <div class="button-group">
-        <el-button class="my-button" @click="testClick" type="primary">匹配</el-button>
-        <el-button class="my-button" @click="execClick" type="success">检索</el-button>
-        <el-button class="my-button" @click="replaceClick" type="warning">替换</el-button>
-      </div>
-    </el-form-item>
-    <el-form-item label="结果">
-      <div class="codemirror-view">
-        <codemirror-editor v-model="outText" />
-      </div>
-    </el-form-item>
-  </el-form>
+  <div>
+    <el-form class="page-regular" label-width="100px">
+      <el-divider content-position="center">正则表达式</el-divider>
+      <el-form-item label="常用正则">
+        <el-button style="margin-bottom: 3px" v-for="(item, index) in regList" :key="index" @click="regClick(item.value)">{{ item.label }}</el-button>
+      </el-form-item>
+      <el-form-item label="正则表达式">
+        <el-input v-model="regText" type="textarea" :rows="3" resize="none" placeholder="请输入正则表达式"></el-input>
+        <el-checkbox-group v-model="modifierList">
+          <el-checkbox label="g">全局匹配(g)</el-checkbox>
+          <el-checkbox label="m">多行匹配(m)</el-checkbox>
+          <el-checkbox label="i">不区分大小写(i)</el-checkbox>
+          <el-checkbox label="group">分组</el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
+      <el-form-item label="匹配内容">
+        <div class="codemirror-view">
+          <codemirror-editor v-model="inText" placeholder="请输入待匹配内容" />
+        </div>
+      </el-form-item>
+      <el-form-item label="替换内容">
+        <el-input v-model="replaceText" type="textarea" :rows="3" resize="none" placeholder="请输入替换内容"></el-input>
+        <div class="button-group">
+          <el-button class="my-button" @click="testClick" type="primary">匹配</el-button>
+          <el-button class="my-button" @click="execClick" type="success">检索</el-button>
+          <el-button class="my-button" @click="replaceClick" type="warning">替换</el-button>
+        </div>
+      </el-form-item>
+      <el-form-item label="结果">
+        <div class="codemirror-view">
+          <codemirror-editor v-model="outText" />
+        </div>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -160,7 +163,8 @@ const regClick = (val: string) => {
 
 <style lang="scss">
 .page-regular {
-  width: 100%;
+  width: calc(100% - 40px);
+  margin: 0 20px;
   .button-group {
     margin-top: 5px;
   }

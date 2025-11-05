@@ -1,47 +1,50 @@
 <template>
-  <el-form class="page-rsa" label-width="100px">
-    <el-form-item label="密钥位数">
-      <el-select v-model="bits" class="select-view">
-        <el-option :key="item" v-for="item in bitsList" :label="item" :value="item"></el-option>
-      </el-select>
-      <el-button type="primary" :disabled="generateLoading" @click="generateRsaKey">生成密钥</el-button>
-    </el-form-item>
-    <el-form-item label="密钥格式">
-      <el-select v-model="rsaType" class="select-view">
-        <el-option :key="item" v-for="item in rsaTypeList" :label="item" :value="item"></el-option>
-      </el-select>
-      <el-button type="success" :disabled="encryptLoading" @click="encryptByPublicKey">公钥加密</el-button>
-      <el-button type="success" :disabled="decryptLoading" @click="decryptByPrivateKey">私钥解密</el-button>
-    </el-form-item>
-    <el-form-item label="签名方式">
-      <el-select v-model="signType" class="select-view">
-        <el-option :key="item" v-for="item in signTypeList" :label="item" :value="item"></el-option>
-      </el-select>
-      <el-button type="warning" :disabled="signLoading" @click="privateKeySign">私钥签名</el-button>
-      <el-button type="warning" :disabled="verifyLoading" @click="publicKeyVerify">公钥验签</el-button>
-    </el-form-item>
-    <el-form-item label="待加密内容">
-      <el-input v-model="content" type="textarea" :rows="3" resize="none" placeholder="待加密的字符串"></el-input>
-    </el-form-item>
-    <el-form-item label="公钥">
-      <el-input v-model="publicKey" type="textarea" :rows="4" resize="none" placeholder="RSA公钥"></el-input>
-    </el-form-item>
-    <el-form-item label="私钥">
-      <el-input v-model="privateKey" type="textarea" :rows="4" resize="none" placeholder="RSA私钥"></el-input>
-    </el-form-item>
-    <el-form-item label="公钥加密">
-      <el-input v-model="encryptContent" type="textarea" :rows="3" resize="none" placeholder="公钥加密后的内容"></el-input>
-    </el-form-item>
-    <el-form-item label="私钥解密">
-      <el-input v-model="decryptContent" type="textarea" :rows="3" resize="none" readonly placeholder="解密公钥加密后的内容"></el-input>
-    </el-form-item>
-    <el-form-item label="私钥签名">
-      <el-input v-model="sign" type="textarea" :rows="2" resize="none" placeholder="使用私钥和原字符串签名"></el-input>
-    </el-form-item>
-    <el-form-item label="公钥验签">
-      <el-input v-model="verify" type="textarea" :rows="2" resize="none" readonly placeholder="使用公钥、签名和原字符串验证私钥签名"></el-input>
-    </el-form-item>
-  </el-form>
+  <div>
+    <el-divider content-position="center">RSA加密</el-divider>
+    <el-form class="page-rsa" label-width="100px">
+      <el-form-item label="密钥位数">
+        <el-select v-model="bits" class="select-view">
+          <el-option :key="item" v-for="item in bitsList" :label="item" :value="item"></el-option>
+        </el-select>
+        <el-button type="primary" :disabled="generateLoading" @click="generateRsaKey">生成密钥</el-button>
+      </el-form-item>
+      <el-form-item label="密钥格式">
+        <el-select v-model="rsaType" class="select-view">
+          <el-option :key="item" v-for="item in rsaTypeList" :label="item" :value="item"></el-option>
+        </el-select>
+        <el-button type="success" :disabled="encryptLoading" @click="encryptByPublicKey">公钥加密</el-button>
+        <el-button type="success" :disabled="decryptLoading" @click="decryptByPrivateKey">私钥解密</el-button>
+      </el-form-item>
+      <el-form-item label="签名方式">
+        <el-select v-model="signType" class="select-view">
+          <el-option :key="item" v-for="item in signTypeList" :label="item" :value="item"></el-option>
+        </el-select>
+        <el-button type="warning" :disabled="signLoading" @click="privateKeySign">私钥签名</el-button>
+        <el-button type="warning" :disabled="verifyLoading" @click="publicKeyVerify">公钥验签</el-button>
+      </el-form-item>
+      <el-form-item label="待加密内容">
+        <el-input v-model="content" type="textarea" :rows="3" resize="none" placeholder="待加密的字符串"></el-input>
+      </el-form-item>
+      <el-form-item label="公钥">
+        <el-input v-model="publicKey" type="textarea" :rows="4" resize="none" placeholder="RSA公钥"></el-input>
+      </el-form-item>
+      <el-form-item label="私钥">
+        <el-input v-model="privateKey" type="textarea" :rows="4" resize="none" placeholder="RSA私钥"></el-input>
+      </el-form-item>
+      <el-form-item label="公钥加密">
+        <el-input v-model="encryptContent" type="textarea" :rows="3" resize="none" placeholder="公钥加密后的内容"></el-input>
+      </el-form-item>
+      <el-form-item label="私钥解密">
+        <el-input v-model="decryptContent" type="textarea" :rows="3" resize="none" readonly placeholder="解密公钥加密后的内容"></el-input>
+      </el-form-item>
+      <el-form-item label="私钥签名">
+        <el-input v-model="sign" type="textarea" :rows="2" resize="none" placeholder="使用私钥和原字符串签名"></el-input>
+      </el-form-item>
+      <el-form-item label="公钥验签">
+        <el-input v-model="verify" type="textarea" :rows="2" resize="none" readonly placeholder="使用公钥、签名和原字符串验证私钥签名"></el-input>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -177,7 +180,8 @@ const publicKeyVerify = () => {
 
 <style lang="scss">
 .page-rsa {
-  width: 100%;
+  width: calc(100% - 40px);
+  margin: 0 20px;
   .select-view {
     width: 100px;
     margin: 1px 0;
