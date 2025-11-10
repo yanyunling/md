@@ -1,7 +1,7 @@
 <template>
   <div>
+    <el-divider content-position="center">JSON格式化</el-divider>
     <div class="page-json-format">
-      <el-divider content-position="center">JSON格式化</el-divider>
       <el-form label-width="60px">
         <el-form-item label="空格数">
           <el-select v-model="spaceCount" style="width: 60px; margin-right: 10px">
@@ -40,15 +40,15 @@ const formatClick = () => {
 
 <style lang="scss">
 .page-json-format {
-  width: calc(100% - 40px);
   margin: 0 20px;
-  height: 100%;
+  width: calc(100% - 40px);
+  height: calc(100% - 60px);
   display: flex;
   flex-direction: column;
   align-items: center;
   .json-view {
-    height: calc(100% - 110px);
-    width: calc(100% - 2px);
+    height: 100%;
+    width: 100%;
     overflow: hidden;
   }
 }

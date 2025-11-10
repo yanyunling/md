@@ -1,7 +1,7 @@
 <template>
   <div>
+    <el-divider content-position="center">Cron表达式解析</el-divider>
     <div class="page-cron">
-      <el-divider content-position="center">Cron表达式解析</el-divider>
       <el-button type="primary" @click="cronConvert">解析</el-button>
       <el-input class="input-view" v-model="cronText" placeholder="请输入Cron表达式" clearable @clear="clear"></el-input>
       <el-input class="input-view" v-model="translateText" type="textarea" :rows="3" resize="none" placeholder="Cron解析结果" readonly></el-input>

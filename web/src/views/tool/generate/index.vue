@@ -1,7 +1,7 @@
 <template>
   <div>
+    <el-divider content-position="center">随机数生成</el-divider>
     <div class="page-generate">
-      <el-divider content-position="center">随机数生成</el-divider>
       <el-form label-width="100px">
         <el-form-item label="随机位数">
           <el-input-number v-model="inputText" placeholder="请输入" :min="1" :max="9999"></el-input-number>

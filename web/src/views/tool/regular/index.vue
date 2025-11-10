@@ -1,7 +1,7 @@
 <template>
   <div>
+    <el-divider content-position="center">正则表达式</el-divider>
     <el-form class="page-regular" label-width="100px">
-      <el-divider content-position="center">正则表达式</el-divider>
       <el-form-item label="常用正则">
         <el-button style="margin-bottom: 3px" v-for="(item, index) in regList" :key="index" @click="regClick(item.value)">{{ item.label }}</el-button>
       </el-form-item>

@@ -1,7 +1,7 @@
 <template>
   <div>
+    <el-divider content-position="center">图片压缩</el-divider>
     <div class="page-image-compression">
-      <el-divider content-position="center">图片压缩</el-divider>
       <el-form label-width="100px">
         <el-form-item label="上传图片">
           <el-button type="primary" @click="upload">上传</el-button>
@@ -120,9 +120,9 @@ const clear = () => {
 
 <style lang="scss">
 .page-image-compression {
-  width: calc(100% - 40px);
   margin: 0 20px;
-  height: 100%;
+  width: calc(100% - 40px);
+  height: calc(100% - 50px);
   display: flex;
   flex-direction: column;
   align-items: center;

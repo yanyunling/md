@@ -1,7 +1,7 @@
 <template>
   <div>
+    <el-divider content-position="center">文本转换</el-divider>
     <div class="page-encryption">
-      <el-divider content-position="center">文本转换</el-divider>
       <div class="button-group">
         <el-button type="warning" @click="encrypt('count')">字符数</el-button>
         <el-button type="warning" @click="encrypt('countNotBlank')">字符数(无空白)</el-button>
