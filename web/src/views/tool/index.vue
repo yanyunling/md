@@ -20,6 +20,7 @@ const router = useRouter();
 const componentList: Ref<ToolComponent[]> = ref([
   { code: "json-format", name: "JSON格式化" },
   { code: "encryption", name: "文本转换" },
+  { code: "bcrypt", name: "Bcrypt加密" },
   { code: "rsa", name: "RSA加密" },
   { code: "generate", name: "随机数生成" },
   { code: "regular", name: "正则表达式" },

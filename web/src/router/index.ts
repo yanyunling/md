@@ -22,6 +22,7 @@ const routes = [
       { path: "/tool/qr-code", name: "qr-code", component: () => import("@/views/tool/qr-code/index.vue") },
       { path: "/tool/regular", name: "regular", component: () => import("@/views/tool/regular/index.vue") },
       { path: "/tool/rsa", name: "rsa", component: () => import("@/views/tool/rsa/index.vue") },
+      { path: "/tool/bcrypt", name: "bcrypt", component: () => import("@/views/tool/bcrypt/index.vue") },
     ],
   },
   { path: "/open/document", name: "openDocument", component: () => import("@/views/open/doc.vue"), children: null },
