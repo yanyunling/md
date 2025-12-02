@@ -33,9 +33,25 @@
 
 当 postgres 相关的 5 个命令行参数全部填写时，将使用 postgres 数据库，否则使用默认的 sqlite 数据库
 
-## docker 镜像
+## docker 部署
 
-- [https://hub.docker.com/r/streamerzero/md](https://hub.docker.com/r/streamerzero/md)
+> [https://hub.docker.com/r/streamerzero/md](https://hub.docker.com/r/streamerzero/md)
+
+- 启动命令：`docker run -d --name md --restart always -p 9900:9900 -v /etc/localtime:/etc/localtime:ro -v /home/docker/md:/md/data -e reg=true streamerzero/md`
+
+### 环境变量
+
+- reg：true/false，是否允许注册（即使禁止注册，在没有任何用户的情况时仍可注册）。默认值：true
+- pg_host：postgres 主机地址
+- pg_port：postgres 端口
+- pg_user：postgres 用户
+- pg_password：postgres 密码
+- pg_db：postgres 数据库名
+
+### 目录
+
+- 数据文件：/md/data
+- 日志文件：/md/logs
 
 ## 隐含的功能按钮
 

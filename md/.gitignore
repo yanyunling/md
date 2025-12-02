@@ -14,6 +14,7 @@
 *.log
 *.db
 *_debug_bin
-web
+web/*
+!web/favicon.ico
 data
 md
