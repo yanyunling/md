@@ -41,17 +41,17 @@
 
 ### 环境变量
 
-- reg：true/false，是否允许注册（即使禁止注册，在没有任何用户的情况时仍可注册）。默认值：true
-- pg_host：postgres 主机地址
-- pg_port：postgres 端口
-- pg_user：postgres 用户
-- pg_password：postgres 密码
-- pg_db：postgres 数据库名
+- `-reg`：是否允许注册（即使禁止注册，在没有任何用户的情况时仍可注册）。默认值：**true**
+- `-pg_host`：postgres 主机地址
+- `-pg_port`：postgres 端口
+- `-pg_user`：postgres 用户
+- `-pg_password`：postgres 密码
+- `-pg_db`：postgres 数据库名
 
 ### 目录
 
-- 数据文件：/md/data
-- 日志文件：/md/logs
+- 数据文件：**/md/data**
+- 日志文件：**/md/logs**
 
 ## 隐含的功能按钮
 
