@@ -7,7 +7,7 @@ import SSEApi from "@/api/sse";
 export class SSE {
   private static eventSource: EventSource = null;
   private static reconnectTimeout = null;
-  private static onMessageList: ((message: SSEMessage<any>) => void)[] = [];
+  private static onMessageList: [(message: SSEMessage<any>) => void, string][] = [];
 
   /**
    * 开启SSE连接
@@ -35,9 +35,11 @@ export class SSE {
             if (message.type === "heart") {
               return;
             }
-            // 消息事件回调
-            for (let func of this.onMessageList) {
-              func(message);
+            // 根据消息类型事件回调：类型匹配或未设置类型
+            for (let item of this.onMessageList) {
+              if (!item[1] || item[1] === message.type) {
+                item[0](message);
+              }
             }
           } catch (e) {
             console.error("SSE消息反序列化失败", e);
@@ -76,10 +78,11 @@ export class SSE {
 
   /**
    * 监听消息
-   * @param callback
+   * @param callback 消息回调函数
+   * @param type 消息类型
    */
-  static onMessage(callback: (message: SSEMessage<any>) => void) {
-    this.onMessageList.push(callback);
+  static onMessage(callback: (message: SSEMessage<any>) => void, type?: string) {
+    this.onMessageList.push([callback, type]);
   }
 
   /**
@@ -89,7 +92,7 @@ export class SSE {
   static removeOnMessage(callback?: (message: SSEMessage<any>) => void) {
     if (callback) {
       // 传入回调方法则移除指定监听
-      this.onMessageList = this.onMessageList.filter((item) => item !== callback);
+      this.onMessageList = this.onMessageList.filter((item) => item[0] !== callback);
     } else if (this.onMessageList.length > 0) {
       // 未传入回调方法则删除最后一个监听
       this.onMessageList.pop();
