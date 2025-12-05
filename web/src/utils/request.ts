@@ -16,7 +16,7 @@ let refreshing = false;
 // 数据接口axios实例
 const dataInstance = axios.create({
   baseURL: host + context + "/data",
-  timeout: 20000,
+  timeout: 10000,
 });
 
 // 授权接口axios实例
@@ -28,7 +28,7 @@ const authInstance = axios.create({
 // 开放接口axios实例
 const openInstance = axios.create({
   baseURL: host + context + "/open",
-  timeout: 20000,
+  timeout: 10000,
 });
 
 /**

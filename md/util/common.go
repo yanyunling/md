@@ -83,3 +83,14 @@ func StringSort(str1, str2 string) bool {
 	}
 	return true
 }
+
+// 删除切片中匹配到的元素
+func RemoveAllMatches(slice []string, target string) []string {
+	result := make([]string, 0, len(slice))
+	for _, v := range slice {
+		if v != target {
+			result = append(result, v)
+		}
+	}
+	return result
+}

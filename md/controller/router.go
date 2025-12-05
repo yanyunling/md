@@ -14,6 +14,9 @@ func InitRouter(app *iris.Application) {
 	app.UseRouter(cors.AllowAll())
 
 	app.PartyFunc("/api", func(api iris.Party) {
+		// SSE
+		api.Get("/sse/{token}", SSEHandler)
+
 		// 开放接口
 		api.PartyFunc("/open", func(open iris.Party) {
 			open.Get("/doc/get/{id}", DocumentGetPublished)
@@ -33,6 +36,8 @@ func InitRouter(app *iris.Application) {
 		// 数据接口
 		api.PartyFunc("/data", func(data iris.Party) {
 			data.Use(middleware.DataAuth)
+
+			data.Post("/sse-token", GetSSEToken)
 
 			data.PartyFunc("/user", func(user iris.Party) {
 				user.Post("/update-password", UserUpdatePassword)
