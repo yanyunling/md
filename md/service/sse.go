@@ -23,7 +23,7 @@ var mu sync.RWMutex
 
 // SSE处理器
 func SSEHandler(ctx iris.Context) {
-	// 验证SSE临时token
+	// 验证SSE临时token，此token作为sseId
 	token := ctx.Params().Get("token")
 	res, err := cache2go.Cache(common.SSETokenCache).Value(token)
 	if err != nil {
@@ -65,7 +65,6 @@ func SSEHandler(ctx iris.Context) {
 	}()
 
 	// 监听通道消息并推送
-
 	for {
 		select {
 		case <-ctx.Request().Context().Done():

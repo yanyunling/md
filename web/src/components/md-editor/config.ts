@@ -6,6 +6,7 @@ import parserMarkdown from "prettier/plugins/markdown";
 import cropper from "cropperjs";
 import "cropperjs/dist/cropper.css";
 import screenfull from "screenfull";
+import mermaid from "mermaid";
 import katex from "katex";
 import "katex/dist/katex.css";
 import "./index.scss";
@@ -53,6 +54,9 @@ config({
     katex: {
       instance: katex,
     },
+    mermaid: {
+      instance: mermaid,
+    },
   },
   codeMirrorExtensions(_theme: any, extensions: any) {
     return [...extensions, lineNumbers()];
@@ -64,7 +68,7 @@ config({
     return [
       ...plugins,
       {
-        type: 'xss',
+        type: "xss",
         plugin: XSSPlugin,
         options: {},
       },

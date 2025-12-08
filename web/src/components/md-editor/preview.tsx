@@ -22,7 +22,6 @@ export default defineComponent({
             previewTheme="cyanosis"
             codeTheme="github"
             mdHeadingId={generateId}
-            noMermaid
             autoFoldThreshold={100}
           />
           <el-scrollbar class="catalog-view">
