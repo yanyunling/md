@@ -7,7 +7,7 @@ import SSEApi from "@/api/sse";
 export class SSE {
   private static eventSource: EventSource = null;
   private static reconnectTimeout = null;
-  private static onMessageList: [(message: SSEMessage<any>) => void, string][] = [];
+  private static onMessageList: [onMessage<any>, string][] = [];
 
   /**
    * 开启SSE连接
@@ -81,7 +81,7 @@ export class SSE {
    * @param callback 消息回调函数
    * @param type 消息类型
    */
-  static onMessage(callback: (message: SSEMessage<any>) => void, type?: string) {
+  static onMessage<T>(callback: onMessage<T>, type?: string) {
     this.onMessageList.push([callback, type]);
   }
 
@@ -89,7 +89,7 @@ export class SSE {
    * 移除消息监听
    * @param callback 未传入则删除最后一个监听
    */
-  static removeOnMessage(callback?: (message: SSEMessage<any>) => void) {
+  static removeOnMessage<T>(callback?: onMessage<T>) {
     if (callback) {
       // 传入回调方法则移除指定监听
       this.onMessageList = this.onMessageList.filter((item) => item[0] !== callback);
