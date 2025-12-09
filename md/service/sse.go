@@ -37,32 +37,11 @@ func SSEHandler(ctx iris.Context) {
 	heartTicker := time.NewTicker(30 * time.Second)
 	defer heartTicker.Stop()
 
-	// 缓存通道
-	c := make(chan common.SSEMessage)
-	go func() {
-		mu.Lock()
-		defer mu.Unlock()
-		sseIds, ok := userIdToSSEIds[userId]
-		if ok {
-			userIdToSSEIds[userId] = append(sseIds, token)
-		} else {
-			userIdToSSEIds[userId] = []string{token}
-		}
-		sseChanMap[token] = c
-	}()
+	// 缓存连接
+	c := cacheConnection(userId, token)
 
 	// 清空连接缓存
-	defer func() {
-		mu.Lock()
-		defer mu.Unlock()
-
-		close(c)
-		delete(sseChanMap, token)
-		sseIds, ok := userIdToSSEIds[userId]
-		if ok {
-			userIdToSSEIds[userId] = util.RemoveAllMatches(sseIds, token)
-		}
-	}()
+	defer clearCacheConnection(userId, token, c)
 
 	// 监听通道消息并推送
 	for {
@@ -119,6 +98,39 @@ func SendMessageToAll(message common.SSEMessage) {
 	for _, c := range sseChanMap {
 		c <- message
 	}
+}
+
+// 缓存连接
+func cacheConnection(userId, sseId string) chan common.SSEMessage {
+	mu.Lock()
+	defer mu.Unlock()
+
+	sseIds, ok := userIdToSSEIds[userId]
+	if ok {
+		userIdToSSEIds[userId] = append(sseIds, sseId)
+	} else {
+		userIdToSSEIds[userId] = []string{sseId}
+	}
+
+	c := make(chan common.SSEMessage)
+	sseChanMap[sseId] = c
+
+	return c
+}
+
+// 清空连接缓存
+func clearCacheConnection(userId, sseId string, c chan common.SSEMessage) {
+	mu.Lock()
+	defer mu.Unlock()
+
+	delete(sseChanMap, sseId)
+
+	sseIds, ok := userIdToSSEIds[userId]
+	if ok {
+		userIdToSSEIds[userId] = util.RemoveAllMatches(sseIds, sseId)
+	}
+
+	close(c)
 }
 
 // 发送心跳
