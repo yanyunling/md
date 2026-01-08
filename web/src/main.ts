@@ -5,8 +5,11 @@ import locale from "element-plus/es/locale/lang/zh-cn";
 import App from "./App.vue";
 import router from "./router";
 import "virtual:svg-icons-register";
+import "go-captcha-vue/dist/style.css";
+import { Slide } from "go-captcha-vue";
 
 const app = createApp(App);
 app.use(router);
 app.use(ElementPlus, { locale });
+app.component("gocaptcha-slide", Slide);
 app.mount("#app");

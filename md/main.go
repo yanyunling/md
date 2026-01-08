@@ -58,6 +58,12 @@ func main() {
 		return
 	}
 
+	// 初始化验证码组件
+	err = middleware.InitCaptcha()
+	if err != nil {
+		return
+	}
+
 	// 初始化数据目录
 	err = middleware.InitDataDir(common.DataPath, common.ResourceName, common.PictureName, common.ThumbnailName)
 	if err != nil {

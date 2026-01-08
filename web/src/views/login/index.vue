@@ -7,7 +7,7 @@
         <form>
           <el-input
             class="input-view"
-            v-model.trim="inputData.name"
+            v-model.trim="signInData.name"
             size="large"
             clearable
             placeholder="请输入用户名"
@@ -15,7 +15,7 @@
           ></el-input>
           <el-input
             class="input-view"
-            v-model.trim="inputData.password"
+            v-model.trim="signInData.password"
             size="large"
             type="password"
             clearable
@@ -28,48 +28,74 @@
       </div>
       <div class="content-view" v-else>
         <form>
-          <el-input class="input-view" v-model.trim="inputData.name" size="large" clearable placeholder="请输入用户名"></el-input>
-          <el-input class="input-view" v-model.trim="inputData.password" size="large" type="password" clearable placeholder="请输入密码"></el-input>
-          <el-input
-            class="input-view"
-            v-model.trim="inputData.confirmPassword"
-            size="large"
-            type="password"
-            clearable
-            placeholder="请再次输入密码"
-          ></el-input>
+          <el-input class="input-view" v-model.trim="signInData.name" size="large" clearable placeholder="请输入用户名"></el-input>
+          <el-input class="input-view" v-model.trim="signInData.password" size="large" type="password" clearable placeholder="请输入密码"></el-input>
+          <el-input class="input-view" v-model.trim="confirmPassword" size="large" type="password" clearable placeholder="请再次输入密码"></el-input>
         </form>
         <el-button class="register-button" type="primary" link text size="small" @click="registerClick" :disabled="loading">返回登录</el-button>
         <el-button class="login-button" size="large" type="primary" @click="loginClick" :disabled="loading">注册</el-button>
       </div>
     </transition>
+    <el-dialog
+      :model-value="captchaVisible"
+      append-to-body
+      destroy-on-close
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      width="360"
+      center
+    >
+      <gocaptcha-slide
+        v-loading="captchaLoading"
+        :config="{ iconSize: 0 }"
+        :data="captchaData"
+        :events="{
+          confirm: captchaConfirm,
+        }"
+      />
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, Ref, onMounted } from "vue";
 import Token from "@/store/token";
 import TokenApi from "@/api/token";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import TextRain from "@/components/text-rain/index.vue";
+import { SlidePoint } from "go-captcha-vue/dist/components/slide/meta/data";
 
 const hostUrl = ref(location.origin);
 const router = useRouter();
 const loading = ref(false);
+const captchaLoading = ref(false);
+const captchaVisible = ref(false);
 // 登录/注册
 const isLogin = ref(true);
-// 输入框数据
-const inputData = ref({
+// 登录/注册数据
+const confirmPassword = ref("");
+const signInData: Ref<SignIn> = ref({
   name: "",
   password: "",
-  confirmPassword: "",
+  captchaId: "",
+  captchaX: 0,
+  captchaY: 0,
+});
+// 验证码数据
+const captchaData = ref({
+  thumbY: 0,
+  thumbWidth: 0,
+  thumbHeight: 0,
+  image: "",
+  thumb: "",
 });
 
 onMounted(() => {
   let nameCache = Token.getName();
   if (nameCache) {
-    inputData.value.name = nameCache;
+    signInData.value.name = nameCache;
   }
 });
 
@@ -77,9 +103,9 @@ onMounted(() => {
  * 点击注册切换按钮
  */
 const registerClick = () => {
-  inputData.value.name = "";
-  inputData.value.password = "";
-  inputData.value.confirmPassword = "";
+  signInData.value.name = "";
+  signInData.value.password = "";
+  confirmPassword.value = "";
   isLogin.value = !isLogin.value;
 };
 
@@ -87,19 +113,81 @@ const registerClick = () => {
  * 点击登录按钮
  */
 const loginClick = () => {
-  if (!inputData.value.name) {
+  if (!signInData.value.name) {
     ElMessage.warning("请输入用户名");
     return;
   }
-  if (!inputData.value.password) {
+  if (!signInData.value.password) {
     ElMessage.warning("请输入密码");
     return;
   }
+  if (!isLogin.value) {
+    if (signInData.value.password !== confirmPassword.value) {
+      ElMessage.warning("两次密码不一致");
+      loading.value = false;
+      return;
+    }
+  }
+  // 打开验证码窗口
+  captchaGet();
+};
+
+/**
+ * 获取验证码
+ */
+const captchaGet = () => {
+  loading.value = true;
+  captchaLoading.value = true;
+  TokenApi.captcha(signInData.value.captchaId)
+    .then((res) => {
+      signInData.value.captchaId = res.data.captchaId;
+      captchaData.value.thumbY = res.data.y;
+      captchaData.value.thumbWidth = res.data.width;
+      captchaData.value.thumbHeight = res.data.width;
+      captchaData.value.image = res.data.image;
+      captchaData.value.thumb = res.data.tile;
+      captchaVisible.value = true;
+    })
+    .catch(() => {
+      loading.value = false;
+      captchaVisible.value = false;
+    })
+    .finally(() => {
+      captchaLoading.value = false;
+    });
+};
+
+/**
+ * 验证码滑动完成回调
+ * @param point
+ * @param reset
+ */
+const captchaConfirm = (point: SlidePoint, reset: () => void) => {
+  signInData.value.captchaX = point.x;
+  signInData.value.captchaY = point.y;
+  TokenApi.validateCaptcha(signInData.value).then((res) => {
+    // 验证成功
+    if (res.data) {
+      captchaVisible.value = false;
+      signIn();
+    } else {
+      ElMessage.warning("验证失败");
+      captchaGet();
+    }
+    reset();
+  });
+};
+
+/**
+ * 调用登录/注册接口
+ */
+const signIn = () => {
   if (isLogin.value) {
     // 登录
     loading.value = true;
-    TokenApi.signIn(inputData.value.name, inputData.value.password)
+    TokenApi.signIn(signInData.value)
       .then((res) => {
+        ElMessage.success("登录成功");
         Token.setToken(res.data);
         router.push({ name: "layout" });
       })
@@ -108,16 +196,12 @@ const loginClick = () => {
       });
   } else {
     // 注册
-    if (inputData.value.password !== inputData.value.confirmPassword) {
-      ElMessage.warning("两次密码不一致");
-      return;
-    }
     loading.value = true;
-    TokenApi.signUp(inputData.value.name, inputData.value.password)
+    TokenApi.signUp(signInData.value)
       .then(() => {
         ElMessage.success("注册成功");
-        inputData.value.password = "";
-        inputData.value.confirmPassword = "";
+        signInData.value.password = "";
+        confirmPassword.value = "";
         isLogin.value = true;
       })
       .finally(() => {

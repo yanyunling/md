@@ -1,33 +1,36 @@
 import { authRequest } from "@/utils/request";
 import sha256 from "crypto-js/sha256";
 import Token from "@/store/token";
+import { clone } from "@/utils";
 
 class TokenApi {
   /**
    * 注册
-   * @param name
-   * @param password
+   * @param signIn
    * @returns
    */
-  signUp(name: string, password: string) {
+  signUp(signIn: SignIn) {
+    let condition = clone(signIn);
+    condition.password = sha256(condition.password).toString();
     return authRequest({
       method: "post",
       url: "/sign-up",
-      data: { name: name, password: sha256(password).toString() },
+      data: condition,
     });
   }
 
   /**
    * 登录
-   * @param name
-   * @param password
+   * @param signIn
    * @returns
    */
-  signIn(name: string, password: string) {
+  signIn(signIn: SignIn) {
+    let condition = clone(signIn);
+    condition.password = sha256(condition.password).toString();
     return authRequest<TokenResult>({
       method: "post",
       url: "/sign-in",
-      data: { name: name, password: sha256(password).toString() },
+      data: condition,
     });
   }
 
@@ -40,6 +43,32 @@ class TokenApi {
       method: "post",
       url: "/sign-out",
       data: { refreshToken: Token.getRefreshToken() },
+    });
+  }
+
+  /**
+   * 获取验证码
+   * @param captchaId
+   * @returns
+   */
+  captcha(captchaId: string) {
+    return authRequest<CaptchaResult>({
+      method: "post",
+      url: "/captcha",
+      data: { captchaId: captchaId },
+    });
+  }
+
+  /**
+   * 校验验证码
+   * @param signIn
+   * @returns
+   */
+  validateCaptcha(signIn: SignIn) {
+    return authRequest({
+      method: "post",
+      url: "/captcha/validate",
+      data: signIn,
     });
   }
 }

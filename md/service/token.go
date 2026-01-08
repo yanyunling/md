@@ -10,15 +10,25 @@ import (
 	"time"
 
 	"github.com/muesli/cache2go"
+	"github.com/wenlng/go-captcha/v2/slide"
 )
 
 const AccessTokenExpire = time.Hour
 const RefreshTokenExpire = time.Hour * 24 * 30
+const CaptchaExpire = time.Minute * 5
 
 // 注册
-func SignUp(user entity.User) {
+func SignUp(signIn common.SignIn) {
 	tx := middleware.Db.MustBegin()
 	defer tx.Rollback()
+
+	// 校验验证码
+	ok := CaptchaValidate(signIn)
+	// 移除验证码缓存
+	cache2go.Cache(common.CaptchaCache).Delete(signIn.CaptchaId)
+	if !ok {
+		panic(common.NewError("验证失败"))
+	}
 
 	// 如不允许注册，查询是否没有任何用户
 	if !common.Register {
@@ -32,18 +42,18 @@ func SignUp(user entity.User) {
 	}
 
 	// 去除用户名的空白
-	user.Name = util.RemoveBlank(user.Name)
-	if user.Name == "" || user.Password == "" {
+	signIn.Name = util.RemoveBlank(signIn.Name)
+	if signIn.Name == "" || signIn.Password == "" {
 		panic(common.NewError("用户名或密码不可为空"))
 	}
 
 	// 用户名长度限制
-	if util.StringLength(user.Name) > 30 {
+	if util.StringLength(signIn.Name) > 30 {
 		panic(common.NewError("用户名不可大于30个字符"))
 	}
 
 	// 查询用户名不可重复
-	commonResult, err := dao.UserCountByName(tx, user.Name)
+	commonResult, err := dao.UserCountByName(tx, signIn.Name)
 	if err != nil {
 		panic(common.NewErr("注册失败", err))
 	}
@@ -52,7 +62,9 @@ func SignUp(user entity.User) {
 	}
 
 	// 保存用户信息
+	user := entity.User{}
 	user.Id = util.SnowflakeString()
+	user.Name = signIn.Name
 	user.Password = util.EncryptSHA256([]byte(user.Id + user.Password))
 	user.CreateTime = time.Now().UnixMilli()
 	dao.UserAdd(tx, user)
@@ -64,24 +76,32 @@ func SignUp(user entity.User) {
 }
 
 // 登录
-func SignIn(user entity.User) common.TokenResult {
+func SignIn(signIn common.SignIn) common.TokenResult {
 	// 去除用户名的空白
-	user.Name = util.RemoveBlank(user.Name)
-	if user.Name == "" || user.Password == "" {
+	signIn.Name = util.RemoveBlank(signIn.Name)
+	if signIn.Name == "" || signIn.Password == "" {
 		panic(common.NewError("用户名或密码不可为空"))
 	}
 
 	// 校验登录次数
-	checkSignInTimes(user.Name)
+	checkSignInTimes(signIn.Name)
+
+	// 校验验证码
+	ok := CaptchaValidate(signIn)
+	// 移除验证码缓存
+	cache2go.Cache(common.CaptchaCache).Delete(signIn.CaptchaId)
+	if !ok {
+		panic(common.NewError("验证失败"))
+	}
 
 	// 根据用户名查询用户
-	userResult, err := dao.UserGetByName(middleware.Db, user.Name)
+	userResult, err := dao.UserGetByName(middleware.Db, signIn.Name)
 	if err != nil {
 		panic(common.NewErr("用户名或密码错误", err))
 	}
 
 	// 匹配密码：sha256(id + password)
-	if util.EncryptSHA256([]byte(userResult.Id+user.Password)) != userResult.Password {
+	if util.EncryptSHA256([]byte(userResult.Id+signIn.Password)) != userResult.Password {
 		panic(common.NewError("用户名或密码错误"))
 	}
 
@@ -98,7 +118,7 @@ func SignIn(user entity.User) common.TokenResult {
 	// 缓存token
 	cache2go.Cache(common.AccessTokenCache).Add(tokenResult.AccessToken, AccessTokenExpire, &tokenCache)
 	cache2go.Cache(common.RefreshTokenCache).Add(tokenResult.RefreshToken, RefreshTokenExpire, &tokenCache)
-	cache2go.Cache(common.SignInTimesCache).Delete(user.Name)
+	cache2go.Cache(common.SignInTimesCache).Delete(signIn.Name)
 
 	return tokenResult
 }
@@ -143,6 +163,42 @@ func TokenRefresh(refreshToken string) common.TokenResult {
 	cache2go.Cache(common.RefreshTokenCache).Add(newTokenCache.RefreshToken, RefreshTokenExpire, &newTokenCache)
 
 	return tokenResult
+}
+
+// 获取验证码
+func Captcha(signIn common.SignIn) middleware.CaptchaResult {
+	// 传入的id是上一次的验证码，此操作为刷新验证码，移除上一次的缓存
+	if signIn.CaptchaId != "" {
+		cache2go.Cache(common.CaptchaCache).Delete(signIn.CaptchaId)
+	}
+
+	// 生成验证码
+	captchaResult, err := middleware.CaptchaGet()
+	captchaResult.CaptchaId = util.Uuid()
+	if err != nil {
+		panic(common.NewErr("验证码生成失败", err))
+	}
+
+	// 缓存验证信息
+	captchaCache := middleware.CaptchaCache{X: captchaResult.X, Y: captchaResult.Y}
+	cache2go.Cache(common.CaptchaCache).Add(captchaResult.CaptchaId, CaptchaExpire, &captchaCache)
+
+	return captchaResult
+}
+
+// 校验验证码
+func CaptchaValidate(signIn common.SignIn) bool {
+	// 根据验证码id从缓存获取验证码信息
+	res, err := cache2go.Cache(common.CaptchaCache).Value(signIn.CaptchaId)
+	if err != nil {
+		return false
+	}
+	captchaCache := res.Data().(*middleware.CaptchaCache)
+
+	// 校验
+	ok := slide.Validate(signIn.CaptchaX, signIn.CaptchaY, captchaCache.X, captchaCache.Y, 6)
+
+	return ok
 }
 
 // 校验登录次数，如已超出则抛出异常

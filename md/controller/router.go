@@ -31,6 +31,8 @@ func InitRouter(app *iris.Application) {
 			token.Post("/sign-in", SignIn)
 			token.Post("/sign-out", SignOut)
 			token.Post("/refresh", TokenRefresh)
+			token.Post("/captcha", Captcha)
+			token.Post("/captcha/validate", CaptchaValidate)
 		})
 
 		// 数据接口

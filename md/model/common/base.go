@@ -29,3 +29,11 @@ type TokenCache struct {
 	Id string `json:"id"`
 	TokenResult
 }
+
+type SignIn struct {
+	Name      string `json:"name"`
+	Password  string `json:"password"`
+	CaptchaId string `json:"captchaId"`
+	CaptchaX  int    `json:"captchaX"`
+	CaptchaY  int    `json:"captchaY"`
+}

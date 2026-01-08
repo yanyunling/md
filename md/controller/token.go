@@ -2,7 +2,6 @@ package controller
 
 import (
 	"md/model/common"
-	"md/model/entity"
 	"md/service"
 
 	"github.com/kataras/iris/v12"
@@ -10,17 +9,17 @@ import (
 
 // 注册
 func SignUp(ctx iris.Context) {
-	user := entity.User{}
-	resolveParam(ctx, &user)
-	service.SignUp(user)
+	signIn := common.SignIn{}
+	resolveParam(ctx, &signIn)
+	service.SignUp(signIn)
 	ctx.JSON(common.NewSuccess("注册成功"))
 }
 
 // 登录
 func SignIn(ctx iris.Context) {
-	user := entity.User{}
-	resolveParam(ctx, &user)
-	tokenResult := service.SignIn(user)
+	signIn := common.SignIn{}
+	resolveParam(ctx, &signIn)
+	tokenResult := service.SignIn(signIn)
 	ctx.JSON(common.NewSuccessData("登录成功", tokenResult))
 }
 
@@ -38,4 +37,24 @@ func TokenRefresh(ctx iris.Context) {
 	resolveParam(ctx, &tokenResult)
 	tokenResult = service.TokenRefresh(tokenResult.RefreshToken)
 	ctx.JSON(common.NewSuccessData("token刷新成功", tokenResult))
+}
+
+// 获取验证码
+func Captcha(ctx iris.Context) {
+	signIn := common.SignIn{}
+	resolveParam(ctx, &signIn)
+	captchaResult := service.Captcha(signIn)
+	ctx.JSON(common.NewSuccessData("验证码获取成功", captchaResult))
+}
+
+// 校验验证码
+func CaptchaValidate(ctx iris.Context) {
+	signIn := common.SignIn{}
+	resolveParam(ctx, &signIn)
+	ok := service.CaptchaValidate(signIn)
+	if ok {
+		ctx.JSON(common.NewSuccessData("验证码校验成功", true))
+	} else {
+		ctx.JSON(common.NewSuccessData("验证码校验失败", false))
+	}
 }
