@@ -24,11 +24,11 @@ func SignUp(signIn common.SignIn) {
 
 	// 校验验证码
 	ok := CaptchaValidate(signIn)
-	// 移除验证码缓存
-	cache2go.Cache(common.CaptchaCache).Delete(signIn.CaptchaId)
 	if !ok {
 		panic(common.NewError("验证失败"))
 	}
+	// 移除验证码缓存
+	cache2go.Cache(common.CaptchaCache).Delete(signIn.CaptchaId)
 
 	// 如不允许注册，查询是否没有任何用户
 	if !common.Register {
@@ -88,11 +88,11 @@ func SignIn(signIn common.SignIn) common.TokenResult {
 
 	// 校验验证码
 	ok := CaptchaValidate(signIn)
-	// 移除验证码缓存
-	cache2go.Cache(common.CaptchaCache).Delete(signIn.CaptchaId)
 	if !ok {
 		panic(common.NewError("验证失败"))
 	}
+	// 移除验证码缓存
+	cache2go.Cache(common.CaptchaCache).Delete(signIn.CaptchaId)
 
 	// 根据用户名查询用户
 	userResult, err := dao.UserGetByName(middleware.Db, signIn.Name)
@@ -197,6 +197,11 @@ func CaptchaValidate(signIn common.SignIn) bool {
 
 	// 校验
 	ok := slide.Validate(signIn.CaptchaX, signIn.CaptchaY, captchaCache.X, captchaCache.Y, 6)
+
+	// 移除验证码缓存
+	if !ok {
+		cache2go.Cache(common.CaptchaCache).Delete(signIn.CaptchaId)
+	}
 
 	return ok
 }
