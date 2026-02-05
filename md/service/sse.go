@@ -3,13 +3,13 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"md/middleware"
 	"md/model/common"
 	"md/util"
 	"sync"
 	"time"
 
 	"github.com/kataras/iris/v12"
-	"github.com/muesli/cache2go"
 )
 
 // 用户id对应sseIds缓存
@@ -25,12 +25,12 @@ var mu sync.RWMutex
 func SSEHandler(ctx iris.Context) {
 	// 验证SSE临时token，此token作为sseId
 	token := ctx.Params().Get("token")
-	res, err := cache2go.Cache(common.SSETokenCache).Value(token)
-	if err != nil {
+	res, found := middleware.Cache.Get(common.SSETokenCache + token)
+	if !found {
 		return
 	}
-	cache2go.Cache(common.SSETokenCache).Delete(token)
-	userId := res.Data().(string)
+	middleware.Cache.Delete(common.SSETokenCache + token)
+	userId := res.(string)
 
 	// 连接成功后发送一次心跳
 	sendHeart(ctx)
@@ -69,7 +69,7 @@ func GetSSEToken(userId string) string {
 	token := util.RandomString(32)
 
 	// 缓存token
-	cache2go.Cache(common.SSETokenCache).Add(token, time.Minute, userId)
+	middleware.Cache.Set(common.SSETokenCache+token, userId, time.Minute)
 
 	return token
 }
