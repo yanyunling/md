@@ -6,7 +6,7 @@ WORKDIR /build/web
 RUN npm install
 RUN npm run build
 
-FROM golang:1.25-alpine AS go
+FROM golang:1.26-alpine AS go
 # 七牛云镜像
 # ENV GOPROXY=https://goproxy.cn,direct
 COPY ./md /build/md
