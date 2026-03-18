@@ -30,6 +30,11 @@ export default defineConfig({
         drop_debugger: true,
       },
     },
+    rolldownOptions: {
+      output: {
+        chunkFileNames: "assets/chunk-[name]-[hash].js",
+      },
+    },
   },
   server: {
     host: "0.0.0.0",
