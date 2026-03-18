@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/kataras/golog"
 	"github.com/kataras/iris/v12"
 )
 
@@ -43,7 +44,7 @@ func main() {
 	app := iris.New()
 
 	// 初始化日志
-	middleware.InitLog(app.Logger())
+	middleware.InitLog()
 
 	// 全局异常恢复
 	app.Use(middleware.GlobalRecover)
@@ -57,7 +58,7 @@ func main() {
 	// 初始化雪花算法节点
 	err := util.InitSnowflake(0)
 	if err != nil {
-		middleware.Log.Error("初始化雪花算法节点失败：", err)
+		golog.Error("初始化雪花算法节点失败：", err)
 		return
 	}
 
@@ -87,7 +88,7 @@ func main() {
 	app.Use(iris.StaticCache(time.Hour * 720))
 	webFs, err := fs.Sub(web, "web")
 	if err != nil {
-		middleware.Log.Error("初始化网页资源失败：", err)
+		golog.Error("初始化网页资源失败：", err)
 		return
 	}
 	app.HandleDir("/", http.FS(webFs))

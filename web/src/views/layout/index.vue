@@ -4,7 +4,7 @@
       <div class="left-view">
         <div class="title-view">
           <span :style="isDocument ? 'cursor: pointer' : ''" :title="isDocument ? (isStretch ? '收起侧栏' : '弹出侧栏') : ''" @click="iconClick">
-            <svg-icon name="md" customStyle="width: 20px; height: 20px; margin: 5px 5px 0 0"></svg-icon>
+            <md-icon style="width: 20px; height: 20px; margin: 5px 5px 0 0; display: block; fill: currentColor" />
           </span>
           <span :style="isDocument ? 'cursor: pointer' : ''" :title="isDocument ? (onlyPreview ? '编辑模式' : '预览模式') : ''" @click="titleClick">
             云文档
@@ -47,7 +47,7 @@
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import SvgIcon from "@/components/svg-icon";
+import mdIcon from "@/icons/md.svg";
 import Token from "@/store/token";
 import TokenApi from "@/api/token";
 import UserApi from "@/api/user";
@@ -71,7 +71,7 @@ watch(
     } else {
       isDocument.value = false;
     }
-  }
+  },
 );
 
 /**

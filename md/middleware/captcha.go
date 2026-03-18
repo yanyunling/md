@@ -3,6 +3,7 @@ package middleware
 import (
 	"errors"
 
+	"github.com/kataras/golog"
 	"github.com/wenlng/go-captcha-assets/resources/imagesv2"
 	"github.com/wenlng/go-captcha-assets/resources/tiles"
 	"github.com/wenlng/go-captcha/v2/slide"
@@ -30,13 +31,13 @@ func InitCaptcha() error {
 
 	imgs, err := imagesv2.GetImages()
 	if err != nil {
-		Log.Error("验证码图片加载失败：", err)
+		golog.Error("验证码图片加载失败：", err)
 		return err
 	}
 
 	graphs, err := tiles.GetTiles()
 	if err != nil {
-		Log.Error("验证码图片拼图加载失败：", err)
+		golog.Error("验证码图片拼图加载失败：", err)
 		return err
 	}
 

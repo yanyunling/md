@@ -2,8 +2,8 @@ import { defineComponent } from "vue";
 import { MdEditor, NormalToolbar } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import { generateId } from "./config";
-import SvgIcon from "@/components/svg-icon";
 import { Fragment } from "vue";
+import DownloadIcon from "@/icons/download.svg";
 
 export default defineComponent({
   name: "MdEditor",
@@ -60,7 +60,7 @@ export default defineComponent({
                 onClick={exportClick}
                 trigger={
                   <div class="md-editor-icon">
-                    <SvgIcon className="icon-download" name="download"></SvgIcon>
+                    <DownloadIcon class="icon-download" />
                   </div>
                 }
               ></NormalToolbar>

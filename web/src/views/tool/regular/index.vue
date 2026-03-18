@@ -8,10 +8,10 @@
       <el-form-item label="正则表达式">
         <el-input v-model="regText" type="textarea" :rows="3" resize="none" placeholder="请输入正则表达式"></el-input>
         <el-checkbox-group v-model="modifierList">
-          <el-checkbox label="g">全局匹配(g)</el-checkbox>
-          <el-checkbox label="m">多行匹配(m)</el-checkbox>
-          <el-checkbox label="i">不区分大小写(i)</el-checkbox>
-          <el-checkbox label="group">分组</el-checkbox>
+          <el-checkbox value="g">全局匹配(g)</el-checkbox>
+          <el-checkbox value="m">多行匹配(m)</el-checkbox>
+          <el-checkbox value="i">不区分大小写(i)</el-checkbox>
+          <el-checkbox value="group">分组</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="匹配内容">

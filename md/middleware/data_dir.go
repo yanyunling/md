@@ -2,6 +2,8 @@ package middleware
 
 import (
 	"os"
+
+	"github.com/kataras/golog"
 )
 
 // 初始化数据目录
@@ -10,13 +12,13 @@ func InitDataDir(dataPath, resourceName, pictureName, thumbnailName string) erro
 
 	err := os.MkdirAll(path+"/"+pictureName, 0777)
 	if err != nil {
-		Log.Error("创建图片目录失败：", err)
+		golog.Error("创建图片目录失败：", err)
 		return err
 	}
 
 	err = os.MkdirAll(path+"/"+thumbnailName, 0777)
 	if err != nil {
-		Log.Error("创建缩略图目录失败：", err)
+		golog.Error("创建缩略图目录失败：", err)
 		return err
 	}
 

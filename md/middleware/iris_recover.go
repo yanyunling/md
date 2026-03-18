@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/kataras/golog"
 	"github.com/kataras/iris/v12"
 )
 
@@ -58,7 +59,7 @@ func GlobalRecover(ctx iris.Context) {
 			// 4.详细堆栈信息
 			logMessage += strings.Join(callers, "\n")
 
-			Log.Error(logMessage)
+			golog.Error(logMessage)
 
 			ctx.JSON(errResponse)
 			ctx.StopExecution()

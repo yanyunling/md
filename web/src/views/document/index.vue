@@ -16,10 +16,10 @@
       <template v-else>
         <div class="codemirror-toolbar">
           <div class="icon-outer" title="保存" @click="saveDoc(currentDoc.content)">
-            <svg-icon name="save" className="icon-save"></svg-icon>
+            <save-icon name="save" class="icon-save"/>
           </div>
           <div class="icon-outer" title="导出" @click="exportOpenApi(currentDoc.name, currentDoc.content)">
-            <svg-icon name="download" className="icon-download"></svg-icon>
+            <download-icon name="download" class="icon-download"/>
           </div>
         </div>
         <div class="codemirror-inner">
@@ -57,7 +57,6 @@ import MdEditor from "@/components/md-editor";
 import MdPreview from "@/components/md-editor/preview";
 import CodemirrorEditor from "@/components/codemirror-editor";
 import OpenApi from "@/components/open-api/index.vue";
-import SvgIcon from "@/components/svg-icon";
 import { uploadPicture } from "../picture/util";
 import Book from "./components/book.vue";
 import Doc from "./components/doc.vue";
@@ -66,6 +65,8 @@ import Token from "@/store/token";
 import { host } from "@/config";
 import crypto from "crypto-js";
 import { exporMarkdown, exportOpenApi } from "./util";
+import saveIcon from "@/icons/save.svg";
+import downloadIcon from "@/icons/download.svg";
 
 defineProps({
   onlyPreview: {
@@ -239,11 +240,15 @@ const saveDoc = (content: string) => {
         width: 16px;
         height: 16px;
         margin: 4px 7px;
+        display: block;
+        fill: currentColor;
       }
       .icon-download {
         width: 20px;
         height: 20px;
         margin: 2px 5px;
+        display: block;
+        fill: currentColor;
       }
     }
     .icon-outer:hover {

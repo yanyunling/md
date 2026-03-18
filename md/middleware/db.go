@@ -5,6 +5,7 @@ import (
 	"md/model/common"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/kataras/golog"
 	_ "github.com/lib/pq"
 	_ "modernc.org/sqlite"
 )
@@ -106,24 +107,24 @@ func initSqlite() error {
 	var err error
 	Db, err = sqlx.Connect("sqlite", common.DataPath+"md.db")
 	if err != nil {
-		Log.Error("开启sqlite数据库文件失败：", err)
+		golog.Error("开启sqlite数据库文件失败：", err)
 		return err
 	}
 
 	// 执行VACUUM优化数据库碎片
 	_, err = Db.Exec("VACUUM;")
 	if err != nil {
-		Log.Error("VACUUM执行失败：", err)
+		golog.Error("VACUUM执行失败：", err)
 	}
 
 	// 开启WAL模式
 	_, err = Db.Exec("PRAGMA journal_mode=WAL;")
 	if err != nil {
-		Log.Error("开启sqlite WAL模式失败：", err)
+		golog.Error("开启sqlite WAL模式失败：", err)
 		return err
 	}
 
-	Log.Info("已连接sqlite")
+	golog.Info("已连接sqlite")
 	return nil
 }
 
@@ -132,10 +133,10 @@ func initPostgres() error {
 	var err error
 	Db, err = sqlx.Connect("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", common.PostgresHost, common.PostgresPort, common.PostgresUser, common.PostgresPassword, common.PostgresDB))
 	if err != nil {
-		Log.Error("postgres连接失败：", err)
+		golog.Error("postgres连接失败：", err)
 		return err
 	}
 
-	Log.Info("已连接postgres")
+	golog.Info("已连接postgres")
 	return nil
 }
