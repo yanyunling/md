@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Token from "@/store/token";
-import Cron from "@/views/tool/cron/index.vue";
 
 const routes = [
   { path: "/login", name: "login", component: () => import("@/views/login/index.vue"), children: null },
@@ -13,7 +12,7 @@ const routes = [
       { path: "/document", name: "document", component: () => import("@/views/document/index.vue") },
       { path: "/picture", name: "picture", component: () => import("@/views/picture/index.vue") },
       { path: "/tool", name: "tool", component: () => import("@/views/tool/index.vue") },
-      { path: "/tool/cron", name: "cron", component: Cron },
+      { path: "/tool/cron", name: "cron", component: () => import("@/views/tool/cron/index.vue") },
       { path: "/tool/docker-convert", name: "docker-convert", component: () => import("@/views/tool/docker-convert/index.vue") },
       { path: "/tool/encryption", name: "encryption", component: () => import("@/views/tool/encryption/index.vue") },
       { path: "/tool/generate", name: "generate", component: () => import("@/views/tool/generate/index.vue") },

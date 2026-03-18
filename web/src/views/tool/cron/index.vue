@@ -13,8 +13,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import cronstrue from "cronstrue";
-import "cronstrue/locales/zh_CN";
-import cronParser from "cron-parser";
+import { CronExpressionParser } from "cron-parser";
 import { formatTime, getWeek } from "@/utils";
 
 const cronText = ref("");
@@ -31,7 +30,7 @@ const cronConvert = () => {
     return;
   }
   try {
-    const interval = cronParser.parse(cronText.value);
+    const interval = CronExpressionParser.parse(cronText.value);
     const nextArr = [];
     for (let i = 0; i < 5; i++) {
       let nextDate = interval.next().toDate();

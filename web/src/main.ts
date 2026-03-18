@@ -4,6 +4,7 @@ import router from "./router";
 import ElementPlus from "element-plus";
 import locale from "element-plus/es/locale/lang/zh-cn";
 import GoCaptcha from "go-captcha-vue";
+import "cronstrue/locales/zh_CN";
 import "./styles/index.scss";
 import "go-captcha-vue/dist/style.css";
 
