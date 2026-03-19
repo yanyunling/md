@@ -16,10 +16,10 @@
       <template v-else>
         <div class="codemirror-toolbar">
           <div class="icon-outer" title="保存" @click="saveDoc(currentDoc.content)">
-            <save-icon name="save" class="icon-save"/>
+            <save-icon name="save" class="icon-save" />
           </div>
           <div class="icon-outer" title="导出" @click="exportOpenApi(currentDoc.name, currentDoc.content)">
-            <download-icon name="download" class="icon-download"/>
+            <download-icon name="download" class="icon-download" />
           </div>
         </div>
         <div class="codemirror-inner">
@@ -35,26 +35,13 @@
         </div>
       </template>
     </div>
-    <template v-else>
-      <md-preview v-if="onlyPreview" :key="'preview' + mdKey" class="editor-view" :content="currentDoc.content" />
-      <md-editor
-        v-else
-        :key="'editor' + mdKey"
-        class="editor-view"
-        v-model="currentDoc.content"
-        v-loading="mdLoading"
-        @onUploadImg="uploadImage"
-        @onSave="saveDoc"
-        @export="exporMarkdown(currentDoc.name, currentDoc.content)"
-      />
-    </template>
+    <md-editor v-else v-model="currentDoc.content" :preview="onlyPreview" @save="saveDoc" :uploadImage="uploadImage"></md-editor>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, Ref, onMounted, onBeforeUnmount, nextTick, computed, watch } from "vue";
 import MdEditor from "@/components/md-editor";
-import MdPreview from "@/components/md-editor/preview";
 import CodemirrorEditor from "@/components/codemirror-editor";
 import OpenApi from "@/components/open-api/index.vue";
 import { uploadPicture } from "../picture/util";
@@ -64,7 +51,7 @@ import DocCache from "@/store/doc-cache";
 import Token from "@/store/token";
 import { host } from "@/config";
 import crypto from "crypto-js";
-import { exporMarkdown, exportOpenApi } from "./util";
+import { exportOpenApi } from "./util";
 import saveIcon from "@/icons/save.svg";
 import downloadIcon from "@/icons/download.svg";
 
@@ -93,7 +80,6 @@ const currentDoc: Ref<CurrentDoc> = ref({
   updateTime: "",
 });
 const mdLoading = ref(false);
-const mdKey = ref(0);
 const codemirrorVisibility = ref("hidden");
 
 const docType = computed(() => {
@@ -159,7 +145,6 @@ const docChange = (id: string, name: string, content: string, type: string, upda
   currentDoc.value.originMD5 = crypto.MD5(content).toString();
   currentDoc.value.updateTime = updateTime;
   if (!noRender) {
-    mdKey.value++;
     nextTick(() => {
       if (codemirrorRef.value) {
         codemirrorRef.value.$el.getElementsByClassName("cm-scroller")[0].scrollTop = 0;
@@ -184,14 +169,10 @@ const codemirrorReday = () => {
 /**
  * 上传图片
  */
-const uploadImage = async (files: File[], callback: (urls: string[]) => void) => {
-  const pathList: string[] = [];
-  for (let file of files) {
-    try {
-      pathList.push(hostUrl.value + (await uploadPicture(file)));
-    } catch (e) {}
-  }
-  callback(pathList);
+const uploadImage = async (file: File, callback: (url: string, options?: object) => void) => {
+  try {
+    callback(hostUrl.value + (await uploadPicture(file)), { name: file.name });
+  } catch (e) {}
 };
 
 /**
@@ -209,14 +190,6 @@ const saveDoc = (content: string) => {
 .page-document {
   display: flex;
   overflow: auto;
-  .editor-view {
-    height: 100%;
-    flex: 1;
-    min-width: 720px;
-  }
-  .editor-view.md-fullscreen {
-    min-width: unset;
-  }
   .codemirror-view {
     height: 100%;
     flex: 1;

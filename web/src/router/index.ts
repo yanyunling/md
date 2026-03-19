@@ -1,8 +1,9 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Token from "@/store/token";
+import Login from "@/views/login/index.vue";
 
 const routes = [
-  { path: "/login", name: "login", component: () => import("@/views/login/index.vue"), children: null },
+  { path: "/login", name: "login", component: Login, children: null },
   {
     path: "/",
     name: "layout",

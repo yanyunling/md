@@ -1,6 +1,6 @@
 <template>
   <div class="page-open-document">
-    <md-preview v-if="docType === 'md'" class="md-view" :content="content" />
+    <md-editor v-if="docType === 'md'" class="md-view" v-model="content" preview></md-editor>
     <open-api-preview v-if="docType === 'openApi'" :content="content" mixUrl></open-api-preview>
     <div v-if="docType === 'error'" class="error-view">文档加载失败</div>
   </div>
@@ -8,7 +8,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import MdPreview from "@/components/md-editor/preview";
+import MdEditor from "@/components/md-editor";
 import OpenApiPreview from "@/components/open-api/index.vue";
 import { useRoute } from "vue-router";
 import OpenApi from "@/api/open";
@@ -38,9 +38,8 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   .md-view {
-    height: 100%;
-    width: 100%;
-    overflow: auto;
+    border-right: 2px solid #ebedee;
+    max-width: 1200px;
   }
   .error-view {
     font-size: 16px;

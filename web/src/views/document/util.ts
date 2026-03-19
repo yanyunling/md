@@ -3,15 +3,6 @@ import axios from "axios";
 import { ElMessage } from "element-plus";
 
 /**
- * 导出Markdown
- * @param name 文档名称
- * @param content 文档内容
- */
-export const exporMarkdown = (name: string, content: string) => {
-  saveAs(new Blob([content], { type: "text/plain;charset=utf-8" }), `${name}.md`);
-};
-
-/**
  * 导出html格式的OpenAPI
  * @param name 文档名称
  * @param content 文档内容

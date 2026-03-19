@@ -65,7 +65,6 @@ import TokenApi from "@/api/token";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import TextRain from "@/components/text-rain/index.vue";
-import { SlidePoint } from "go-captcha-vue/dist/components/slide/meta/data";
 
 const hostUrl = ref(location.origin);
 const router = useRouter();
@@ -162,7 +161,7 @@ const captchaGet = () => {
  * @param point
  * @param reset
  */
-const captchaConfirm = (point: SlidePoint, reset: () => void) => {
+const captchaConfirm = (point, reset: () => void) => {
   signInData.value.captchaX = point.x;
   signInData.value.captchaY = point.y;
   captchaLoading.value = true;

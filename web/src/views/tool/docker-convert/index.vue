@@ -7,10 +7,10 @@
         <codemirror-editor v-model="dockerRun" placeholder="docker run 命令" />
       </div>
       <div class="codemirror-view" style="height: 15%">
-        <codemirror-editor v-model="existCompose" :extensions="[javascript()]" placeholder="待合并的docker-compose" />
+        <codemirror-editor v-model="existCompose" :extensions="[yaml()]" placeholder="待合并的docker-compose" />
       </div>
       <div class="codemirror-view" style="height: calc(70% - 57px)">
-        <codemirror-editor v-model="composeResult" :extensions="[javascript()]" placeholder="转换后的docker-compose" />
+        <codemirror-editor v-model="composeResult" :extensions="[yaml()]" placeholder="转换后的docker-compose" />
       </div>
     </div>
   </div>
@@ -20,7 +20,7 @@
 import { ref } from "vue";
 import composerize from "composerize";
 import CodemirrorEditor from "@/components/codemirror-editor";
-import { javascript } from "@codemirror/lang-javascript";
+import { yaml } from "@codemirror/lang-yaml";
 import { ElMessage } from "element-plus";
 
 const dockerRun = ref("");
