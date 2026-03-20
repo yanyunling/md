@@ -1,11 +1,24 @@
 .md-editor {
   height: 100%;
   width: 100%;
+  min-width: 360px;
+  overflow: hidden;
   .cherry {
     box-shadow: none;
     border-left: 1px solid #ebedee;
     .cherry-previewer {
       border-left: 1px solid #ebedee;
+      img {
+        max-width: 100%;
+      }
+    }
+    .cherry-toolbar {
+      max-height: 100px;
+      overflow: auto;
+    }
+    .cherry-dropdown {
+      max-height: calc(100% - 60px);
+      overflow: auto;
     }
   }
 }
