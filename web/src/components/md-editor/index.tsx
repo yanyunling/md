@@ -79,7 +79,7 @@ export default defineComponent({
             "list",
             "panel",
             {
-              insert: ["image", "link", "hr", "br", "code", "toc", "table", "detail"],
+              insert: ["image", "link", "hr", "br", "code", "formula", "toc", "table", "detail"],
             },
             "graph",
             "|",
@@ -91,7 +91,7 @@ export default defineComponent({
             "togglePreview",
             "fullScreen",
           ],
-          toolbarRight: ["save", "export", "|", "codeTheme", "theme"],
+          toolbarRight: ["export", "save", "|", "codeTheme", "theme"],
           bubble: ["bold", "italic", "underline", "strikethrough", "sub", "sup", "quote", "|", "size", "color"],
           float: ["h1", "h2", "h3", "|", "ol", "ul", "quote", "table", "code"],
           customMenu: {
@@ -132,6 +132,14 @@ export default defineComponent({
             },
             header: {
               anchorStyle: "none",
+            },
+            mathBlock: {
+              engine: "katex",
+              src: "/static/katex/katex.min.js",
+              css: "/static/katex/katex.min.css",
+            },
+            inlineMath: {
+              engine: "katex",
             },
           },
         },
