@@ -38,7 +38,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   .md-view {
-    border-right: 2px solid #ebedee;
+    border-right: 1px solid #ebedee;
     max-width: 1200px;
   }
   .error-view {

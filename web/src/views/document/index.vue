@@ -15,11 +15,11 @@
       <open-api v-if="onlyPreview" :content="currentDoc.content"></open-api>
       <template v-else>
         <div class="codemirror-toolbar">
-          <div class="icon-outer" title="保存" @click="saveDoc(currentDoc.content)">
-            <save-icon name="save" class="icon-save" />
-          </div>
           <div class="icon-outer" title="导出" @click="exportOpenApi(currentDoc.name, currentDoc.content)">
             <download-icon name="download" class="icon-download" />
+          </div>
+          <div class="icon-outer" title="保存" @click="saveDoc(currentDoc.content)">
+            <save-icon name="save" class="icon-save" />
           </div>
         </div>
         <div class="codemirror-inner">
