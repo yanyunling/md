@@ -1,7 +1,8 @@
-import { defineComponent, onMounted, onBeforeUnmount, watch } from "vue";
+import { defineComponent, onMounted, onBeforeUnmount, watch, PropType } from "vue";
 import "cherry-markdown/dist/cherry-markdown.css";
 import "./index.scss";
 import Cherry from "cherry-markdown";
+import type { CherryFileUploadHandler } from "cherry-markdown/types/cherry";
 
 export default defineComponent({
   name: "MdEditor",
@@ -15,8 +16,8 @@ export default defineComponent({
       default: false,
     },
     uploadImage: {
-      type: Function,
-      default: null,
+      type: Function as PropType<CherryFileUploadHandler>,
+      default: undefined,
     },
   },
   emits: ["save", "update:modelValue"],
@@ -110,12 +111,10 @@ export default defineComponent({
           defaultModel: props.preview ? "previewOnly" : "edit&preview",
         },
         callback: {
-          afterChange: (text) => {
+          afterChange: (text: string) => {
             emit("update:modelValue", text);
           },
-          fileUpload: async (file, callback) => {
-            props.uploadImage(file, callback);
-          },
+          fileUpload: props.uploadImage,
         },
         engine: {
           syntax: {

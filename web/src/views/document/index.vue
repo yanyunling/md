@@ -169,7 +169,7 @@ const codemirrorReday = () => {
 /**
  * 上传图片
  */
-const uploadImage = async (file: File, callback: (url: string, options?: object) => void) => {
+const uploadImage = async (file: File, callback: (url: string, params?: { name?: string }) => void) => {
   try {
     callback(hostUrl.value + (await uploadPicture(file)), { name: file.name });
   } catch (e) {}
