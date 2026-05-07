@@ -28,7 +28,9 @@ export default defineComponent({
       () => props.modelValue,
       () => {
         if (cherryInstance && cherryInstance.getValue() !== props.modelValue) {
-          initEditor();
+          cherryInstance.setValue(props.modelValue);
+          cherryInstance.previewer.scrollToTop(0);
+          cherryInstance.refreshPreviewer(true);
         }
       },
     );
@@ -45,19 +47,14 @@ export default defineComponent({
     });
 
     onBeforeUnmount(() => {
-      if (cherryInstance) {
-        cherryInstance.destroy();
-        cherryInstance = null;
-      }
+      destroyEditor();
     });
 
     /**
      * 初始化编辑器
      */
     const initEditor = () => {
-      if (cherryInstance) {
-        cherryInstance.destroy();
-      }
+      destroyEditor();
       cherryInstance = new Cherry({
         id: "md-editor",
         value: props.modelValue,
@@ -91,7 +88,7 @@ export default defineComponent({
             "togglePreview",
             "fullScreen",
           ],
-          toolbarRight: ["save", "export", "|", "codeTheme", "theme"],
+          toolbarRight: ["save" as any, "export", "|", "codeTheme", "theme"],
           bubble: ["bold", "italic", "underline", "strikethrough", "sub", "sup", "size", "color", "|", "quote", "link"],
           float: ["h1", "h2", "h3", "|", "ol", "ul", "table", "code"],
           customMenu: {
@@ -106,9 +103,6 @@ export default defineComponent({
               },
             },
           },
-        },
-        editor: {
-          defaultModel: props.preview ? "previewOnly" : "edit&preview",
         },
         callback: {
           afterChange: (text: string) => {
@@ -142,11 +136,22 @@ export default defineComponent({
           },
         },
         previewer: {
-          enablePreviewerBubble: !props.preview,
+          enablePreviewerBubble: true,
         },
         themeSettings: {
-          mainTheme: "light",
+          themeList: [
+            { className: "default", label: "默认" },
+            { className: "light", label: "明亮" },
+            { className: "dark", label: "暗黑" },
+            { className: "abyss", label: "深海" },
+            { className: "green", label: "清新" },
+            { className: "red", label: "热情" },
+            { className: "violet", label: "淡雅" },
+            { className: "blue", label: "清幽" },
+          ],
+          mainTheme: "default",
           codeBlockTheme: "coy",
+          inlineCodeTheme: "red",
         },
         isPreviewOnly: props.preview,
       });
@@ -161,6 +166,16 @@ export default defineComponent({
         emit("save", cherryInstance.getValue());
       },
     });
+
+    /**
+     * 销毁编辑器
+     */
+    const destroyEditor = () => {
+      if (cherryInstance) {
+        cherryInstance.destroy();
+        cherryInstance = null;
+      }
+    };
 
     return () => {
       return <div id="md-editor" class="md-editor"></div>;
