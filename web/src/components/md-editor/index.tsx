@@ -58,6 +58,10 @@ export default defineComponent({
       cherryInstance = new Cherry({
         id: "md-editor",
         value: props.modelValue,
+        editor: {
+          convertWhenPaste: false,
+          showSuggestList: false,
+        },
         toolbars: {
           toc: {
             updateLocationHash: false,
@@ -85,10 +89,12 @@ export default defineComponent({
             "undo",
             "redo",
             "shortcutKey",
+            "theme",
+            "codeTheme",
             "togglePreview",
             "fullScreen",
           ],
-          toolbarRight: ["save" as any, "export", "|", "codeTheme", "theme"],
+          toolbarRight: ["save" as any, "export", "|", "wordCount"],
           bubble: ["bold", "italic", "underline", "strikethrough", "sub", "sup", "size", "color", "|", "quote", "link"],
           float: ["h1", "h2", "h3", "|", "ol", "ul", "table", "code"],
           customMenu: {
