@@ -80,11 +80,16 @@ func SendMessageToUser(userId string, message common.SSEMessage) {
 	defer mu.RUnlock()
 
 	sseIds, ok := userIdToSSEIds[userId]
-	if ok {
-		for _, sseId := range sseIds {
-			c, ok2 := sseChanMap[sseId]
-			if ok2 {
-				c <- message
+	if !ok {
+		return
+	}
+	for _, sseId := range sseIds {
+		c, ok2 := sseChanMap[sseId]
+		if ok2 {
+			select {
+			case c <- message:
+			default:
+				// 接收方已满或断开，丢弃消息，避免阻塞
 			}
 		}
 	}
@@ -96,7 +101,11 @@ func SendMessageToAll(message common.SSEMessage) {
 	defer mu.RUnlock()
 
 	for _, c := range sseChanMap {
-		c <- message
+		select {
+		case c <- message:
+		default:
+			// 接收方已满或断开，丢弃消息，避免阻塞
+		}
 	}
 }
 
@@ -112,7 +121,7 @@ func cacheConnection(userId, sseId string) chan common.SSEMessage {
 		userIdToSSEIds[userId] = []string{sseId}
 	}
 
-	c := make(chan common.SSEMessage)
+	c := make(chan common.SSEMessage, 1)
 	sseChanMap[sseId] = c
 
 	return c
@@ -128,6 +137,13 @@ func clearCacheConnection(userId, sseId string, c chan common.SSEMessage) {
 	sseIds, ok := userIdToSSEIds[userId]
 	if ok {
 		userIdToSSEIds[userId] = util.RemoveAllMatches(sseIds, sseId)
+		remaining := util.RemoveAllMatches(sseIds, sseId)
+		if len(remaining) == 0 {
+			// 清理空切片，防止内存泄漏
+			delete(userIdToSSEIds, userId)
+		} else {
+			userIdToSSEIds[userId] = remaining
+		}
 	}
 
 	close(c)
