@@ -64,7 +64,7 @@ func SignUp(signIn common.SignIn) {
 	user := entity.User{}
 	user.Id = util.SnowflakeString()
 	user.Name = signIn.Name
-	user.Password = util.EncryptSHA256([]byte(user.Id + user.Password))
+	user.Password = util.EncryptSHA256([]byte(user.Id + signIn.Password))
 	user.CreateTime = time.Now().UnixMilli()
 	dao.UserAdd(tx, user)
 
