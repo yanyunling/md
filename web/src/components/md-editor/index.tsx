@@ -38,7 +38,15 @@ export default defineComponent({
     watch(
       () => props.preview,
       () => {
-        initEditor();
+        if (cherryInstance) {
+          if (props.preview) {
+            cherryInstance.switchModel("previewOnly");
+          } else {
+            cherryInstance.switchModel("edit&preview");
+          }
+          cherryInstance.previewer.scrollToTop(0);
+          cherryInstance.refreshPreviewer(true);
+        }
       },
     );
 
