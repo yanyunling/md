@@ -79,7 +79,7 @@
 
 <script lang="ts" setup>
 import { ref, Ref, nextTick, onMounted } from "vue";
-import { ElTable, ElMessage } from "element-plus";
+import { ElMessage } from "element-plus";
 import OpenApi from "@/api/open";
 import { formatTime } from "@/utils";
 import copy from "copy-to-clipboard";
@@ -99,7 +99,7 @@ const lastCondition = ref("");
 const tableData: Ref<DocPageResult[]> = ref([]);
 const tableTotal = ref(0);
 const tableLoading = ref(false);
-const tableRef = ref<InstanceType<typeof ElTable>>();
+const tableRef = ref();
 const namePopover = ref(false);
 const typePopover = ref(false);
 const bookNamePopover = ref(false);

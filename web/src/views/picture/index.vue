@@ -54,7 +54,7 @@
 
 <script lang="ts" setup>
 import { ref, Ref, onMounted, nextTick } from "vue";
-import { ElMessage, ElMessageBox, ElTable } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import PictureApi from "@/api/picture";
 import { uploadPicture } from "./util";
 import { formatTime, Upload } from "@/utils";
@@ -71,7 +71,7 @@ const tableCondition: Ref<PageCondition<null>> = ref({
   },
   condition: null,
 });
-const tableRef = ref<InstanceType<typeof ElTable>>();
+const tableRef = ref();
 
 onMounted(() => {
   hostUrl.value = process.env.NODE_ENV === "production" ? location.origin : host;
