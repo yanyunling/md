@@ -177,6 +177,10 @@ const captchaConfirm = (point, reset: () => void) => {
       }
       reset();
     })
+    .catch(() => {
+      loading.value = false;
+      captchaVisible.value = false;
+    })
     .finally(() => {
       captchaLoading.value = false;
     });

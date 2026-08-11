@@ -22,12 +22,13 @@ func SignUp(signIn common.SignIn) {
 	defer tx.Rollback()
 
 	// 校验验证码
-	ok := CaptchaValidate(signIn)
+	ok := CaptchaValidate(signIn, false)
 	if !ok {
 		panic(common.NewError("验证失败"))
 	}
 	// 移除验证码缓存
 	middleware.Cache.Delete(common.CaptchaCache + signIn.CaptchaId)
+	middleware.Cache.Delete(common.SignInTimesCache + signIn.Name)
 
 	// 如不允许注册，查询是否没有任何用户
 	if !common.Register {
@@ -82,11 +83,8 @@ func SignIn(signIn common.SignIn) common.TokenResult {
 		panic(common.NewError("用户名或密码不可为空"))
 	}
 
-	// 校验登录次数
-	checkSignInTimes(signIn.Name)
-
 	// 校验验证码
-	ok := CaptchaValidate(signIn)
+	ok := CaptchaValidate(signIn, false)
 	if !ok {
 		panic(common.NewError("验证失败"))
 	}
@@ -186,7 +184,10 @@ func Captcha(signIn common.SignIn) middleware.CaptchaResult {
 }
 
 // 校验验证码
-func CaptchaValidate(signIn common.SignIn) bool {
+func CaptchaValidate(signIn common.SignIn, onlyCheck bool) bool {
+	// 校验登录次数
+	checkSignInTimes(signIn.Name)
+
 	// 根据验证码id从缓存获取验证码信息
 	res, found := middleware.Cache.Get(common.CaptchaCache + signIn.CaptchaId)
 	if !found {
@@ -197,9 +198,12 @@ func CaptchaValidate(signIn common.SignIn) bool {
 	// 校验
 	ok := slide.Validate(signIn.CaptchaX, signIn.CaptchaY, captchaCache.X, captchaCache.Y, 6)
 
-	// 移除验证码缓存
 	if !ok {
+		// 移除验证码缓存
 		middleware.Cache.Delete(common.CaptchaCache + signIn.CaptchaId)
+	} else if onlyCheck {
+		// 校验成功，登录次数缓存减一（认证接口需再次校验验证码）
+		subtractSignInTimes(signIn.Name)
 	}
 
 	return ok
@@ -217,6 +221,17 @@ func checkSignInTimes(name string) {
 		middleware.Cache.Set(common.SignInTimesCache+name, times, exp.Sub(now))
 	}
 	if times > 5 {
-		panic(common.NewError(fmt.Sprintf("登录次数已达上限，请于%v分钟后再试", int(exp.Sub(now).Minutes())+1)))
+		panic(common.NewError(fmt.Sprintf("验证次数已达上限，请于%v分钟后再试", int(exp.Sub(now).Minutes())+1)))
 	}
+}
+
+// 登录次数缓存减一
+func subtractSignInTimes(name string) {
+	signInTimes, exp, found := middleware.Cache.GetWithExpiration(common.SignInTimesCache + name)
+	now := time.Now()
+	if !found || exp.Before(now) {
+		return
+	}
+	times := signInTimes.(int) - 1
+	middleware.Cache.Set(common.SignInTimesCache+name, times, exp.Sub(now))
 }
